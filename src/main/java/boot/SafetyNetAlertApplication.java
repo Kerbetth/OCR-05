@@ -1,10 +1,12 @@
-package com.safetynet.SafetyNetAlert;
+package boot;
 
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.boot.*;
 import org.slf4j.*;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan("com.safetynet.SafetyNetAlert")
 public class SafetyNetAlertApplication
 {
     private static final Logger log;
