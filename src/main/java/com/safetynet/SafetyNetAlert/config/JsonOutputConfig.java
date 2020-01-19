@@ -1,11 +1,6 @@
 package com.safetynet.SafetyNetAlert.config;
 
-import com.safetynet.SafetyNetAlert.services.JsonOutputFactory;
-import com.safetynet.SafetyNetAlert.services.JsonOutputService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class JsonOutputConfig {

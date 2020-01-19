@@ -12,35 +12,46 @@ import java.util.*;
 public class MedicalRecordsDTO {
 
 
-    public ArrayList<Map<String,String>> getChildrenFirstNameLastNameAndAge() {
-        JSONObject jsonData = JSONDAO.getJsonData();
-        JSONArray medicalRecords = (JSONArray)jsonData.get((Object)"medicalrecords");
-        ArrayList<Map<String,String>>childrenList= new ArrayList<>();
-        long longage = 0;
-        for (Object medicalRecordOBJ : medicalRecords)
-        {
-            Map<String,String> medicalRecord = (JSONObject)medicalRecordOBJ;
-            try {
-                Date birthDate = new SimpleDateFormat("dd/mm/yyyy").parse(medicalRecord.get("birthdate"));
-            longage = ((System.currentTimeMillis()/60000 - birthDate.getTime()/60000) / (525560));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Integer age = (int) longage;
-            if(age < 18){
-                //childData.put((JSONObject) medicalRecord.get("firstName"))
-                medicalRecord.remove("medications");
-                medicalRecord.remove("allergies");
-                medicalRecord.remove("birthdate");
-                medicalRecord.put("age", age.toString());
-                childrenList.add(medicalRecord);
+    public ArrayList<String> getMedicalRecordsData(String dataType) {
+        ArrayList<Map<String, String>> medicalRecords = getMedicalrecords();
+        ArrayList<String> dataList = new ArrayList<>();
+        for (Map<String, String> medicalRecordOBJ : medicalRecords) {
+            switch (dataType) {
+                case "firstName":
+                    dataList.add(medicalRecordOBJ.get("firstName"));
+                    break;
+                case "lastName":
+                    dataList.add(medicalRecordOBJ.get("lastName"));
+                    break;
+                case "medications":
+                    dataList.add(((Object)medicalRecordOBJ.get("medications")).toString());
+                    break;
+                case "allergies":
+                    dataList.add(((Object)medicalRecordOBJ.get("allergies")).toString());
+                    break;
+                case "age":
+                    String birthdate = (medicalRecordOBJ.get("birthdate"));
+                    dataList.add(getAge(birthdate));
             }
         }
-        return childrenList;
+        return dataList;
     }
+
+    public String getAge(String birthdate) {
+        long longage = 0;
+        try {
+            Date birthDate = new SimpleDateFormat("dd/mm/yyyy").parse(birthdate);
+            longage = ((System.currentTimeMillis() / 60000 - birthDate.getTime() / 60000) / (525560));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Integer age = (int) longage;
+        return age.toString();
+    }
+
     public JSONArray getMedicalrecords() {
         JSONObject jsonData = JSONDAO.getJsonData();
-        JSONArray medicalRecords = (JSONArray)jsonData.get((Object)"medicalrecords");
+        JSONArray medicalRecords = (JSONArray) jsonData.get((Object) "medicalrecords");
         return medicalRecords;
     }
 }

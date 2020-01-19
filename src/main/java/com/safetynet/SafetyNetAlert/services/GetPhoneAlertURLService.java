@@ -2,30 +2,31 @@ package com.safetynet.SafetyNetAlert.services;
 
 import com.safetynet.SafetyNetAlert.dto.FirestationDTO;
 import com.safetynet.SafetyNetAlert.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.impl.GetURLService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.*;
 
-public class JsonOutputServicePhoneAlert implements JsonOutputService{
+public class GetPhoneAlertURLService implements GetURLService {
 
-    PersonsDTO jsonDataDAO = new PersonsDTO();
+    PersonsDTO personsDTO = new PersonsDTO();
     FirestationDTO firestationDTO = new FirestationDTO();
     private Integer firestation;
 
-    public JsonOutputServicePhoneAlert(Integer firestation){
+    public GetPhoneAlertURLService(Integer firestation){
         this.firestation = firestation;
     }
 
     @Override
     public String getRequest() {
         String stationAddress = firestationDTO.getFirestationAddress(firestation);
+        ArrayList<String> personsPhoneList = personsDTO.getPersonsData("phone");
+        ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
         Set<String> phoneNumbersList = new HashSet<>();
-        JSONArray persons = jsonDataDAO.getPersons();
-        for (Object personObj : persons) {
-            JSONObject person = (JSONObject)personObj;
-            if (person.get((Object)"address").equals(stationAddress) || stationAddress == null) {
-                phoneNumbersList.add("\"" + (person.get((Object)"phone").toString() + "\""));
+        for (int i = 0; i < personsPhoneList.size(); i++)  {
+            if (personsAddressList.get(i).equals(stationAddress) || stationAddress == null) {
+                phoneNumbersList.add("\"" + (personsPhoneList.get(i)) + "\"");
             }
         }
         return phoneNumbersList.toString();
