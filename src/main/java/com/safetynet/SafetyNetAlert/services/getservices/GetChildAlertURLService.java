@@ -1,9 +1,9 @@
-package com.safetynet.SafetyNetAlert.services;
+package com.safetynet.SafetyNetAlert.services.getservices;
 
 
-import com.safetynet.SafetyNetAlert.dto.MedicalRecordsDTO;
-import com.safetynet.SafetyNetAlert.dto.PersonsDTO;
-import com.safetynet.SafetyNetAlert.services.impl.GetURLService;
+import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
+import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 
 import java.util.*;
 

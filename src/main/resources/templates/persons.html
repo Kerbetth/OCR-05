@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List Persons</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
+            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+
+    <link href="../static/css/spring-core.css"
+          th:href="@{css/spring-core.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="/person/new">New Person</a>
+        </div>
+        <div class="col-sm-3">
+            <a href="/person/put">Edit a person by ID:</a>
+        </div>
+        <div class="col-sm-3">
+            <a href="/person/delete">Remove a person by ID:</a>
+        </div>
+        <p class="col-sm-3">
+            <a href="/">Back to Index</a></p>
+    </div>
+    <div th:if="${not #lists.isEmpty(persons)}">
+        <h2>Persons List</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Zip</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Editing</th>
+                <th>Deleting</th>
+            </tr>
+            <tr th:each="person : ${persons}">
+                <td> <a th:href="${'/personInf/' + person.id}" th:text="${person.id}">id</a></td>
+                <td th:text="${person.firstName}"></td>
+                <td th:text="${person.lastName}"></td>
+                <td th:text="${person.address}"></td>
+                <td th:text="${person.city}"></td>
+                <td th:text="${person.zip}"></td>
+                <td th:text="${person.phone}"></td>
+                <td th:text="${person.email}"></td>
+                <td> <a th:href="${'/personInf/edit/' + person.id}">Edit</a></td>
+                <td> <a th:href="${'/personInf/delete/' + person.id}">Remove</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

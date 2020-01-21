@@ -1,12 +1,8 @@
-package com.safetynet.SafetyNetAlert.dto;
+package com.safetynet.SafetyNetAlert.services.dto;
 
-import com.safetynet.SafetyNetAlert.dao.JSONDAO;
-import org.json.simple.parser.*;
-import java.io.*;
+import com.safetynet.SafetyNetAlert.services.dao.JSONDAO;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
-
 import org.json.simple.*;
 
 public class PersonsDTO

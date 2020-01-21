@@ -1,4 +1,4 @@
-package com.safetynet.SafetyNetAlert.dao;
+package com.safetynet.SafetyNetAlert.services.dao;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

@@ -1,6 +1,6 @@
-package com.safetynet.SafetyNetAlert.dto;
+package com.safetynet.SafetyNetAlert.services.dto;
 
-import com.safetynet.SafetyNetAlert.dao.JSONDAO;
+import com.safetynet.SafetyNetAlert.services.dao.JSONDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

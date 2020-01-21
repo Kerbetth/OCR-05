@@ -1,15 +1,15 @@
 package com.safetynet.SafetyNetAlert.controllers;
 
 
-import com.safetynet.SafetyNetAlert.services.*;
-import com.safetynet.SafetyNetAlert.services.impl.GetURLService;
+import com.safetynet.SafetyNetAlert.services.getservices.*;
+import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 
 @RestController
-public class URLController
+public class GetController
 {
 
   private GetURLService setJsonOutput;
@@ -69,10 +69,5 @@ public class URLController
         String output = setJsonOutput.getRequest();
         return output;
     }
-    /*@Autowired
-    @Qualifier("jsonOutputServicePhoneAlert")
-    public void setJsonOutputPhoneAlert(JsonOutputService jsonOutputPhoneAlert) {
-        this.setJsonOutputPhoneAlert = jsonOutputPhoneAlert;
-    }*/
 
 }

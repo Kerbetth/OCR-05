@@ -1,8 +1,8 @@
-package com.safetynet.SafetyNetAlert.services;
+package com.safetynet.SafetyNetAlert.services.getservices;
 
-import com.safetynet.SafetyNetAlert.dto.FirestationDTO;
-import com.safetynet.SafetyNetAlert.dto.PersonsDTO;
-import com.safetynet.SafetyNetAlert.services.impl.GetURLService;
+import com.safetynet.SafetyNetAlert.services.dto.FirestationDTO;
+import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package com.safetynet.SafetyNetAlert.services;
+package com.safetynet.SafetyNetAlert.services.getservices;
 
 public class JsonOutputFactory {
 /*
