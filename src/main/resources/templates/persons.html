@@ -18,13 +18,13 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-3">
-            <a href="/person/new">New Person</a>
+            <a href="/persons/new">New Person</a>
         </div>
         <div class="col-sm-3">
-            <a href="/person/put">Edit a person by ID:</a>
+            <a href="/persons/edit/">Edit a person by ID:</a>
         </div>
         <div class="col-sm-3">
-            <a href="/person/delete">Remove a person by ID:</a>
+            <a href="/persons/delete/">Remove a person by ID:</a>
         </div>
         <p class="col-sm-3">
             <a href="/">Back to Index</a></p>
@@ -45,7 +45,7 @@
                 <th>Deleting</th>
             </tr>
             <tr th:each="person : ${persons}">
-                <td> <a th:href="${'/personInf/' + person.id}" th:text="${person.id}">id</a></td>
+                <td> <a th:href="${'/persons/info' + person.id}" th:text="${person.id}">id</a></td>
                 <td th:text="${person.firstName}"></td>
                 <td th:text="${person.lastName}"></td>
                 <td th:text="${person.address}"></td>
@@ -53,8 +53,8 @@
                 <td th:text="${person.zip}"></td>
                 <td th:text="${person.phone}"></td>
                 <td th:text="${person.email}"></td>
-                <td> <a th:href="${'/personInf/edit/' + person.id}">Edit</a></td>
-                <td> <a th:href="${'/personInf/delete/' + person.id}">Remove</a></td>
+                <td> <a th:href="${'/persons/edit/' + person.id}">Edit</a></td>
+                <td> <a th:href="${'/person/del/' + person.id}">Remove</a></td>
             </tr>
         </table>
     </div>

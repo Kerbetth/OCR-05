@@ -5,6 +5,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -20,5 +21,13 @@ public class JSONDAO {
             ex.printStackTrace();
         }
         return jsonData;
+    }
+
+    public static void jsonWriter(String allData){
+        try (FileWriter file = new FileWriter("src/main/resources/data.json")) {
+            file.write(allData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

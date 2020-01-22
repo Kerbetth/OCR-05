@@ -1,4 +1,4 @@
-package com.safetynet.SafetyNetAlert.controllers;
+package com.safetynet.SafetyNetAlert.controllers.get;
 
 
 import com.safetynet.SafetyNetAlert.services.getservices.*;
