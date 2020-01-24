@@ -1,50 +1,53 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
 
-import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataDefaultValue;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 
 import java.util.*;
 
 public class GetChildAlertURLService implements GetURLService {
 
-    PersonsDTO personsDTO = new PersonsDTO();
-    MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
-
     private String address;
+    public DTO dTOPersons;
+    public DTO dTOMedrec;
 
-    public GetChildAlertURLService(String address) {
+    public GetChildAlertURLService(String address, DTO dTOPersons, DTO dTOMedrec) {
+        this.dTOPersons = dTOPersons;
+        this.dTOMedrec = dTOMedrec;
         this.address = address;
     }
 
     @Override
     public String getRequest() {
-        //address = DecodeURLService.decodeURL(address);
-        ArrayList<String> personsAgeList = medicalRecordsDTO.getMedicalRecordsData("age");
-        ArrayList<String> personsFirstNameList = medicalRecordsDTO.getMedicalRecordsData("firstName");
-        ArrayList<String> personsLastNameList = medicalRecordsDTO.getMedicalRecordsData("lastName");
-        ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
+        ArrayList<Object> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
+        ArrayList<Object> personsFirstNameList = dTOMedrec.getData(DataEntry.FNAME);
+        ArrayList<Object> personsLastNameList = dTOMedrec.getData(DataEntry.LNAME);
+        ArrayList<Object> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
         ArrayList<String> personsList = new ArrayList<>();
         for (int i = 0; i < personsFirstNameList.size(); i++) {
-            if (Integer.parseInt(personsAgeList.get(i)) < 18) {
-                if (personsAddressList.get(i).equals(address) || address == null) {
-                    ArrayList<String> householdMemberList = new ArrayList<>();
-                    for (int j = 0; j < personsFirstNameList.size(); j++) {
-                        if (personsAddressList.get(i).equals(personsAddressList.get(j)) && !personsFirstNameList.get(i).equals(personsFirstNameList.get(j))) {
-                            householdMemberList.add("\""+personsFirstNameList.get(j)+" "+personsLastNameList.get(j)+"\"");
+            if (!personsAgeList.get(i).equals(DataDefaultValue.UNKNOW.getString())) {
+                if (Integer.parseInt((String)personsAgeList.get(i)) < 18) {
+                    if (personsAddressList.get(i).equals(address) || address == null) {
+                        ArrayList<String> householdMemberList = new ArrayList<>();
+                        for (int j = 0; j < personsFirstNameList.size(); j++) {
+                            if (personsAddressList.get(i).equals(personsAddressList.get(j)) && !personsFirstNameList.get(i).equals(personsFirstNameList.get(j))) {
+                                householdMemberList.add("\"" + personsFirstNameList.get(j) + " " + personsLastNameList.get(j) + "\"");
+                            }
                         }
+                        String child = "{\"" + DataEntry.FNAME.getString() + "\":\""
+                                + personsFirstNameList.get(i)
+                                + "\", \"" + DataEntry.LNAME.getString() + "\":\""
+                                + personsLastNameList.get(i)
+                                + "\", \"" + DataEntry.AGE.getString() + "\":\""
+                                + personsAgeList.get(i)
+                                + "\", \"" + DataEntry.HOUSEMEMBERS.getString() + "\":"
+                                + householdMemberList.toString()
+                                + "}";
+                        personsList.add(child);
                     }
-                    String child = "{\"firstName\":\""
-                            + personsFirstNameList.get(i)
-                            + "\", \"lastName\":\""
-                            + personsLastNameList.get(i)
-                            + "\", \"age\":\""
-                            + personsAgeList.get(i)
-                            + "\", \"householdMemeberList\":"
-                            + householdMemberList.toString()
-                            + "}";
-                    personsList.add(child);
                 }
             }
         }

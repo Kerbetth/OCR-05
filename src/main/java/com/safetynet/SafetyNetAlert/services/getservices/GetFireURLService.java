@@ -1,55 +1,57 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
-import com.safetynet.SafetyNetAlert.services.dto.FirestationDTO;
-import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 import java.util.ArrayList;
 
 public class GetFireURLService implements GetURLService {
 
-    PersonsDTO personsDTO = new PersonsDTO();
-    MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
-    FirestationDTO firestationDTO = new FirestationDTO();
+    public DTO dTOPersons = new DTO(Datatype.PERSO);
+    public DTO dTOMedrec = new DTO(Datatype.MEDREC);
 
     private String address;
 
-    public GetFireURLService(String address) {
+    public GetFireURLService(String address, DTO dTOPersons, DTO dTOMedrec) {
+        this.dTOPersons = dTOPersons;
+        this.dTOMedrec = dTOMedrec;
         this.address = address;
     }
 
     @Override
     public String getRequest() {
-        ArrayList<String> personsAgeList = medicalRecordsDTO.getMedicalRecordsData("age");
-        ArrayList<String> personsFirstNameList = medicalRecordsDTO.getMedicalRecordsData("firstName");
-        ArrayList<String> personsLastNameList = medicalRecordsDTO.getMedicalRecordsData("lastName");
-        ArrayList<String> personsPhoneList = personsDTO.getPersonsData("phone");
-        ArrayList<String> personsMedicationsList = medicalRecordsDTO.getMedicalRecordsData("medications");
-        ArrayList<String> personsAllergiesList = medicalRecordsDTO.getMedicalRecordsData("allergies");
-        ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
-        String stationNumber = firestationDTO.getFirestationNumber(address);
+        ArrayList<Object> personsFirstNameList = dTOPersons.getData(DataEntry.FNAME);
+        ArrayList<Object> personsLastNameList = dTOPersons.getData(DataEntry.LNAME);
+        ArrayList<Object> personsPhoneList = dTOPersons.getData(DataEntry.PHONE);
+        ArrayList<Object> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
+        ArrayList<Object> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
+        ArrayList<Object> personsMedicationsList = dTOMedrec.getData(DataEntry.MEDIC);
+        ArrayList<Object> personsAllergiesList = dTOMedrec.getData(DataEntry.ALLERGI);
+        String stationNumber = dTOPersons.getFirestationNumber(address);
         ArrayList<String> personsList = new ArrayList<>();
         for (int i = 0; i < personsFirstNameList.size(); i++) {
             if (personsAddressList.get(i).equals(address) || address == null) {
-                String person = "\n{\"firstName\":\""
+                String person = "\n{\"" + DataEntry.FNAME.getString() + "\":\""
                         + personsFirstNameList.get(i)
-                        + "\", \"lastName\":\""
+                        + "\", \"" + DataEntry.LNAME.getString() + "\":\""
                         + personsLastNameList.get(i)
-                        + "\", \"phone\":\""
+                        + "\", \"" + DataEntry.PHONE.getString() + "\":\""
                         + personsPhoneList.get(i)
-                        + "\", \"age\":\""
+                        + "\", \"" + DataEntry.AGE.getString() + "\":\""
                         + personsAgeList.get(i)
-                        + "\", \"medications\":"
+                        + "\", \"" + DataEntry.MEDIC.getString() + "\":"
                         + personsMedicationsList.get(i)
-                        + ", \"allergies\":"
+                        + ", \"" + DataEntry.ALLERGI.getString() + "\":"
                         + personsAllergiesList.get(i)
                         + "}";
                 personsList.add(person);
             }
         }
-        String fire =   "{\"persons\":"
+        String fire =   "{\"stationNumber\":"
                         + stationNumber
-                        + ",\"stationNumber\":"
+                        + ",\""+DataEntry.PERSOBYSTATION.getString()+"\":"
                         + personsList.toString()
                         + "}";
         return fire;

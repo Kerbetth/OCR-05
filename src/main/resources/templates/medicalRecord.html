@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col-sm-6">
             <h2 th:inline="text" >
-                Person  [[${person.id}]]
+                Person  [[${medicalRecord.id}]]
             </h2>
         </div>
     </div>
@@ -30,43 +30,31 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">FirstName:</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static" th:text="${person.firstName}">FirstName</p>
+                        <p class="form-control-static" th:text="${medicalRecord.firstName}">FirstName</p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">LastName:</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static" th:text="${person.lastName}">LastName</p>
+                        <p class="form-control-static" th:text="${medicalRecord.lastName}">LastName</p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Adress:</label>
+                    <label class="col-sm-2 control-label">Birth date:</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static" th:text="${person.address}">Adress</p>
+                        <p class="form-control-static" th:text="${medicalRecord.birthdate}">Birth date</p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 sm-2 control-label">City:</label>
+                    <label class="col-sm-2 sm-2 control-label">Medications:</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static" th:text="${person.city}">City</p>
+                        <p class="form-control-static" th:text="${medicalRecord.medications}">Medications</p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 sm-2 control-label">Zip:</label>
+                    <label class="col-sm-2 sm-2 control-label">Allergies:</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static" th:text="${person.zip}">Zip</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 sm-2 control-label">Phone:</label>
-                    <div class="col-sm-10">
-                        <p class="form-control-static" th:text="${person.phone}">Phone</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 sm-2 control-label">Email:</label>
-                    <div class="col-sm-10">
-                        <p class="form-control-static" th:text="${person.email}">Email</p>
+                        <p class="form-control-static" th:text="${medicalRecord.allergies}">Allergies</p>
                     </div>
                 </div>
             </form>

@@ -8,18 +8,18 @@ public class MedicalRecord {
     private Integer id;
     private String firstName;
     private String lastName;
-    private String birthDate;
-    private ArrayList medications;
-    private ArrayList allergies;
+    private String birthdate;
+    private String medications;
+    private String allergies;
 
     public MedicalRecord() {
     }
 
-    public MedicalRecord(Integer id, String firstName, String lastName, String birthDate, ArrayList medications, ArrayList allergies) {
+    public MedicalRecord(Integer id, String firstName, String lastName, String birthdate, String medications, String allergies) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.birthdate = birthdate;
         this.medications = medications;
         this.allergies = allergies;
     }
@@ -48,27 +48,27 @@ public class MedicalRecord {
         this.lastName = lastName;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public String getBirthdate() {
+        return birthdate;
     }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(String birthdate) {
+        this.birthdate = birthdate;
     }
 
-    public ArrayList getMedications() {
+    public String getMedications() {
         return medications;
     }
 
-    public void setMedications(ArrayList medications) {
+    public void setMedications(String medications) {
         this.medications = medications;
     }
 
-    public ArrayList getAllergies() {
+    public String getAllergies() {
         return allergies;
     }
 
-    public void setAllergies(ArrayList allergies) {
+    public void setAllergies(String allergies) {
         this.allergies = allergies;
     }
 }

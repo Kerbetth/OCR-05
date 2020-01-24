@@ -8,10 +8,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Map;
 
 public class JSONDAO {
 
-    public static JSONObject getJsonData() {
+    public JSONObject getJsonData() {
         JSONObject jsonData = new JSONObject();
         try {
             final JSONParser parser = new JSONParser();
@@ -23,9 +24,9 @@ public class JSONDAO {
         return jsonData;
     }
 
-    public static void jsonWriter(String allData){
+    public void jsonWriter(Map allData){
         try (FileWriter file = new FileWriter("src/main/resources/data.json")) {
-            file.write(allData);
+            file.write(allData.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
