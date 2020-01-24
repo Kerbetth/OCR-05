@@ -1,6 +1,6 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
-import com.safetynet.SafetyNetAlert.services.dto.FirestationDTO;
+import com.safetynet.SafetyNetAlert.services.dto.FirestationsDTO;
 import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
 import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
@@ -10,7 +10,7 @@ public class GetFireURLService implements GetURLService {
 
     PersonsDTO personsDTO = new PersonsDTO();
     MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
-    FirestationDTO firestationDTO = new FirestationDTO();
+    FirestationsDTO firestationsDTO = new FirestationsDTO();
 
     private String address;
 
@@ -27,7 +27,7 @@ public class GetFireURLService implements GetURLService {
         ArrayList<String> personsMedicationsList = medicalRecordsDTO.getMedicalRecordsData("medications");
         ArrayList<String> personsAllergiesList = medicalRecordsDTO.getMedicalRecordsData("allergies");
         ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
-        String stationNumber = firestationDTO.getFirestationNumber(address);
+        String stationNumber = firestationsDTO.getFirestationNumber(address);
         ArrayList<String> personsList = new ArrayList<>();
         for (int i = 0; i < personsFirstNameList.size(); i++) {
             if (personsAddressList.get(i).equals(address) || address == null) {

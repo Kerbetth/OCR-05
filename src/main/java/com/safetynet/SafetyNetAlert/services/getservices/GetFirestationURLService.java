@@ -1,6 +1,6 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
-import com.safetynet.SafetyNetAlert.services.dto.FirestationDTO;
+import com.safetynet.SafetyNetAlert.services.dto.FirestationsDTO;
 import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
 import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
@@ -9,7 +9,7 @@ import java.util.*;
 
 public class GetFirestationURLService implements GetURLService {
 
-    FirestationDTO firestationDTO = new FirestationDTO();
+    FirestationsDTO firestationsDTO = new FirestationsDTO();
     PersonsDTO personsDTO = new PersonsDTO();
     MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
     private String stationNumber;
@@ -29,36 +29,38 @@ public class GetFirestationURLService implements GetURLService {
         ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
         ArrayList<String> personsPhoneList = personsDTO.getPersonsData("phone");
         ArrayList<String> personsAgeList = medicalRecordsDTO.getMedicalRecordsData("age");
-        Set<String> stationAddresses = firestationDTO.getStationAddresses(stationNumber);
+        Set<String> stationAddresses = firestationsDTO.getStationAddresses(stationNumber);
         System.out.println(stationAddresses);
         for (int i = 0; i < personsFirstNameList.size(); i++)
             if (stationAddresses == null || stationAddresses.contains(personsAddressList.get(i))) {
                 String person = "\n{\"firstName\":\""
-                                + personsFirstNameList.get(i)
-                                + "\", \"lastName\":\""
-                                + personsLastNameList.get(i)
-                                + "\", \"address\":\""
-                                + personsAddressList.get(i)
-                                + "\", \"phone\":\""
-                                + personsPhoneList.get(i)
-                                + "\"}";
+                        + personsFirstNameList.get(i)
+                        + "\", \"lastName\":\""
+                        + personsLastNameList.get(i)
+                        + "\", \"address\":\""
+                        + personsAddressList.get(i)
+                        + "\", \"phone\":\""
+                        + personsPhoneList.get(i)
+                        + "\"}";
                 personsbyStation.add(person);
-                if (Integer.parseInt(personsAgeList.get(i)) < 18) {
-                    children++;
-                } else {
-                    adults++;
+                if (!personsAgeList.get(i).equals("unknow")) {
+                    if (Integer.parseInt(personsAgeList.get(i)) < 18) {
+                        children++;
+                    } else {
+                        adults++;
+                    }
                 }
             }
-        String counting =   "{\"children\":\""
-                            + children
-                            + "\", \"adults\":\""
-                            + adults
-                            + "\"}\n";
-        String firestation =    "{\"persons by Station\":\n"
-                                + personsbyStation
-                                + ",\n\"counting\":"
-                                + counting
-                                + "}";
+        String counting = "{\"children\":\""
+                + children
+                + "\", \"adults\":\""
+                + adults
+                + "\"}\n";
+        String firestation = "{\"persons by Station\":\n"
+                + personsbyStation
+                + ",\n\"counting\":"
+                + counting
+                + "}";
         return firestation;
     }
 }

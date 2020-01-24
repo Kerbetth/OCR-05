@@ -1,6 +1,6 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
-import com.safetynet.SafetyNetAlert.services.dto.FirestationDTO;
+import com.safetynet.SafetyNetAlert.services.dto.FirestationsDTO;
 import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 
@@ -11,7 +11,7 @@ import java.util.Set;
 public class GetCommunityEmailURLService implements GetURLService {
 
     PersonsDTO personsDTO = new PersonsDTO();
-    FirestationDTO firestationDTO = new FirestationDTO();
+    FirestationsDTO firestationsDTO = new FirestationsDTO();
     private String city;
 
     public GetCommunityEmailURLService(String city){

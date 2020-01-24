@@ -1,7 +1,7 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
 
-import com.safetynet.SafetyNetAlert.services.dto.FirestationDTO;
+import com.safetynet.SafetyNetAlert.services.dto.FirestationsDTO;
 import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
 import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
@@ -13,7 +13,7 @@ public class GetFloodStationsURLService implements GetURLService {
 
     PersonsDTO personsDTO = new PersonsDTO();
     MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
-    FirestationDTO firestationDTO = new FirestationDTO();
+    FirestationsDTO firestationsDTO = new FirestationsDTO();
 
     private String stationNumbers;
 
@@ -23,7 +23,7 @@ public class GetFloodStationsURLService implements GetURLService {
 
     @Override
     public String getRequest() {
-        Set<String> houseHoldAddresses = firestationDTO.getStationAddresses(stationNumbers);
+        Set<String> houseHoldAddresses = firestationsDTO.getStationAddresses(stationNumbers);
         ArrayList<String> personsAgeList = medicalRecordsDTO.getMedicalRecordsData("age");
         ArrayList<String> personsFirstNameList = medicalRecordsDTO.getMedicalRecordsData("firstName");
         ArrayList<String> personsLastNameList = medicalRecordsDTO.getMedicalRecordsData("lastName");

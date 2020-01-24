@@ -27,24 +27,26 @@ public class GetChildAlertURLService implements GetURLService {
         ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
         ArrayList<String> personsList = new ArrayList<>();
         for (int i = 0; i < personsFirstNameList.size(); i++) {
-            if (Integer.parseInt(personsAgeList.get(i)) < 18) {
-                if (personsAddressList.get(i).equals(address) || address == null) {
-                    ArrayList<String> householdMemberList = new ArrayList<>();
-                    for (int j = 0; j < personsFirstNameList.size(); j++) {
-                        if (personsAddressList.get(i).equals(personsAddressList.get(j)) && !personsFirstNameList.get(i).equals(personsFirstNameList.get(j))) {
-                            householdMemberList.add("\""+personsFirstNameList.get(j)+" "+personsLastNameList.get(j)+"\"");
+            if (!personsAgeList.get(i).equals("unknow")) {
+                if (Integer.parseInt(personsAgeList.get(i)) < 18) {
+                    if (personsAddressList.get(i).equals(address) || address == null) {
+                        ArrayList<String> householdMemberList = new ArrayList<>();
+                        for (int j = 0; j < personsFirstNameList.size(); j++) {
+                            if (personsAddressList.get(i).equals(personsAddressList.get(j)) && !personsFirstNameList.get(i).equals(personsFirstNameList.get(j))) {
+                                householdMemberList.add("\"" + personsFirstNameList.get(j) + " " + personsLastNameList.get(j) + "\"");
+                            }
                         }
+                        String child = "{\"firstName\":\""
+                                + personsFirstNameList.get(i)
+                                + "\", \"lastName\":\""
+                                + personsLastNameList.get(i)
+                                + "\", \"age\":\""
+                                + personsAgeList.get(i)
+                                + "\", \"householdMemeberList\":"
+                                + householdMemberList.toString()
+                                + "}";
+                        personsList.add(child);
                     }
-                    String child = "{\"firstName\":\""
-                            + personsFirstNameList.get(i)
-                            + "\", \"lastName\":\""
-                            + personsLastNameList.get(i)
-                            + "\", \"age\":\""
-                            + personsAgeList.get(i)
-                            + "\", \"householdMemeberList\":"
-                            + householdMemberList.toString()
-                            + "}";
-                    personsList.add(child);
                 }
             }
         }

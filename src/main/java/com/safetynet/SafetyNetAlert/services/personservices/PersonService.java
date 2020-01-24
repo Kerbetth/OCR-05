@@ -1,11 +1,9 @@
-package com.safetynet.SafetyNetAlert.services;
+package com.safetynet.SafetyNetAlert.services.personservices;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.SafetyNetAlert.domain.Person;
-import com.safetynet.SafetyNetAlert.services.dao.JSONDAO;
 import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +25,7 @@ public class PersonService {
     private void loadPersons() {
         persons = new ArrayList<>();
         ArrayList<Map<String, String>> personsList = personsDTO.getPersons();
+        ArrayList<Map<String, String>> medList = (ArrayList) personsDTO.getData().get("medicalrecords");
         for (int i = 0; i < personsList.size(); i++) {
             Person person = new Person();
             person.setId(i);
@@ -41,39 +40,50 @@ public class PersonService {
         }
     }
 
+    public boolean verifyNoNullData(Person personData){
+        Integer i=0;
+        if(personData.getFirstName() != "") i++;
+        if(personData.getLastName() != "") i++;
+        if(personData.getAddress() != "") i++;
+        if(personData.getCity() != "") i++;
+        if(personData.getZip() != "") i++;
+        if(personData.getPhone() != "") i++;
+        if(personData.getEmail() != "") i++;
+        Boolean isNotNull = (i == 7);
+        return isNotNull;
+    }
+
     public void addPerson(Person person) {
-        if (person != null) {
+        if (verifyNoNullData(person)) {
             ObjectMapper oMapper = new ObjectMapper();
             Map<String, Object> personToAdd = oMapper.convertValue(person, Map.class);
-            Integer id = -1;
-            personToAdd.remove("id");
-            personsDTO.setPersonsData(id, personToAdd);
+            personsDTO.addPersonsData(personToAdd);
         } else {
-            throw new RuntimeException("Please write infos about the person");
+            throw new RuntimeException("Please write all required infos about the person");
         }
     }
 
-
     public void updatePerson(Person person) {
-        if (person != null) {
+        if (verifyNoNullData(person)) {
             ObjectMapper oMapper = new ObjectMapper();
             Map<String, Object> personToEdit = oMapper.convertValue(person, Map.class);
             Integer id = (Integer) personToEdit.get("id");
             personToEdit.remove("id");
             personsDTO.setPersonsData(id, personToEdit);
         } else {
-            throw new RuntimeException("Please write infos about the person");
+            throw new RuntimeException("Please write all required infos about the person");
         }
     }
 
-    public Person getPersonById(Integer id) {
+    public void removePersonData(String firstName, String lastName) {
+        Person person = persons.get(personsDTO.getIdByName(firstName,lastName));
+        personsDTO.removePersonData(person.getId());
+    }
+
+    public Person getPersonByName(String firstName, String lastName) {
+        Integer id=personsDTO.getIdByName(firstName, lastName);
         return persons.get(id);
     }
-
-    public void removePersonDelete(Integer id) {
-        personsDTO.removePersonData(id);
-    }
-
 
 
 }

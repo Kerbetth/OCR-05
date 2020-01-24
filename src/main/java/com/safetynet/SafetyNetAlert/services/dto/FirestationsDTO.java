@@ -6,7 +6,13 @@ import org.json.simple.JSONObject;
 
 import java.util.*;
 
-public class FirestationDTO {
+public class FirestationsDTO {
+
+    public ArrayList getFirestations() {
+            JSONObject jsonData = JSONDAO.getJsonData();
+            JSONArray firestations = (JSONArray) jsonData.get((Object) "firestations");
+        return firestations;
+    }
 
     public String getFirestationAddress(Integer stationNumber) {
         String stationAddress;
