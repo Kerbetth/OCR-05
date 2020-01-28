@@ -105,8 +105,7 @@
                 <th>Station Number</th>
             </tr>
             <tr th:each="firestation : ${firestations}">
-
-                <td th:text="${firestation.id}"></td>
+                <td><a th:href="${'/station/info/' + firestation.address}" th:text="${firestation.id}"></a></td>
                 <td th:text="${firestation.address}"></td>
                 <td th:text="${firestation.station}"></td>
                 <td><a th:href="${'/station/edit/' + firestation.address}">Edit</a>

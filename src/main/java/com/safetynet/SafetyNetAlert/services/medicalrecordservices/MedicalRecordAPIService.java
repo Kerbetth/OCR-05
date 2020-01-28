@@ -3,54 +3,59 @@ package com.safetynet.SafetyNetAlert.services.medicalrecordservices;
 
 
 
-import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.APIServices;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MedicalRecordAPIService {
+public class MedicalRecordAPIService implements APIServices {
 
-    MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
+    DTO dTOMedicalRecords = new DTO(Datatype.MEDREC);
 
 
-    public String addMedicalRecordPost(Map<String, String> medicalRecordData) {
+    public String postMethod(Map<String, String> medrecData) {
         Map<String, String> medicalRecord = new HashMap<>();
-        medicalRecord.put("firstName", medicalRecordData.get("firstName"));
-        medicalRecord.put("lastName", medicalRecordData.get("lastName"));
-        medicalRecord.put("birthdate", medicalRecordData.get("birthdate"));
+        medicalRecord.put(DataEntry.FNAME.getString(), medrecData.get(DataEntry.FNAME.getString()));
+        medicalRecord.put(DataEntry.LNAME.getString(), medrecData.get(DataEntry.LNAME.getString()));
+        medicalRecord.put(DataEntry.BIRTHDATE.getString(), medrecData.get(DataEntry.BIRTHDATE.getString()));
         for (Map.Entry<String, String> value : medicalRecord.entrySet()) {
             if (value.getValue() == null) {
                 return "The " + value.getKey() + " value is not specify, operation aborted";
             }
         }
-        medicalRecord.put("medications", medicalRecordData.get("medications"));
-        medicalRecord.put("allergies", medicalRecordData.get("allergies"));
-        medicalRecordsDTO.addMedicalRecordsData(medicalRecordData);
+        medicalRecord.put(DataEntry.MEDIC.getString(), medrecData.get(DataEntry.MEDIC.getString()));
+        medicalRecord.put(DataEntry.ALLERGI.getString(), medrecData.get(DataEntry.ALLERGI.getString()));
+        dTOMedicalRecords.addData(medicalRecord);
         return "Ok";
     }
 
-    public void updateMedicalRecordPut(String firstName, String lastName, Map<String, String> map) {
-        Integer id = medicalRecordsDTO.getIdByName(firstName, lastName);
-        Map<String, String> person = (Map) medicalRecordsDTO.getMedicalrecords().get(id);
+    public void putMethod(String firstNameLastName, Map<String, String> map) {
+        Integer id = dTOMedicalRecords.getIdByName(firstNameLastName);
+        Map<String, String> medicalRecord = (Map) dTOMedicalRecords.getDataTypeContent().get(id);
         for (Map.Entry<String, String> value : map.entrySet()) {
             switch (value.getKey()) {
                 case "birthdate":
-                    person.put("address", value.getValue());
+                    medicalRecord.put(DataEntry.BIRTHDATE.getString(), value.getValue());
                     break;
                 case "medications":
-                    person.put("city", value.getValue());
+                    medicalRecord.put(DataEntry.MEDIC.getString(), value.getValue());
                     break;
                 case "allergies":
-                    person.put("zip", value.getValue());
+                    medicalRecord.put(DataEntry.ALLERGI.getString(), value.getValue());
                     break;
             }
         }
-        medicalRecordsDTO.setMedicalRecordData(id, person);
+        dTOMedicalRecords.setData(id, medicalRecord);
     }
 
+    public void deleteMethod(String firstNameLastName) {
+        Integer id = dTOMedicalRecords.getIdByName(firstNameLastName);
+        dTOMedicalRecords.removeData(id);
+    }
 
 }

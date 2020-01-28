@@ -1,6 +1,8 @@
 package com.safetynet.SafetyNetAlert.controllers.get;
 
 
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
 import com.safetynet.SafetyNetAlert.services.getservices.*;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,7 @@ public class GetController
     @RequestMapping(method = { RequestMethod.GET }, value = { "/firestation" }, produces = { "application/json" })
     @ResponseBody
     public String getFirestation(@RequestParam(required = false) String stationNumber) {
-        setJsonOutput = new GetFirestationURLService(stationNumber);
+        setJsonOutput = new GetFirestationURLService(stationNumber, new DTO(Datatype.PERSO),new DTO(Datatype.MEDREC), new  DTO(Datatype.FSTATION));
         String output = setJsonOutput.getRequest();
         return output;
     }
@@ -25,7 +27,7 @@ public class GetController
    @RequestMapping(method = { RequestMethod.GET }, value = { "/phoneAlert" }, produces = { "application/json" })
     @ResponseBody
     public String getPhoneNumbers(@RequestParam(required = false) Integer firestation) {
-       setJsonOutput = new GetPhoneAlertURLService(firestation);
+       setJsonOutput = new GetPhoneAlertURLService(firestation, new DTO(Datatype.PERSO));
        String output = setJsonOutput.getRequest();
        return output;
     }
@@ -33,7 +35,7 @@ public class GetController
     @RequestMapping(method = { RequestMethod.GET }, value = { "/childAlert" }, produces = { "application/json" })
     @ResponseBody
     public String getChildAlert(@RequestParam(required = false) String address) {
-        setJsonOutput = new GetChildAlertURLService(address);
+        setJsonOutput = new GetChildAlertURLService(address, new DTO(Datatype.PERSO),new DTO(Datatype.MEDREC));
         String output = setJsonOutput.getRequest();
         return output;
     }

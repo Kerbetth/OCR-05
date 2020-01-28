@@ -1,17 +1,17 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
 
-import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 
 import java.util.*;
 
 public class GetPersonInfoURLService implements GetURLService {
 
-    PersonsDTO personsDTO = new PersonsDTO();
-    MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
-
+    DTO dTOPersons = new DTO(Datatype.PERSO);
+    DTO dTOMedrec = new DTO(Datatype.MEDREC);
     private Map name;
 
     public GetPersonInfoURLService(Map name) {
@@ -20,18 +20,17 @@ public class GetPersonInfoURLService implements GetURLService {
 
     @Override
     public String getRequest() {
-        ArrayList<String> personsAgeList = medicalRecordsDTO.getMedicalRecordsData("age");
-        ArrayList<String> personsFirstNameList = medicalRecordsDTO.getMedicalRecordsData("firstName");
-        ArrayList<String> personsLastNameList = medicalRecordsDTO.getMedicalRecordsData("lastName");
-        ArrayList<String> personsEmailList = personsDTO.getPersonsData("email");
-        ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
-        ArrayList<String> personsMedicationsList = medicalRecordsDTO.getMedicalRecordsData("medications");
-        ArrayList<String> personsAllergiesList = medicalRecordsDTO.getMedicalRecordsData("allergies");
+        ArrayList<String> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
+        ArrayList<String> personsFirstNameList = dTOMedrec.getData(DataEntry.FNAME);
+        ArrayList<String> personsLastNameList = dTOMedrec.getData(DataEntry.LNAME);
+        ArrayList<String> personsMedicationsList = dTOMedrec.getData(DataEntry.MEDIC);
+        ArrayList<String> personsAllergiesList = dTOMedrec.getData(DataEntry.ALLERGI);
+        ArrayList<String> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
+        ArrayList<String> personsEmailList = dTOPersons.getData(DataEntry.EMAIL);
         ArrayList<String> personInfoList = new ArrayList<>();
         for (int i = 0; i < personsFirstNameList.size(); i++) {
-            if ((personsFirstNameList.get(i).equals(name.get("firstName")) || name.get("firstName")==null)
-               &&
-               (personsLastNameList.get(i).equals(name.get("lastName")) || name.get("lastName")==null)) {
+            String fnamelname = (String) name.get(DataEntry.FNAME)+name.get(DataEntry.LNAME);
+            if (((personsFirstNameList.get(i)+personsLastNameList.get(i)).equals(name.get(fnamelname))) || name.get(fnamelname)==null) {
                 String person = "\n{\"firstName\":\""
                         + personsFirstNameList.get(i)
                         + "\", \"lastName\":\""

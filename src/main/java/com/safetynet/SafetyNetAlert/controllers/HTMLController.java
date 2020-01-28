@@ -3,6 +3,7 @@ package com.safetynet.SafetyNetAlert.controllers;
 
 
 
+import com.safetynet.SafetyNetAlert.domain.Firestation;
 import com.safetynet.SafetyNetAlert.domain.MedicalRecord;
 import com.safetynet.SafetyNetAlert.domain.Person;
 import com.safetynet.SafetyNetAlert.services.firestationservices.FirestationService;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HTMLController {
 
-    private PersonService personService = new PersonService();
-    private MedicalRecordService medicalRecordService = new MedicalRecordService();
-    private FirestationService firestationService = new FirestationService();
+    private PersonService personService;
+    private MedicalRecordService medicalRecordService;
+    private FirestationService firestationService;
 
     //----------IndexController----------//
 
@@ -45,13 +46,14 @@ public class HTMLController {
 
     @RequestMapping(value = "/person/adding")
     public String addingPerson(Person person){
+        System.out.println(person);
         personService.addPerson(person);
         return "redirect:/";
     }
 
     @RequestMapping("/persons/edit/{firstName}/{lastName}")
     public String editPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName , Model model){
-        model.addAttribute("personedit", personService.getPersonByName(firstName, lastName));
+        model.addAttribute("personedit", personService.getPersonByName(firstName+lastName));
         return "personedit";
     }
 
@@ -63,13 +65,15 @@ public class HTMLController {
 
     @RequestMapping(value = "/person/del/{firstName}/{lastName}")
     public String deletingPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName){
-        personService.removePersonData(firstName, lastName);
+        medicalRecordService.removeMedicalRecordData(firstName+lastName);
+        personService = new PersonService();
+        personService.removePersonData(firstName+lastName);
         return "redirect:/";
     }
 
     @RequestMapping("/persons/info/{firstName}/{lastName}")
     public String getPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName, Model model){
-        model.addAttribute("person", personService.getPersonByName(firstName, lastName));
+        model.addAttribute("person", personService.getPersonByName(firstName+lastName));
         return "person";
     }
 
@@ -89,7 +93,7 @@ public class HTMLController {
 
     @RequestMapping("/medrec/edit/{firstName}/{lastName}")
     public String editmedicalRecord(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName, Model model) {
-        model.addAttribute("medicalRecordedit", medicalRecordService.getMedicalRecordByName(firstName, lastName));
+        model.addAttribute("medicalRecordedit", medicalRecordService.getMedicalRecordByName(firstName+lastName));
         return "medicalRecordedit";
     }
 
@@ -101,51 +105,53 @@ public class HTMLController {
 
     @RequestMapping(value = "/medrec/del/{firstName}/{lastName}")
     public String deletingMedicalRecord(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName, Model model) {
-        personService.removePersonData(firstName, lastName);
+        medicalRecordService.removeMedicalRecordData(firstName+lastName);
+        personService = new PersonService();
+        personService.removePersonData(firstName+lastName);
         return "redirect:/";
     }
 
     @RequestMapping("/medrec/info/{firstName}/{lastName}")
     public String getMedrec(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName, Model model) {
-        model.addAttribute("medicalRecord", medicalRecordService.getMedicalRecordByName(firstName, lastName));
+        model.addAttribute("medicalRecord", medicalRecordService.getMedicalRecordByName(firstName+lastName));
         return "medicalRecord";
     }
 
 //----------FirestationControllers----------//
 
-    @RequestMapping("/firestation/new")
+    @RequestMapping("/station/new")
     public String newFirestationRecord(Model model) {
-        model.addAttribute("firestation", new MedicalRecord());
+        model.addAttribute("firestation", new Firestation());
         return "firestationAdd";
     }
 
-    @RequestMapping(value = "/firestation/adding")
-    public String addingFirestation(MedicalRecord medicalRecord) {
-        //firestationService.addFirestation(medicalRecord);
+    @RequestMapping(value = "/station/adding")
+    public String addingFirestation(Firestation firestation) {
+        firestationService.addData(firestation);
         return "redirect:/";
     }
 
-    @RequestMapping("/firestation/edit/{address}")
-    public String editFirestation(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName, Model model) {
-        model.addAttribute("firestationedit", medicalRecordService.getMedicalRecordByName(firstName, lastName));
+    @RequestMapping("/station/edit/{address}")
+    public String editFirestation(@PathVariable("address") String address, Model model) {
+        model.addAttribute("firestationedit", firestationService.getfirestationByAddress(address));
         return "firestationedit";
     }
 
-    @RequestMapping(value = "/firestation/setting")
-    public String updatingfirestation(MedicalRecord medicalRecord) {
-        medicalRecordService.updateMedicalRecords(medicalRecord);
+    @RequestMapping(value = "/station/setting")
+    public String updatingfirestation(Firestation firestation) {
+        firestationService.updateData(firestation);
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/firestation/del/{firstName}/{lastName}")
-    public String deletingfirestation(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName, Model model) {
-        personService.removePersonData(firstName, lastName);
+    @RequestMapping(value = "/station/del/{address}")
+    public String deletingfirestation(@PathVariable("address") String address, Model model) {
+        firestationService.removeData(address);
         return "redirect:/";
     }
 
-    @RequestMapping("/firestation/{address}}")
-    public String getfirestation(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName, Model model) {
-        model.addAttribute("firestation", medicalRecordService.getMedicalRecordByName(firstName, lastName));
+    @RequestMapping("/station/info/{address}")
+    public String infoFirestation(@PathVariable("address") String address, Model model) {
+        model.addAttribute("firestation", firestationService.getfirestationByAddress(address));
         return "firestation";
     }
 

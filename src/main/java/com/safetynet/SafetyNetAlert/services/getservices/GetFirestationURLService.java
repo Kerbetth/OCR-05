@@ -1,21 +1,24 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
-import com.safetynet.SafetyNetAlert.services.dto.FirestationsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataDefaultValue;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 
 import java.util.*;
 
 public class GetFirestationURLService implements GetURLService {
 
-    FirestationsDTO firestationsDTO = new FirestationsDTO();
-    PersonsDTO personsDTO = new PersonsDTO();
-    MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
+    public DTO dTOPersons;
+    public DTO dTOMedrec;
+    public DTO dTOFirestation;
     private String stationNumber;
 
 
-    public GetFirestationURLService(String stationNumber) {
+    public GetFirestationURLService(String stationNumber, DTO dTOPersons, DTO dTOMedrec, DTO dTOFirestation) {
+        this.dTOPersons = dTOPersons;
+        this.dTOMedrec = dTOMedrec;
+        this.dTOFirestation = dTOFirestation;
         this.stationNumber = stationNumber;
     }
 
@@ -24,26 +27,25 @@ public class GetFirestationURLService implements GetURLService {
         Set<String> personsbyStation = new HashSet<>();
         int children = 0;
         int adults = 0;
-        ArrayList<String> personsFirstNameList = personsDTO.getPersonsData("firstName");
-        ArrayList<String> personsLastNameList = personsDTO.getPersonsData("lastName");
-        ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
-        ArrayList<String> personsPhoneList = personsDTO.getPersonsData("phone");
-        ArrayList<String> personsAgeList = medicalRecordsDTO.getMedicalRecordsData("age");
-        Set<String> stationAddresses = firestationsDTO.getStationAddresses(stationNumber);
-        System.out.println(stationAddresses);
+        ArrayList<String> personsFirstNameList = dTOPersons.getData(DataEntry.FNAME);
+        ArrayList<String> personsLastNameList = dTOPersons.getData(DataEntry.LNAME);
+        ArrayList<String> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
+        ArrayList<String> personsPhoneList = dTOPersons.getData(DataEntry.PHONE);
+        ArrayList<String> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
+        Set<String> stationAddresses = dTOFirestation.getStationAddresses(stationNumber);
         for (int i = 0; i < personsFirstNameList.size(); i++)
             if (stationAddresses == null || stationAddresses.contains(personsAddressList.get(i))) {
-                String person = "\n{\"firstName\":\""
+                String person = "\n{\"" + DataEntry.FNAME.getString() + " \":\""
                         + personsFirstNameList.get(i)
-                        + "\", \"lastName\":\""
+                        + "\", \""+ DataEntry.LNAME.getString() + "\":\""
                         + personsLastNameList.get(i)
-                        + "\", \"address\":\""
+                        + "\", \""+ DataEntry.ADDRESS.getString() + "\":\""
                         + personsAddressList.get(i)
-                        + "\", \"phone\":\""
+                        + "\", \""+ DataEntry.PHONE.getString() + "\":\""
                         + personsPhoneList.get(i)
                         + "\"}";
                 personsbyStation.add(person);
-                if (!personsAgeList.get(i).equals("unknow")) {
+                if (!personsAgeList.get(i).equals(DataDefaultValue.UNKNOW.getString())) {
                     if (Integer.parseInt(personsAgeList.get(i)) < 18) {
                         children++;
                     } else {
@@ -51,14 +53,14 @@ public class GetFirestationURLService implements GetURLService {
                     }
                 }
             }
-        String counting = "{\"children\":\""
+        String counting = "{\""+DataEntry.CHILDREN.getString()+"\":\""
                 + children
-                + "\", \"adults\":\""
+                + "\", \""+DataEntry.ADULTS.getString()+"\":\""
                 + adults
                 + "\"}\n";
-        String firestation = "{\"persons by Station\":\n"
+        String firestation = "{\""+DataEntry.PERSOBYSTATION.getString()+"\":\n"
                 + personsbyStation
-                + ",\n\"counting\":"
+                + ",\n\""+DataEntry.COUNT.getString()+"\":"
                 + counting
                 + "}";
         return firestation;

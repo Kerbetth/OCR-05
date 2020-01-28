@@ -1,9 +1,8 @@
 package com.safetynet.SafetyNetAlert.services.getservices;
 
-
-import com.safetynet.SafetyNetAlert.services.dto.FirestationsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
-import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import com.safetynet.SafetyNetAlert.services.getservices.impl.GetURLService;
 
 import java.util.ArrayList;
@@ -11,10 +10,9 @@ import java.util.Set;
 
 public class GetFloodStationsURLService implements GetURLService {
 
-    PersonsDTO personsDTO = new PersonsDTO();
-    MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
-    FirestationsDTO firestationsDTO = new FirestationsDTO();
-
+    public DTO dTOPersons = new DTO(Datatype.PERSO);
+    public DTO dTOFirestation = new DTO(Datatype.FSTATION);
+    public DTO dTOMedrec = new DTO(Datatype.MEDREC);
     private String stationNumbers;
 
     public GetFloodStationsURLService(String stationNumbers) {
@@ -23,14 +21,14 @@ public class GetFloodStationsURLService implements GetURLService {
 
     @Override
     public String getRequest() {
-        Set<String> houseHoldAddresses = firestationsDTO.getStationAddresses(stationNumbers);
-        ArrayList<String> personsAgeList = medicalRecordsDTO.getMedicalRecordsData("age");
-        ArrayList<String> personsFirstNameList = medicalRecordsDTO.getMedicalRecordsData("firstName");
-        ArrayList<String> personsLastNameList = medicalRecordsDTO.getMedicalRecordsData("lastName");
-        ArrayList<String> personsPhoneList = personsDTO.getPersonsData("phone");
-        ArrayList<String> personsMedicationsList = medicalRecordsDTO.getMedicalRecordsData("medications");
-        ArrayList<String> personsAllergiesList = medicalRecordsDTO.getMedicalRecordsData("allergies");
-        ArrayList<String> personsAddressList = personsDTO.getPersonsData("address");
+        Set<String> houseHoldAddresses = dTOFirestation.getStationAddresses(stationNumbers);
+        ArrayList<String> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
+        ArrayList<String> personsFirstNameList = dTOMedrec.getData(DataEntry.FNAME);
+        ArrayList<String> personsLastNameList = dTOMedrec.getData(DataEntry.LNAME);
+        ArrayList<String> personsPhoneList = dTOPersons.getData(DataEntry.PHONE);
+        ArrayList<String> personsMedicationsList = dTOMedrec.getData(DataEntry.MEDIC);
+        ArrayList<String> personsAllergiesList = dTOMedrec.getData(DataEntry.ALLERGI);
+        ArrayList<String> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
         String floodStations;
         if (stationNumbers == null) floodStations = "{\"allStations\":{";
         else floodStations = "{\"station " + stationNumbers +"\":{";

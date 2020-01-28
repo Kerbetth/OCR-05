@@ -2,9 +2,10 @@ package com.safetynet.SafetyNetAlert.services.medicalrecordservices;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.SafetyNetAlert.domain.Person;
 import com.safetynet.SafetyNetAlert.domain.MedicalRecord;
-import com.safetynet.SafetyNetAlert.services.dto.MedicalRecordsDTO;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.Map;
 @Service
 public class MedicalRecordService {
 
-    MedicalRecordsDTO medicalRecordsDTO = new MedicalRecordsDTO();
+    DTO dTOMedicalRecords = new DTO(Datatype.MEDREC);
     private ArrayList<MedicalRecord> medicalRecords;
 
     public MedicalRecordService() {
@@ -25,15 +26,15 @@ public class MedicalRecordService {
 
     private void loadMedicalRecords() {
         medicalRecords = new ArrayList<>();
-        ArrayList<Map<String, Object>> medicalRecordsList = medicalRecordsDTO.getMedicalrecords();
+        ArrayList<Map> medicalRecordsList = dTOMedicalRecords.getDataTypeContent();
         for (int i = 0; i < medicalRecordsList.size(); i++) {
             MedicalRecord medicalRecord = new MedicalRecord();
             medicalRecord.setId(i);
-            medicalRecord.setFirstName((String)medicalRecordsList.get(i).get("firstName"));
-            medicalRecord.setLastName((String)medicalRecordsList.get(i).get("lastName"));
-            medicalRecord.setBirthDate((String)medicalRecordsList.get(i).get("birthdate"));
-            medicalRecord.setMedications(medicalRecordsList.get(i).get("medications").toString());
-            medicalRecord.setAllergies(medicalRecordsList.get(i).get("allergies").toString());
+            medicalRecord.setFirstName((String)medicalRecordsList.get(i).get(DataEntry.FNAME.getString()));
+            medicalRecord.setLastName((String)medicalRecordsList.get(i).get(DataEntry.LNAME.getString()));
+            medicalRecord.setBirthDate((String)medicalRecordsList.get(i).get(DataEntry.BIRTHDATE.getString()));
+            medicalRecord.setMedications(medicalRecordsList.get(i).get(DataEntry.MEDIC.getString()).toString());
+            medicalRecord.setAllergies(medicalRecordsList.get(i).get(DataEntry.ALLERGI.getString()).toString());
             medicalRecords.add(medicalRecord);
         }
     }
@@ -44,7 +45,7 @@ public class MedicalRecordService {
             Map<String, Object> personToAdd = oMapper.convertValue(medicalRecord, Map.class);
             Integer id = -1;
             personToAdd.remove("id");
-            medicalRecordsDTO.addMedicalRecordsData(personToAdd);
+            dTOMedicalRecords.addData(personToAdd);
         } else {
             throw new RuntimeException("Please write infos about the person");
         }
@@ -58,15 +59,18 @@ public class MedicalRecordService {
             Map<String, Object> medicalRecordToEdit = oMapper.convertValue(medicalRecord, Map.class);
             Integer id = (Integer) medicalRecordToEdit.get("id");
             medicalRecordToEdit.remove("id");
-            medicalRecordsDTO.setMedicalRecordData(id, medicalRecordToEdit);
+            dTOMedicalRecords.setData(id, medicalRecordToEdit);
         } else {
             throw new RuntimeException("Please write infos about the person");
         }
     }
 
-    public MedicalRecord getMedicalRecordByName(String firstName, String lastName) {
-        Integer id= medicalRecordsDTO.getIdByName(firstName, lastName);
+    public MedicalRecord getMedicalRecordByName(String firstNameLastName) {
+        Integer id= dTOMedicalRecords.getIdByName(firstNameLastName);
         return medicalRecords.get(id);
     }
-
+    public void removeMedicalRecordData(String firstNameLastName) {
+        int id = dTOMedicalRecords.getIdByName(firstNameLastName);
+        dTOMedicalRecords.removeData(id);
+    }
 }

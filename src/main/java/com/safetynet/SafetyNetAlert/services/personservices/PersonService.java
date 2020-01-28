@@ -3,7 +3,8 @@ package com.safetynet.SafetyNetAlert.services.personservices;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.SafetyNetAlert.domain.Person;
-import com.safetynet.SafetyNetAlert.services.dto.PersonsDTO;
+import com.safetynet.SafetyNetAlert.services.dto.DTO;
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,7 +12,7 @@ import java.util.*;
 @Service
 public class PersonService {
 
-    PersonsDTO personsDTO = new PersonsDTO();
+    DTO dTOPersons = new DTO(Datatype.PERSO);
     private ArrayList<Person> persons;
 
     public PersonService() {
@@ -24,18 +25,17 @@ public class PersonService {
 
     private void loadPersons() {
         persons = new ArrayList<>();
-        ArrayList<Map<String, String>> personsList = personsDTO.getPersons();
-        ArrayList<Map<String, String>> medList = (ArrayList) personsDTO.getData().get("medicalrecords");
+        ArrayList<Map> personsList = dTOPersons.getDataTypeContent();
         for (int i = 0; i < personsList.size(); i++) {
             Person person = new Person();
             person.setId(i);
-            person.setFirstName(personsList.get(i).get("firstName"));
-            person.setLastName(personsList.get(i).get("lastName"));
-            person.setAddress(personsList.get(i).get("address"));
-            person.setCity(personsList.get(i).get("city"));
-            person.setZip(personsList.get(i).get("zip"));
-            person.setPhone(personsList.get(i).get("phone"));
-            person.setEmail(personsList.get(i).get("email"));
+            person.setFirstName(personsList.get(i).get("firstName").toString());
+            person.setLastName(personsList.get(i).get("lastName").toString());
+            person.setAddress(personsList.get(i).get("address").toString());
+            person.setCity(personsList.get(i).get("city").toString());
+            person.setZip(personsList.get(i).get("zip").toString());
+            person.setPhone(personsList.get(i).get("phone").toString());
+            person.setEmail(personsList.get(i).get("email").toString());
             persons.add(person);
         }
     }
@@ -57,7 +57,7 @@ public class PersonService {
         if (verifyNoNullData(person)) {
             ObjectMapper oMapper = new ObjectMapper();
             Map<String, Object> personToAdd = oMapper.convertValue(person, Map.class);
-            personsDTO.addPersonsData(personToAdd);
+            dTOPersons.addData(personToAdd);
         } else {
             throw new RuntimeException("Please write all required infos about the person");
         }
@@ -69,21 +69,19 @@ public class PersonService {
             Map<String, Object> personToEdit = oMapper.convertValue(person, Map.class);
             Integer id = (Integer) personToEdit.get("id");
             personToEdit.remove("id");
-            personsDTO.setPersonsData(id, personToEdit);
+            dTOPersons.setData(id, personToEdit);
         } else {
             throw new RuntimeException("Please write all required infos about the person");
         }
     }
 
-    public void removePersonData(String firstName, String lastName) {
-        Person person = persons.get(personsDTO.getIdByName(firstName,lastName));
-        personsDTO.removePersonData(person.getId());
+    public void removePersonData(String firstNameLastName) {
+        int id =dTOPersons.getIdByName(firstNameLastName);
+        dTOPersons.removeData(id);
     }
 
-    public Person getPersonByName(String firstName, String lastName) {
-        Integer id=personsDTO.getIdByName(firstName, lastName);
+    public Person getPersonByName(String firstNameLastName) {
+        Integer id=dTOPersons.getIdByName(firstNameLastName);
         return persons.get(id);
     }
-
-
 }
