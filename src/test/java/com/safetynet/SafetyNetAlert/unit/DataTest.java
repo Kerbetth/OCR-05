@@ -1,6 +1,7 @@
 package com.safetynet.SafetyNetAlert.unit;
 
 import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
+import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -165,7 +166,7 @@ public class DataTest {
         return med;
     }
 
-    public Map<String, String> getPersonData(Integer id){
+    public Map<String, String> getPersonData(Integer id) {
         Map<String, String> person = new HashMap<>();
         person.put(DataEntry.FNAME.getString(), (String) personsFirstNameList.get(id));
         person.put(DataEntry.LNAME.getString(), (String) personsLastNameList.get(id));
@@ -174,30 +175,31 @@ public class DataTest {
         person.put(DataEntry.ZIP.getString(), (String) personsZipList.get(id));
         person.put(DataEntry.PHONE.getString(), (String) personsPhoneList.get(id));
         person.put(DataEntry.EMAIL.getString(), (String) personsEmailList.get(id));
-        return  person;
+        return person;
     }
 
-    public Map<String, String> getMedrecData(Integer id){
+    public Map<String, String> getMedrecData(Integer id) {
         Map<String, String> person = new HashMap<>();
         person.put(DataEntry.FNAME.getString(), (String) personsFirstNameList.get(id));
         person.put(DataEntry.LNAME.getString(), (String) personsLastNameList.get(id));
         person.put(DataEntry.BIRTHDATE.getString(), (String) medBirthdateList.get(id));
         person.put(DataEntry.MEDIC.getString(), (String) medMedicationsList.get(id).toString());
         person.put(DataEntry.ALLERGI.getString(), (String) medAllergiesList.get(id).toString());
-        return  person;
+        return person;
     }
 
-    public Map<String, String> getFirestationData(Integer id){
+    public Map<String, String> getFirestationData(Integer id) {
         Map<String, String> person = new HashMap<>();
         person.put(DataEntry.STATION.getString(), (String) firestationStationNumbers.get(id));
         person.put(DataEntry.ADDRESS.getString(), (String) personsAddressList.get(id));
-        return  person;
+        return person;
     }
 
-    public ArrayList<Map> getAllPersonsData(){
+    public ArrayList<Map> get4PersonsData() {
         ArrayList<Map> persons = new ArrayList<>();
-        for (int i=0; i<4;i++){
+        for (int i = 0; i < 4; i++) {
             Map<String, String> person = new HashMap<>();
+
             person.put(DataEntry.FNAME.getString(), (String) personsFirstNameList.get(i));
             person.put(DataEntry.LNAME.getString(), (String) personsLastNameList.get(i));
             person.put(DataEntry.ADDRESS.getString(), (String) personsAddressList.get(i));
@@ -207,12 +209,12 @@ public class DataTest {
             person.put(DataEntry.EMAIL.getString(), (String) personsEmailList.get(i));
             persons.add(person);
         }
-        return  persons;
+        return persons;
     }
 
-    public ArrayList<Map> getAllMedrecData(){
+    public ArrayList<Map> get4MedrecData() {
         ArrayList<Map> persons = new ArrayList<>();
-        for (int i=0; i<4;i++){
+        for (int i = 0; i < 4; i++) {
             Map<String, String> medrec = new HashMap<>();
             medrec.put(DataEntry.FNAME.getString(), (String) personsFirstNameList.get(i));
             medrec.put(DataEntry.LNAME.getString(), (String) personsLastNameList.get(i));
@@ -221,6 +223,26 @@ public class DataTest {
             //medrec.put(DataEntry.ALLERGI.getString(), (String) medAllergiesList.get(i));
             persons.add(medrec);
         }
-        return  persons;
+        return persons;
     }
+
+    public Map getAllData() {
+        Map all = new HashMap();
+        all.put(Datatype.PERSO.getString(), get4PersonsData());
+        all.put(Datatype.MEDREC.getString(), get4MedrecData());
+        return all;
+    }
+
+    public Map getNewPersonData() {
+        Map person = new HashMap();
+        person.put(DataEntry.FNAME.getString(), "newName");
+        person.put(DataEntry.LNAME.getString(), "newLastName");
+        person.put(DataEntry.ADDRESS.getString(), "newAddress");
+        person.put(DataEntry.CITY.getString(), "newCity");
+        person.put(DataEntry.ZIP.getString(), "newZip");
+        person.put(DataEntry.PHONE.getString(), "new-phone-000");
+        person.put(DataEntry.EMAIL.getString(), "new@mail");
+        return person;
+    }
+
 }

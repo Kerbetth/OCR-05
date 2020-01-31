@@ -3,22 +3,24 @@ package com.safetynet.SafetyNetAlert.services.dto;
 import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
 import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import com.safetynet.SafetyNetAlert.services.dao.JSONDAO;
-import org.json.simple.JSONObject;
 
 import java.util.*;
 
 public class DTO {
 
-    public JSONObject allData;
+    public Map allData;
     public ArrayList<Map> dataTypeContent;
-    Datatype dataType;
+    private Datatype dataType;
+    public JSONDAO jsondao;
 
 //**************************//
         //Constructor//
 //**************************//
     public DTO(Datatype dataType) {
-        this.allData = JSONDAO.getJsonData();
-        this.dataTypeContent = (ArrayList) JSONDAO.getJsonData().get(dataType.getString());
+        this.dataType = dataType;
+        this.jsondao = new JSONDAO();
+        this.allData = jsondao.getJsonData();
+        this.dataTypeContent = (ArrayList) jsondao.getJsonData().get(dataType.getString());
     }
 
     public ArrayList<Map> getDataTypeContent(){
@@ -95,20 +97,40 @@ public class DTO {
             case FSTATION:
                 dataTypeContent.add(inputData);
                 allData.put(dataType.getString(), dataTypeContent);
+                break;
         }
-        JSONDAO.jsonWriter(allData.toString());
+        jsondao.jsonWriter(allData);
     }
 
     public void setData(Integer id, Map dataToSet) {
         dataTypeContent.set(id, dataToSet);
         allData.put(dataType.getString(), dataTypeContent);
-        JSONDAO.jsonWriter(allData.toString());
+        jsondao.jsonWriter(allData);
     }
 
     public void removeData(Integer id) {
-        dataTypeContent.remove(dataTypeContent.get(id));
-        allData.put(dataType.getString(), dataTypeContent);
-        JSONDAO.jsonWriter(allData.toString());
+        switch (dataType) {
+            case PERSO:
+                ArrayList medrecDataOfSamePerson = (ArrayList) allData.get(Datatype.MEDREC.getString());
+                dataTypeContent.remove(dataTypeContent.get(id));
+                allData.put(dataType.getString(), dataTypeContent);
+                medrecDataOfSamePerson.remove(medrecDataOfSamePerson.get(id));
+                allData.put(Datatype.MEDREC.getString(), medrecDataOfSamePerson);
+                jsondao.jsonWriter(allData);
+                break;
+            case MEDREC:
+                ArrayList personDataOfSamePerson = (ArrayList) allData.get(Datatype.PERSO.getString());
+                dataTypeContent.remove(dataTypeContent.get(id));
+                allData.put(dataType.getString(), dataTypeContent);
+                personDataOfSamePerson.remove(personDataOfSamePerson.get(id));
+                allData.put(Datatype.PERSO.getString(), personDataOfSamePerson);
+                jsondao.jsonWriter(allData);
+                break;
+            case FSTATION:
+                dataTypeContent.remove(dataTypeContent.get(id));
+                allData.put(dataType.getString(), dataTypeContent);
+                break;
+        }
     }
 
     public Set<String> getStationAddresses(String stationNumbers) {

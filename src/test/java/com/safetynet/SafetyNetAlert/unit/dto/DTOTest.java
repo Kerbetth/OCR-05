@@ -1,33 +1,37 @@
 package com.safetynet.SafetyNetAlert.unit.dto;
 
+import com.safetynet.SafetyNetAlert.services.dao.JSONDAO;
 import com.safetynet.SafetyNetAlert.services.dto.DTO;
 import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
 import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import com.safetynet.SafetyNetAlert.unit.DataTest;
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import java.util.ArrayList;
+import java.util.Map;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DTOTest {
 
-    private DataTest dataTest = new DataTest();;
+    private DataTest dataTest = new DataTest();
+    ;
 
-    DTO dto= new DTO(Datatype.PERSO);;
+    DTO dto = new DTO(Datatype.PERSO);
 
+    @Mock
+    JSONDAO jsondaoMock;
 
 
     @Test
-    public void returnCorrectDataWithGetData() throws ParseException {
-        dto.dataTypeContent = dataTest.getAllPersonsData();;
+    public void returnCorrectDataWithGetData() {
+        //ARRANGE
+        dto.dataTypeContent = dataTest.get4PersonsData();
 
         //ACT
         ArrayList firstname = dto.getData(DataEntry.FNAME);
@@ -39,7 +43,7 @@ public class DTOTest {
         ArrayList email = dto.getData(DataEntry.EMAIL);
 
         //ASSERT
-        for(int i = 0; i<firstname.size();i++){
+        for (int i = 0; i < firstname.size(); i++) {
             assertEquals(dataTest.getPersonsFirstNameList().get(i), firstname.get(i));
             assertEquals(dataTest.getPersonsLastNameList().get(i), lastname.get(i));
             assertEquals(dataTest.getPersonsAddressList().get(i), address.get(i));
@@ -54,18 +58,121 @@ public class DTOTest {
     }
 
     @Test
-    public void returnCorrectAge() throws ParseException {
-        dto.dataTypeContent = dataTest.getAllMedrecData();;
+    public void returnCorrectAge(){
+        //ARRANGE
+        dto.dataTypeContent = dataTest.get4MedrecData();
 
         //ACT
         ArrayList ages = dto.getData(DataEntry.AGE);
 
         //ASSERT
-        for(int i = 0; i<ages.size();i++){
+        for (int i = 0; i < ages.size(); i++) {
             assertEquals(2, ages.get(i).toString().length());
         }
-
     }
 
+    @Test
+    public void returnCorrectDataAfterAddData(){
+        //ARRANGE
+        dto.dataTypeContent = dataTest.get4PersonsData();
+        dto.jsondao = jsondaoMock;
+        ArgumentCaptor<Map> allDataCapture = ArgumentCaptor.forClass(Map.class);
+        dto.allData = dataTest.getAllData();
+        Map newPerson = dataTest.getNewPersonData();
+
+        //ACT
+        dto.addData(newPerson);
+
+        //ASSERT
+        verify(jsondaoMock).jsonWriter(allDataCapture.capture());
+        Map<String,ArrayList<Map<String,String>>> finalData = (Map<String,ArrayList<Map<String,String>>>) allDataCapture.getValue();
+        Map<String, String> personResult = finalData.get(Datatype.PERSO.getString()).get(4);
+        assertEquals(newPerson.get(DataEntry.FNAME.getString()), personResult.get(DataEntry.FNAME.getString()));
+        assertEquals(newPerson.get(DataEntry.LNAME.getString()), personResult.get(DataEntry.LNAME.getString()));
+        assertEquals(newPerson.get(DataEntry.ADDRESS.getString()), personResult.get(DataEntry.ADDRESS.getString()));
+        assertEquals(newPerson.get(DataEntry.CITY.getString()), personResult.get(DataEntry.CITY.getString()));
+        assertEquals(newPerson.get(DataEntry.ZIP.getString()), personResult.get(DataEntry.ZIP.getString()));
+        assertEquals(newPerson.get(DataEntry.PHONE.getString()), personResult.get(DataEntry.PHONE.getString()));
+        assertEquals(newPerson.get(DataEntry.EMAIL.getString()), personResult.get(DataEntry.EMAIL.getString()));
+    }
+
+    @Test
+    public void returnCorrectDataAfterSetData() {
+        //ARRANGE
+        dto.dataTypeContent = dataTest.get4PersonsData();
+        dto.jsondao = jsondaoMock;
+        ArgumentCaptor<Map> allDataCapture = ArgumentCaptor.forClass(Map.class);
+        dto.allData = dataTest.getAllData();
+        Map newPerson = dataTest.getNewPersonData();
+        newPerson.remove(DataEntry.FNAME.getString());
+        newPerson.remove(DataEntry.LNAME.getString());
+        //ACT
+        dto.setData(1, newPerson);
+
+        //ASSERT
+        verify(jsondaoMock).jsonWriter(allDataCapture.capture());
+        Map<String,ArrayList<Map<String,String>>> finalData = (Map<String,ArrayList<Map<String,String>>>) allDataCapture.getValue();
+        Map<String, String> personResult = finalData.get(Datatype.PERSO.getString()).get(1);
+        assertEquals(newPerson.get(DataEntry.ADDRESS.getString()), personResult.get(DataEntry.ADDRESS.getString()));
+        assertEquals(newPerson.get(DataEntry.CITY.getString()), personResult.get(DataEntry.CITY.getString()));
+        assertEquals(newPerson.get(DataEntry.ZIP.getString()), personResult.get(DataEntry.ZIP.getString()));
+        assertEquals(newPerson.get(DataEntry.PHONE.getString()), personResult.get(DataEntry.PHONE.getString()));
+        assertEquals(newPerson.get(DataEntry.EMAIL.getString()), personResult.get(DataEntry.EMAIL.getString()));
+    }
+
+    @Test
+    public void returnCorrectEntryNumberAfterDeletePersonsEntry() {
+        //ARRANGE
+        dto.dataTypeContent = dataTest.get4PersonsData();
+        dto.jsondao = jsondaoMock;
+        dto.allData = dataTest.getAllData();
+        ArgumentCaptor<Map> allDataCapture = ArgumentCaptor.forClass(Map.class);
+
+        //ACT
+        dto.removeData(1);
+
+        //ASSERT
+        verify(jsondaoMock).jsonWriter(allDataCapture.capture());
+        Map<String,ArrayList> finalData = (Map<String,ArrayList>) allDataCapture.getValue();
+        assertEquals(3, finalData.get(Datatype.PERSO.getString()).size());
+        assertEquals(3, finalData.get(Datatype.MEDREC.getString()).size());
+    }
+
+    @Test
+    public void returnCorrectEntryNumberAfterDeleteMedicalRecordsEntry() {
+        //ARRANGE
+        dto = new DTO(Datatype.MEDREC);
+        dto.dataTypeContent = dataTest.get4MedrecData();
+        dto.jsondao = jsondaoMock;
+        dto.allData = dataTest.getAllData();
+        ArgumentCaptor<Map> allDataCapture = ArgumentCaptor.forClass(Map.class);
+
+        //ACT
+        dto.removeData(1);
+
+        //ASSERT
+        verify(jsondaoMock).jsonWriter(allDataCapture.capture());
+        Map<String,ArrayList> finalData = (Map<String,ArrayList>) allDataCapture.getValue();
+        assertEquals(3, finalData.get(Datatype.PERSO.getString()).size());
+        assertEquals(3, finalData.get(Datatype.MEDREC.getString()).size());
+    }
+
+    @Test
+    public void returnCorrectStationAddressAccordingToTheID() {
+        //ARRANGE
+        dto.dataTypeContent = dataTest.get4PersonsData();
+        dto.jsondao = jsondaoMock;
+        dto.allData = dataTest.getAllData();
+        ArgumentCaptor<Map> allDataCapture = ArgumentCaptor.forClass(Map.class);
+
+        //ACT
+        dto.removeData(1);
+
+        //ASSERT
+        verify(jsondaoMock).jsonWriter(allDataCapture.capture());
+        Map<String,ArrayList> finalData = (Map<String,ArrayList>) allDataCapture.getValue();
+        assertEquals(3, finalData.get(Datatype.PERSO.getString()).size());
+        assertEquals(3, finalData.get(Datatype.MEDREC.getString()).size());
+    }
 
 }
