@@ -20,8 +20,8 @@ public class GetCommunityEmailURLService implements GetURLService {
 
     @Override
     public String getRequest() {
-        ArrayList<String> personsCityList = dTOPersons.getData(DataEntry.CITY);
-        ArrayList<String> personsEmailList = dTOPersons.getData(DataEntry.EMAIL);
+        ArrayList<Object> personsCityList = dTOPersons.getData(DataEntry.CITY);
+        ArrayList<Object> personsEmailList = dTOPersons.getData(DataEntry.EMAIL);
         Set<String> emailList = new HashSet<>();
         for (int i = 0; i < personsCityList.size(); i++)  {
             if (personsCityList.get(i).equals(city) || city == null) {

@@ -10,43 +10,46 @@ import java.util.Set;
 
 public class GetFloodStationsURLService implements GetURLService {
 
-    public DTO dTOPersons = new DTO(Datatype.PERSO);
+    public DTO dTOPersons;
     public DTO dTOFirestation = new DTO(Datatype.FSTATION);
-    public DTO dTOMedrec = new DTO(Datatype.MEDREC);
+    public DTO dTOMedrec;
     private String stationNumbers;
 
-    public GetFloodStationsURLService(String stationNumbers) {
+    public GetFloodStationsURLService(String stationNumbers, DTO dTOPersons, DTO dTOMedrec, DTO dTOFirestation) {
+        this.dTOPersons = dTOPersons;
+        this.dTOFirestation = dTOFirestation;
+        this.dTOMedrec = dTOMedrec;
         this.stationNumbers = stationNumbers;
     }
 
     @Override
     public String getRequest() {
         Set<String> houseHoldAddresses = dTOFirestation.getStationAddresses(stationNumbers);
-        ArrayList<String> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
-        ArrayList<String> personsFirstNameList = dTOMedrec.getData(DataEntry.FNAME);
-        ArrayList<String> personsLastNameList = dTOMedrec.getData(DataEntry.LNAME);
-        ArrayList<String> personsPhoneList = dTOPersons.getData(DataEntry.PHONE);
-        ArrayList<String> personsMedicationsList = dTOMedrec.getData(DataEntry.MEDIC);
-        ArrayList<String> personsAllergiesList = dTOMedrec.getData(DataEntry.ALLERGI);
-        ArrayList<String> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
+        ArrayList personsFirstNameList = dTOPersons.getData(DataEntry.FNAME);
+        ArrayList personsLastNameList = dTOPersons.getData(DataEntry.LNAME);
+        ArrayList personsAgeList = dTOMedrec.getData(DataEntry.AGE);
+        ArrayList personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
+        ArrayList personsPhoneList = dTOPersons.getData(DataEntry.PHONE);
+        ArrayList personsMedicationsList = dTOMedrec.getData(DataEntry.MEDIC);
+        ArrayList personsAllergiesList = dTOMedrec.getData(DataEntry.ALLERGI);
         String floodStations;
         if (stationNumbers == null) floodStations = "{\"allStations\":{";
-        else floodStations = "{\"station " + stationNumbers +"\":{";
+        else floodStations = "{\"" + DataEntry.STATION.getString() + " " + stationNumbers + "\":{";
         for (String houseHoldAddress : houseHoldAddresses) {
             ArrayList<String> personsbyHoushold = new ArrayList<>();
             for (int i = 0; i < personsFirstNameList.size(); i++) {
                 if (personsAddressList.get(i).equals(houseHoldAddress)) {
-                    String person = "\n{\"firstName\":\""
+                    String person = "\n{\"" + DataEntry.FNAME.getString() + "\":\""
                             + personsFirstNameList.get(i)
-                            + "\", \"lastName\":\""
+                            + "\", \"" + DataEntry.LNAME.getString() + "\":\""
                             + personsLastNameList.get(i)
-                            + "\", \"phone\":\""
+                            + "\", \"" + DataEntry.PHONE.getString() + "\":\""
                             + personsPhoneList.get(i)
-                            + "\", \"age\":\""
+                            + "\", \"" + DataEntry.AGE.getString() + "\":\""
                             + personsAgeList.get(i)
-                            + "\", \"medications\":"
+                            + "\", \"" + DataEntry.MEDIC.getString() + "\":"
                             + personsMedicationsList.get(i)
-                            + ", \"allergies\":"
+                            + ", \"" + DataEntry.ALLERGI.getString() + "\":"
                             + personsAllergiesList.get(i)
                             + "}";
                     personsbyHoushold.add(person);
@@ -58,7 +61,7 @@ public class GetFloodStationsURLService implements GetURLService {
                     + personsbyHoushold
                     + ",";
         }
-        floodStations = (floodStations.substring(0, floodStations.length()-1)) + "}}";
+        floodStations = (floodStations.substring(0, floodStations.length() - 1)) + "}}";
         return floodStations;
     }
 }

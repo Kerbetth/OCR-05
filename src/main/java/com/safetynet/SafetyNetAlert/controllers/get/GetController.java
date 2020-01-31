@@ -43,7 +43,7 @@ public class GetController
     @RequestMapping(method = { RequestMethod.GET }, value = { "/fire" }, produces = { "application/json" })
     @ResponseBody
     public String getFire(@RequestParam(required = false) String address) {
-        setJsonOutput = new GetFireURLService(address);
+        setJsonOutput = new GetFireURLService(address, new DTO(Datatype.PERSO),new DTO(Datatype.MEDREC));
         String output = setJsonOutput.getRequest();
         return output;
     }
@@ -51,7 +51,7 @@ public class GetController
     @RequestMapping(method = { RequestMethod.GET }, value = { "/flood/stations" }, produces = { "application/json" })
     @ResponseBody
     public String getFloodStations(@RequestParam(required = false) String stations) {
-        setJsonOutput = new GetFloodStationsURLService(stations);
+        setJsonOutput = new GetFloodStationsURLService(stations, new DTO(Datatype.PERSO), new DTO(Datatype.MEDREC), new DTO(Datatype.FSTATION));
         String output = setJsonOutput.getRequest();
         return output;
     }
@@ -59,7 +59,7 @@ public class GetController
     @RequestMapping(method = { RequestMethod.GET }, value = { "/personInfo" }, produces = { "application/json" })
     @ResponseBody
     public String getPersonInfo(@RequestParam(required = false) Map<String,String> name) {
-        setJsonOutput = new GetPersonInfoURLService(name);
+        setJsonOutput = new GetPersonInfoURLService(name, new DTO(Datatype.PERSO), new DTO(Datatype.MEDREC));
         String output = setJsonOutput.getRequest();
         return output;
     }

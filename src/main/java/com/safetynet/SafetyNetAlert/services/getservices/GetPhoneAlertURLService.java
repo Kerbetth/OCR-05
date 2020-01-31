@@ -21,8 +21,8 @@ public class GetPhoneAlertURLService implements GetURLService {
     @Override
     public String getRequest() {
         String stationAddress = dTOPersons.getFirestationAddress(firestation);
-        ArrayList<String> personsPhoneList = dTOPersons.getData(DataEntry.PHONE);
-        ArrayList<String> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
+        ArrayList<Object> personsPhoneList = dTOPersons.getData(DataEntry.PHONE);
+        ArrayList<Object> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
         Set<String> phoneNumbersList = new HashSet<>();
         for (int i = 0; i < personsPhoneList.size(); i++)  {
             if (personsAddressList.get(i).equals(stationAddress) || stationAddress == null) {

@@ -5,7 +5,6 @@ package com.safetynet.SafetyNetAlert.services.firestationservices;
 
 import com.safetynet.SafetyNetAlert.services.APIServices;
 import com.safetynet.SafetyNetAlert.services.dto.DTO;
-import com.safetynet.SafetyNetAlert.services.dto.DTOFactory;
 import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
 import com.safetynet.SafetyNetAlert.services.enumerations.Datatype;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import java.util.Map;
 @Service
 public class FirestationAPIService implements APIServices {
 
-    DTO dTOFirestation = new DTO(Datatype.FSTATION);
+    public DTO dTOFirestation = new DTO(Datatype.FSTATION);
 
     public String postMethod(Map<String, String> firestationData) {
         Map<String, String> firestation = new HashMap<>();
@@ -32,7 +31,7 @@ public class FirestationAPIService implements APIServices {
 
     public void putMethod(String address, Map<String,String> stationNumber) {
         Integer id = dTOFirestation.getIdByAddress(address);
-        Map<String, String> firestation = (Map) dTOFirestation.getDataTypeContent().get(id);
+        Map<String, String> firestation = (Map) dTOFirestation.getDataTypeContentwithID(id);
         firestation.put(DataEntry.STATION.getString(),stationNumber.get(DataEntry.STATION.getString()) );
         dTOFirestation.setData(id, firestation);
     }

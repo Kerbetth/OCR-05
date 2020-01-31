@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 public class MedicalRecordAPIService implements APIServices {
 
-    DTO dTOMedicalRecords = new DTO(Datatype.MEDREC);
+    public DTO dTOMedrec = new DTO(Datatype.MEDREC);
 
 
     public String postMethod(Map<String, String> medrecData) {
@@ -30,13 +30,13 @@ public class MedicalRecordAPIService implements APIServices {
         }
         medicalRecord.put(DataEntry.MEDIC.getString(), medrecData.get(DataEntry.MEDIC.getString()));
         medicalRecord.put(DataEntry.ALLERGI.getString(), medrecData.get(DataEntry.ALLERGI.getString()));
-        dTOMedicalRecords.addData(medicalRecord);
+        dTOMedrec.addData(medicalRecord);
         return "Ok";
     }
 
     public void putMethod(String firstNameLastName, Map<String, String> map) {
-        Integer id = dTOMedicalRecords.getIdByName(firstNameLastName);
-        Map<String, String> medicalRecord = (Map) dTOMedicalRecords.getDataTypeContent().get(id);
+        Integer id = dTOMedrec.getIdByName(firstNameLastName);
+        Map<String, String> medicalRecord = (Map) dTOMedrec.getDataTypeContentwithID(id);
         for (Map.Entry<String, String> value : map.entrySet()) {
             switch (value.getKey()) {
                 case "birthdate":
@@ -50,12 +50,12 @@ public class MedicalRecordAPIService implements APIServices {
                     break;
             }
         }
-        dTOMedicalRecords.setData(id, medicalRecord);
+        dTOMedrec.setData(id, medicalRecord);
     }
 
     public void deleteMethod(String firstNameLastName) {
-        Integer id = dTOMedicalRecords.getIdByName(firstNameLastName);
-        dTOMedicalRecords.removeData(id);
+        Integer id = dTOMedrec.getIdByName(firstNameLastName);
+        dTOMedrec.removeData(id);
     }
 
 }

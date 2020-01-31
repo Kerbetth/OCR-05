@@ -9,8 +9,8 @@ import java.util.*;
 
 public class DTO {
 
-    private JSONObject allData;
-    private ArrayList<Map> dataTypeContent;
+    public JSONObject allData;
+    public ArrayList<Map> dataTypeContent;
     Datatype dataType;
 
 //**************************//
@@ -25,12 +25,15 @@ public class DTO {
     return dataTypeContent;
     }
 
+    public Map getDataTypeContentwithID(Integer id){
+        return dataTypeContent.get(id);
+    }
 //**************************//
         //Methods//
 //**************************//
 
-    public ArrayList<String> getData(DataEntry entryType) {
-        ArrayList<String> dataList = new ArrayList<>();
+    public ArrayList<Object> getData(DataEntry entryType) {
+        ArrayList<Object> dataList = new ArrayList<>();
         for (Map<String, String> inputData : dataTypeContent) {
             switch (entryType) {
                 case FNAME:
@@ -40,7 +43,7 @@ public class DTO {
                     dataList.add(inputData.get(DataEntry.LNAME.getString()));
                     break;
                 case ADDRESS:
-                    dataList.add(inputData.get(DataEntry.LNAME.getString()));
+                    dataList.add(inputData.get(DataEntry.ADDRESS.getString()));
                     break;
                 case CITY:
                     dataList.add(inputData.get(DataEntry.CITY.getString()));
@@ -55,14 +58,13 @@ public class DTO {
                     dataList.add(inputData.get(DataEntry.EMAIL.getString()));
                     break;
                 case MEDIC:
-                    dataList.add(((Object) inputData.get(DataEntry.MEDIC.getString())).toString());
+                    dataList.add(inputData.get(DataEntry.MEDIC.getString()));
                     break;
                 case ALLERGI:
-                    dataList.add(((Object) inputData.get(DataEntry.ALLERGI.getString())).toString());
+                    dataList.add(inputData.get(DataEntry.ALLERGI.getString()));
                     break;
                 case AGE:
                     String birthdate = (inputData.get(DataEntry.BIRTHDATE.getString()));
-                    System.out.println(birthdate);
                     dataList.add(DTOFactory.getAge(birthdate));
                     break;
             }

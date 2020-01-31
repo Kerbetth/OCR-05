@@ -19,8 +19,8 @@ public enum DataEntry {
     ADULTS("adults"),
     COUNT("counting"),
     PHONEALERT("phone numbers"),
-    PERSOBYSTATION("persons by Station");
-
+    PERSOBYSTATION("persons by Station"),
+    UNKNOWAGE("unknow age");
 
 
     private String dataEntry;

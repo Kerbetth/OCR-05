@@ -1,9 +1,9 @@
-package com.safetynet.SafetyNetAlert.unit.Services;
+package com.safetynet.SafetyNetAlert.unit.Services.getServices;
 
 import com.safetynet.SafetyNetAlert.services.dto.DTO;
 import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
-import com.safetynet.SafetyNetAlert.services.getservices.*;
-import org.assertj.core.api.Assertions;
+import com.safetynet.SafetyNetAlert.services.getservices.GetPhoneAlertURLService;
+import com.safetynet.SafetyNetAlert.unit.DataTest;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GetPhoneAlertURLServicesTest {
+public class GetCommunityEmailURLServicesTest {
 
     private DataTest dataTest = new DataTest();
     JSONParser parser = new JSONParser();
@@ -36,15 +36,15 @@ public class GetPhoneAlertURLServicesTest {
 
 
     @Test
-    public void returnPhoneAlertMapContentWithCorrectData() throws ParseException {
+    public void returnCommunityEmailMapContentWithCorrectData() throws ParseException {
         //ARRANGE
         getURLService = new GetPhoneAlertURLService(1, dTOPersons);
         when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
         when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
         when(getURLService.dTOPersons.getFirestationAddress(1)).thenReturn("3333 broadway");
         ArrayList<String> phoneNumberlist = new ArrayList<>();
-        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(0));
-        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(2));
+        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(0).toString());
+        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(2).toString());
         //ACT
         String output= getURLService.getRequest();
         json = (Map) parser.parse(output);
@@ -55,7 +55,7 @@ public class GetPhoneAlertURLServicesTest {
     }
 
     @Test
-    public void returnAllPhoneAlertMapContentIfNoStationNumber() throws ParseException {
+    public void returnAllCommunityEmailMapContentIfNoStationNumber() throws ParseException {
         //ARRANGE
         getURLService = new GetPhoneAlertURLService(null, dTOPersons);
         when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
@@ -70,7 +70,7 @@ public class GetPhoneAlertURLServicesTest {
     }
 
     @Test
-    public void returnNoPhoneAlertMapContentIfNoStationNumberAffiliate() throws ParseException {
+    public void returnNoCommunityEmailMapContentIfNoStationNumberAffiliate() throws ParseException {
         //ARRANGE
         getURLService = new GetPhoneAlertURLService(5, dTOPersons);
         when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());

@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 public class MedicalRecordService {
 
-    DTO dTOMedicalRecords = new DTO(Datatype.MEDREC);
+    public DTO dTOMedrec = new DTO(Datatype.MEDREC);
     private ArrayList<MedicalRecord> medicalRecords;
 
     public MedicalRecordService() {
@@ -26,7 +26,7 @@ public class MedicalRecordService {
 
     private void loadMedicalRecords() {
         medicalRecords = new ArrayList<>();
-        ArrayList<Map> medicalRecordsList = dTOMedicalRecords.getDataTypeContent();
+        ArrayList<Map> medicalRecordsList = dTOMedrec.getDataTypeContent();
         for (int i = 0; i < medicalRecordsList.size(); i++) {
             MedicalRecord medicalRecord = new MedicalRecord();
             medicalRecord.setId(i);
@@ -45,7 +45,7 @@ public class MedicalRecordService {
             Map<String, Object> personToAdd = oMapper.convertValue(medicalRecord, Map.class);
             Integer id = -1;
             personToAdd.remove("id");
-            dTOMedicalRecords.addData(personToAdd);
+            dTOMedrec.addData(personToAdd);
         } else {
             throw new RuntimeException("Please write infos about the person");
         }
@@ -59,18 +59,18 @@ public class MedicalRecordService {
             Map<String, Object> medicalRecordToEdit = oMapper.convertValue(medicalRecord, Map.class);
             Integer id = (Integer) medicalRecordToEdit.get("id");
             medicalRecordToEdit.remove("id");
-            dTOMedicalRecords.setData(id, medicalRecordToEdit);
+            dTOMedrec.setData(id, medicalRecordToEdit);
         } else {
             throw new RuntimeException("Please write infos about the person");
         }
     }
 
     public MedicalRecord getMedicalRecordByName(String firstNameLastName) {
-        Integer id= dTOMedicalRecords.getIdByName(firstNameLastName);
+        Integer id= dTOMedrec.getIdByName(firstNameLastName);
         return medicalRecords.get(id);
     }
     public void removeMedicalRecordData(String firstNameLastName) {
-        int id = dTOMedicalRecords.getIdByName(firstNameLastName);
-        dTOMedicalRecords.removeData(id);
+        int id = dTOMedrec.getIdByName(firstNameLastName);
+        dTOMedrec.removeData(id);
     }
 }

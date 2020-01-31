@@ -22,14 +22,14 @@ public class GetChildAlertURLService implements GetURLService {
 
     @Override
     public String getRequest() {
-        ArrayList<String> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
-        ArrayList<String> personsFirstNameList = dTOMedrec.getData(DataEntry.FNAME);
-        ArrayList<String> personsLastNameList = dTOMedrec.getData(DataEntry.LNAME);
-        ArrayList<String> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
+        ArrayList<Object> personsAgeList = dTOMedrec.getData(DataEntry.AGE);
+        ArrayList<Object> personsFirstNameList = dTOMedrec.getData(DataEntry.FNAME);
+        ArrayList<Object> personsLastNameList = dTOMedrec.getData(DataEntry.LNAME);
+        ArrayList<Object> personsAddressList = dTOPersons.getData(DataEntry.ADDRESS);
         ArrayList<String> personsList = new ArrayList<>();
         for (int i = 0; i < personsFirstNameList.size(); i++) {
             if (!personsAgeList.get(i).equals(DataDefaultValue.UNKNOW.getString())) {
-                if (Integer.parseInt(personsAgeList.get(i)) < 18) {
+                if (Integer.parseInt((String)personsAgeList.get(i)) < 18) {
                     if (personsAddressList.get(i).equals(address) || address == null) {
                         ArrayList<String> householdMemberList = new ArrayList<>();
                         for (int j = 0; j < personsFirstNameList.size(); j++) {

@@ -14,7 +14,8 @@ import java.util.Map;
 @Service
 public class PersonAPIService implements APIServices {
 
-    DTO dTOPersons = new DTO(Datatype.PERSO);
+    public DTO dTOPersons = new DTO(Datatype.PERSO);
+
     private static final Logger logger = LogManager.getLogger("PersonAPIService");
 
     public String postMethod(Map<String, String> personData) {
@@ -33,15 +34,16 @@ public class PersonAPIService implements APIServices {
                 return "The " + value.getKey() + " value is not specify, operation aborted";
             }
         }
+
         dTOPersons.addData(person);
         return "Ok";
     }
 
     public void putMethod(String firstNameLastName, Map<String, String> map) {
         Integer id = dTOPersons.getIdByName(firstNameLastName);
-        Map<String, String> person = (Map) dTOPersons.getDataTypeContent().get(id);
+        Map<String, String> person = (Map) dTOPersons.getDataTypeContentwithID(id);
         for (Map.Entry<String, String> value : map.entrySet()) {
-            if (value.getValue() != "" || value.getValue() != null) {
+            if (value.getValue() != "" && value.getValue() != null) {
                 switch (value.getKey()) {
                     case "address":
                         person.put(DataEntry.ADDRESS.getString(), value.getValue());

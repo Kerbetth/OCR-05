@@ -1,8 +1,9 @@
-package com.safetynet.SafetyNetAlert.unit.Services;
+package com.safetynet.SafetyNetAlert.unit.Services.getServices;
 
 import com.safetynet.SafetyNetAlert.services.dto.DTO;
 import com.safetynet.SafetyNetAlert.services.enumerations.DataEntry;
 import com.safetynet.SafetyNetAlert.services.getservices.GetChildAlertURLService;
+import com.safetynet.SafetyNetAlert.unit.DataTest;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
@@ -67,7 +68,6 @@ public class GetChildAlertURLServicesTest {
         String output= getURLService.getRequest();
         json = (ArrayList) parser.parse(output);
         //ASSERT
-        System.out.println(output);
         assertEquals(0, json.size());
     }
 
@@ -83,7 +83,6 @@ public class GetChildAlertURLServicesTest {
         String output= getURLService.getRequest();
         json = (ArrayList) parser.parse(output);
         //ASSERT
-        System.out.println(output);
         assertEquals(2, json.size());
     }
 }
