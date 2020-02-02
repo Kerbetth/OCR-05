@@ -129,7 +129,7 @@ public class GetService {
 
     public List<PersonInfo> personInfo(String firstName, String lastName) {
         List<PersonInfo> result = new ArrayList<>();
-        List<Person> persons = dao.findPersonByName(firstName, lastName);
+        List<Person> persons = dao.findPersonsWithSameFirstNameOrLastName(firstName, lastName);
         for (Person person : persons) {
             PersonInfo info = new PersonInfo();
             info.setName(person.getLastName() + " " + person.getFirstName());

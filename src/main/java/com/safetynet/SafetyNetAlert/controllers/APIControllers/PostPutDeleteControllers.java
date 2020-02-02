@@ -24,15 +24,16 @@ public class PostPutDeleteControllers {
         return "redirect:/";
     }
 
-    @PutMapping(value = "/person/{firstNameLastName}")
-    public String setPersonPut(@PathVariable String firstNameLastName, @RequestParam Map<String,String> personData){
-        postPutDeleteService.putPerson(firstNameLastName, personData);
+    @PutMapping(value = "/person/{name}")
+    //"name" has to be declared in format "FirstnameLastname"
+    public String setPersonPut(@PathVariable String name, @RequestParam Map<String,String> personData){
+        postPutDeleteService.putPerson(name, personData);
         return "redirect:/";
     }
 
     @DeleteMapping(value = "/person")
-    public String removePersonDelete(@RequestParam String firstNameLastName) {
-        postPutDeleteService.deletePersonAndMedicalRecord(firstNameLastName);
+    public String removePersonDelete(@RequestParam String name) {
+        postPutDeleteService.deletePersonAndMedicalRecord(name);
         return "redirect:/";
     }
 
@@ -46,15 +47,16 @@ public class PostPutDeleteControllers {
         return "redirect:/";
     }
 
-    @PutMapping(value = "/medicalRecord/{firstNameLastName}")
-    public String setMedicalRecordPut(@PathVariable String firstNameLastName, @RequestParam Map<String,String> medicalRecordData){
-        postPutDeleteService.putMedicalRecord(firstNameLastName, medicalRecordData);
+    @PutMapping(value = "/medicalRecord/{name}")
+    //"name" has to be declared in format "FirstnameLastname"
+    public String setMedicalRecordPut(@PathVariable String name, @RequestParam Map<String,String> medicalRecordData){
+        postPutDeleteService.putMedicalRecord(name, medicalRecordData);
         return "redirect:/";
     }
 
     @DeleteMapping(value = "/medicalRecord")
-    public String removeMedicalRecordDelete(@RequestParam String firstNameLastName) {
-        postPutDeleteService.deletePersonAndMedicalRecord(firstNameLastName);
+    public String removeMedicalRecordDelete(@RequestParam String name) {
+        postPutDeleteService.deletePersonAndMedicalRecord(name);
         return "redirect:/";
     }
 

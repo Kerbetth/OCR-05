@@ -27,7 +27,7 @@ public class HTMLControllers {
 
         model.addAttribute("persons",dao.loadPersons());
         model.addAttribute("medicalrecords", dao.loadMedicalRecords());
-        model.addAttribute("firestations", dao.loadPersons());
+        model.addAttribute("firestations", dao.loadFirestions());
         return "Index";
     }
 
@@ -47,13 +47,13 @@ public class HTMLControllers {
 
     @RequestMapping("/persons/edit/{firstName}/{lastName}")
     public String editPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName , Model model){
-        model.addAttribute("personedit", dao.findPersonByName(firstName,lastName));
+        model.addAttribute("personedit", dao.findPersonByName(firstName+lastName));
         return "personedit";
     }
 
     @RequestMapping(value = "/person/setting")
-    public String updatingPerson(Integer id, Person person){
-        dao.setPerson(id,person);
+    public String updatingPerson(Person person){
+        dao.setPerson(person);
         return "redirect:/";
     }
 
@@ -65,7 +65,7 @@ public class HTMLControllers {
 
     @RequestMapping("/persons/info/{firstName}/{lastName}")
     public String getPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName, Model model){
-        model.addAttribute("person", dao.findPersonByName(firstName,lastName));
+        model.addAttribute("person", dao.findPersonByName(firstName+lastName));
         return "person";
     }
 
@@ -92,8 +92,8 @@ public class HTMLControllers {
     }
 
     @RequestMapping(value = "/medrec/setting")
-    public String updatingMedicalRecord(Integer id, Medicalrecord medicalRecord) {
-        dao.setMedicalrecord(id, medicalRecord);
+    public String updatingMedicalRecord(Medicalrecord medicalRecord) {
+        dao.setMedicalrecord(medicalRecord);
         return "redirect:/";
     }
 
@@ -130,8 +130,8 @@ public class HTMLControllers {
     }
 
     @RequestMapping(value = "/station/setting")
-    public String updatingfirestation(Integer id, Firestation firestation) {
-        dao.setFirestation(id, firestation);
+    public String updatingfirestation(Firestation firestation) {
+        dao.setFirestation(firestation);
         return "redirect:/";
     }
 

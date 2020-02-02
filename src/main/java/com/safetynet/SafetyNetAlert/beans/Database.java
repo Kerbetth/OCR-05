@@ -6,16 +6,16 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Database {
 
-    private List<Firestation> firestations;
-    private List<Medicalrecord> medicalrecords;
     private List<Person> persons;
+    private List<Medicalrecord> medicalrecords;
+    private List<Firestation> firestations;
 
-    public List<Firestation> getFirestations() {
-        return firestations;
+    public List<Person> getPersons() {
+        return persons;
     }
 
-    public void setFirestations(List<Firestation> firestations) {
-        this.firestations = firestations;
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 
     public List<Medicalrecord> getMedicalrecords() {
@@ -26,12 +26,12 @@ public class Database {
         this.medicalrecords = medicalrecords;
     }
 
-    public List<Person> getPersons() {
-        return persons;
+    public List<Firestation> getFirestations() {
+        return firestations;
     }
 
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
+    public void setFirestations(List<Firestation> firestations) {
+        this.firestations = firestations;
     }
 
 }

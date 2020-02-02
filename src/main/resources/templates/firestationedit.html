@@ -20,7 +20,6 @@
     <h2 th:inline="text">Edit Number of the firestation at [[${firestationedit.address}]]</h2>
     <div>
         <form class="form-horizontal" th:object="${firestationedit}" th:action="@{/station/setting}" method="post">
-            <input type="hidden" th:field="*{id}"/>
             <input type="hidden" th:field="*{address}"/>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Station:</label>

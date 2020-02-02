@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,10 +30,33 @@ public class Dao {
                 );
     }
 
-    public List<Person> findPersonByName(String fname, String lname) {
+    public void daoWriter(Database database){
+        ObjectMapper Obj = new ObjectMapper();
+        String jsonStr = "";
+        try {
+            jsonStr = Obj.writeValueAsString(database);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileWriter file = new FileWriter("src/main/resources/data.json")) {
+            file.write(jsonStr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Person findPersonByName(String fnamelname) {
         return database.getPersons()
                 .stream()
-                .filter(person -> Objects.equals(fname, person.getFirstName()) || Objects.equals(lname, person.getLastName()))
+                .filter(person -> Objects.equals(fnamelname, person.getFirstName()+person.getLastName()))
+                .findFirst().get();
+    }
+
+    public List<Person> findPersonsWithSameFirstNameOrLastName(String firstName, String lastName) {
+        return database.getPersons()
+                .stream()
+                .filter(person -> Objects.equals(firstName, person.getFirstName()) || Objects.equals(lastName, person.getLastName()))
                 .collect(Collectors.toList());
     }
 
@@ -61,8 +85,12 @@ public class Dao {
         return database.getMedicalrecords().get(id);
     }
 
-    public Person findPersonByID(Integer id) {
-        return database.getPersons().get(id);
+
+    public Firestation findFirestationByAddress(String address) {
+        return database.getFirestations()
+                .stream()
+                .filter(firestation -> Objects.equals(address, firestation.getAddress()))
+                .findFirst().get();
     }
 
     public Set<Firestation> getStationAddresses(String stationNumbers) {
@@ -93,6 +121,7 @@ public class Dao {
         } else {
             logger.error("Fatal Error, the number of persons and of medicalRecords are not the same, please check the JSON file");
         }
+        daoWriter(database);
     }
 
     public void addPerson(Person person) {
@@ -106,49 +135,43 @@ public class Dao {
         } else {
             logger.error("Fatal Error, the number of persons and medicalRecords are not the same, please check the JSON file");
         }
+        daoWriter(database);
     }
 
     public void addFirestation(Firestation firestation) {
-            database.getFirestations().add(firestation);
+        database.getFirestations().add(firestation);
+        daoWriter(database);
     }
 
-    public void setMedicalrecord(Integer id, Medicalrecord medicalrecord) {
-        database.getMedicalrecords().set(id, medicalrecord);
+    public void setMedicalrecord(Medicalrecord medicalrecord) {
+        database.getMedicalrecords().set(getIdByName(medicalrecord.getFirstName()+medicalrecord.getLastName()), medicalrecord);
+        daoWriter(database);
     }
 
-    public void setPerson(Integer id, Person person) {
-        database.getPersons().set(id, person);
+    public void setPerson(Person person) {
+        database.getPersons().set(getIdByName(person.getFirstName()+person.getLastName()), person);
+        daoWriter(database);
     }
 
-    public void setFirestation(Integer id, Firestation firestation) {
-        database.getFirestations().set(id, firestation);
-    }
-
-    public Integer getIdByName(String firstNameLastName) {
-        Integer id = 0;
-        List<Person> persons = database.getPersons();
-        for (Person person : persons) {
-            if ((person.getFirstName()+person.getLastName()).equals(firstNameLastName)){
-                break;
-            } else id++;
-        }
-        return id;
+    public void setFirestation(Firestation firestation) {
+        database.getFirestations().set(getIdByAddress(firestation.getAddress()), firestation);
+        daoWriter(database);
     }
 
     public void deleteMedicalRecordAndPersonEntry(Integer id){
-        database.getMedicalrecords().remove(id);
-        database.getPersons().remove(id);
+        database.getMedicalrecords().remove(database.getMedicalrecords().get(id));
+        database.getPersons().remove(database.getPersons().get(id));
         if (database.getPersons().size() != database.getMedicalrecords().size()) {
             logger.error("Fatal Error, the number of persons and medicalRecords are not the same, please check the JSON file");
         }
+        daoWriter(database);
     }
 
-    public Firestation findFirestationByAddress(String address) {
-        return database.getFirestations()
-                .stream()
-                .filter(firestation -> Objects.equals(address, firestation.getAddress()))
-                .findFirst().get();
+    public void deleteFirestation(Integer id) {
+        database.getFirestations().remove(database.getFirestations().get(id));
+        daoWriter(database);
     }
+
 
     public Integer getIdByAddress(String address) {
         Integer id = 0;
@@ -161,8 +184,15 @@ public class Dao {
         return id;
     }
 
-    public void deleteFirestation(Integer id) {
-        database.getFirestations().remove(id);
+    public Integer getIdByName(String firstNameLastName) {
+        Integer id = 0;
+        List<Person> persons = database.getPersons();
+        for (Person person : persons) {
+            if ((person.getFirstName()+person.getLastName()).equals(firstNameLastName)){
+                break;
+            } else id++;
+        }
+        return id;
     }
 
 
@@ -179,5 +209,6 @@ public class Dao {
     public List<Firestation> loadFirestions() {
         return database.getFirestations();
     }
+
 
 }
