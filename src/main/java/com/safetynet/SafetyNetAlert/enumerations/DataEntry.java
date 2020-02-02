@@ -1,4 +1,4 @@
-package com.safetynet.SafetyNetAlert.services.enumerations;
+package com.safetynet.SafetyNetAlert.enumerations;
 
 public enum DataEntry {
 
@@ -11,16 +11,7 @@ public enum DataEntry {
     EMAIL("email"),
     MEDIC("medications"),
     ALLERGI("allergies"),
-    BIRTHDATE("birthdate"),
-    AGE("age"),
-    STATION("station"),
-    HOUSEMEMBERS("household members"),
-    CHILDREN("children"),
-    ADULTS("adults"),
-    COUNT("counting"),
-    PHONEALERT("phone numbers"),
-    PERSOBYSTATION("persons by Station"),
-    UNKNOWAGE("unknow age");
+    BIRTHDATE("birthdate");
 
 
     private String dataEntry;
