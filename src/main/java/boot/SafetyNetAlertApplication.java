@@ -6,7 +6,7 @@ import org.slf4j.*;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("com.safetynet.SafetyNetAlert")
+@ComponentScan("com.safetynet.safetynetalert")
 public class SafetyNetAlertApplication
 {
     private static final Logger log;
