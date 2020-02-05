@@ -83,10 +83,10 @@ public class Dao {
     }
 
     public Firestation findFirestationByAddress(String address) {
-        return database.getFirestations()
-                .stream()
-                .filter(firestation -> Objects.equals(address, firestation.getAddress()))
-                .findFirst().get();
+            return database.getFirestations()
+                    .stream()
+                    .filter(firestation -> Objects.equals(address, firestation.getAddress()))
+                    .findFirst().get();
     }
 
     public Set<Firestation> getStationAddresses(String stationNumbers) {
@@ -108,7 +108,6 @@ public class Dao {
     //***********Html Methods*************//
 
     public List<Person> loadPersons() {
-
         return database.getPersons();
     }
     public List<Firestation> loadFirestions() {

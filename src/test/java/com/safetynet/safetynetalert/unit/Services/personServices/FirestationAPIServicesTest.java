@@ -1,112 +1,81 @@
 package com.safetynet.safetynetalert.unit.Services.personServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.firestationservices.FirestationAPIService;
-import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.ParseException;
+import com.safetynet.safetynetalert.apiservices.FirestationService;
+import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.domain.Firestation;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FirestationAPIServicesTest {
 
-    private DataTest dataTest = new DataTest();
-    Map<String, String> firestation = new HashMap<>();
 
     @Mock
-    static DTO dTOFirestationsMock;
+    static FirestationDao firestationDao;
 
     @InjectMocks
-    FirestationAPIService aPIService;
-
-    @BeforeEach
-    private void setup() {
-        aPIService = new FirestationAPIService();
-        aPIService.dTOFirestation = dTOFirestationsMock;
-    }
+    FirestationService aPIService;
 
 
     @Test
-    public void returnFirestationMapContentWithCorrectDataEvenWithUselessEntryValueForPost() throws ParseException {
-        // Map person contain an entry named "Age", which do not belong of "persons" entries, so the Map contains
-        // 8 entries instead of the 7 required, let see if this supplement entry is correctly ignored:
+    public void returnFirestationContentWithCorrectDataEvenWithUselessEntryValueForPost() {
 
         //ARRANGE
-        doNothing().when(dTOFirestationsMock).addData(any());
-        ArgumentCaptor<Map> personArgCapt = ArgumentCaptor.forClass(Map.class);
-        firestation = dataTest.getFirestationData(0);
-        firestation.put(DataEntry.AGE.getString(), (String) dataTest.getPersonsAgeList().get(0));
+        doNothing().when(firestationDao).addFirestation(any());
+        ArgumentCaptor<Firestation> firestationArgCapt = ArgumentCaptor.forClass(Firestation.class);
 
         //ACT
-        aPIService.postMethod(firestation);
+        aPIService.postFirestation("randomaddress",1);
 
         //ASSERT
-        verify(dTOFirestationsMock).addData(personArgCapt.capture());
-        assertEquals(firestation.get(DataEntry.ADDRESS.getString()), personArgCapt.getValue().get(DataEntry.ADDRESS.getString()));
-        assertEquals(firestation.get(DataEntry.STATION.getString()), personArgCapt.getValue().get(DataEntry.STATION.getString()));
-        assertEquals(2, personArgCapt.getValue().size());
+        verify(firestationDao).addFirestation(firestationArgCapt.capture());
+        assertEquals("randomaddress", firestationArgCapt.getValue().getAddress());
+        assertEquals(1, firestationArgCapt.getValue().getStation());
     }
 
     @Test
-    public void returnErrorIfSomeFieldIsMissing() throws ParseException {
+    public void medicalRecordCorrectlyPut() {
         //ARRANGE
-        firestation = dataTest.getFirestationData(0);
-        firestation.remove(DataEntry.STATION.getString());
+        Firestation firestation =new Firestation();
+        firestation.setStation(1);
+        firestation.setAddress("randomaddress");
+        doNothing().when(firestationDao).setFirestation(any());
+        String name = "name";
+        when(firestationDao.findFirestationByAddress(anyString())).thenReturn(firestation);
+        ArgumentCaptor<Firestation> firestationArgCapt = ArgumentCaptor.forClass(Firestation.class);
 
         //ACT
-        String test = aPIService.postMethod(firestation);
+        ResponseEntity responseEntity = aPIService.putFirestation("randomaddress",2);
 
         //ASSERT
-        assertEquals("The " + DataEntry.STATION.getString() + " value is not specify, operation aborted", test);
-    }
-
-
-    @Test
-    public void returnPersonMapContentWithCorrectDataEvenWithUselessEntryValueForPut() throws ParseException {
-        //ARRANGE
-        doNothing().when(dTOFirestationsMock).setData(anyInt(), any());
-        ArgumentCaptor<Map> personArgCapt = ArgumentCaptor.forClass(Map.class);
-        firestation = dataTest.getFirestationData(0);
-        firestation.put(DataEntry.AGE.getString(), (String) dataTest.getPersonsAgeList().get(0));
-        String address = "3333 broadway";
-        when(dTOFirestationsMock.getIdByAddress(address)).thenReturn(1);
-        when(dTOFirestationsMock.getDataTypeContentwithID(anyInt())).thenReturn(dataTest.getFirestationData(1));
-
-        //ACT
-        aPIService.putMethod(address, firestation);
-
-        //ASSERT
-        verify(dTOFirestationsMock, times(1)).setData(any(),personArgCapt.capture());
-        assertEquals(false, firestation.get(DataEntry.ADDRESS.getString())== personArgCapt.getValue().get(DataEntry.ADDRESS.getString()));
-        assertEquals(firestation.get(DataEntry.STATION.getString()), personArgCapt.getValue().get(DataEntry.STATION.getString()));
-        assertEquals(2, personArgCapt.getValue().size());
+        verify(firestationDao).setFirestation(firestationArgCapt.capture());
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(2, firestationArgCapt.getValue().getStation());
     }
 
     @Test
-    public void personMapIsDeletedWithDelete() throws ParseException {
+    public void medicalRecordIsDeletedWithDelete() {
         //ARRANGE
         String name = "name";
-        when(dTOFirestationsMock.getIdByAddress(name)).thenReturn(1);
-        doNothing().when(dTOFirestationsMock).removeData(1);
+        when(firestationDao.getIdByAddress(anyString())).thenReturn(1);
+        ArgumentCaptor<Integer> numberArgCapt = ArgumentCaptor.forClass(Integer.class);
 
         //ACT
-        aPIService.deleteMethod(name);
+        ResponseEntity responseEntity = aPIService.deletetFirestation("randomaddress");
 
         //ASSERT
-        verify(dTOFirestationsMock, times(1)).removeData(1);
+        verify(firestationDao).deleteFirestation(numberArgCapt.capture());
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(1, numberArgCapt.getValue());
     }
 }

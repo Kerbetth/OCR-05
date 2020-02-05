@@ -7,8 +7,8 @@ import com.safetynet.safetynetalert.enumerations.DataEntry;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -16,11 +16,13 @@ import java.util.*;
 public class DataTest {
     private ArrayList<Person> personlist;
     private ArrayList<Medicalrecord> medicalrecords;
-    private ArrayList<Firestation> firestations;
+    private Set<Firestation> firestations;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-
-    public DataTest() throws ParseException {
+    public DataTest() {
         personlist = new ArrayList<>();
+        medicalrecords = new ArrayList<>();
+        firestations = new HashSet<>();
         Person person1 = new Person();
         person1.setFirstName("John");
         person1.setLastName("Schaffer");
@@ -40,8 +42,8 @@ public class DataTest {
         person2.setEmail("ji@ji.co");
         personlist.add(person2);
         Person person3 = new Person();
-        person3.setFirstName("Michael");
-        person3.setLastName("Amott");
+        person3.setFirstName("Nita");
+        person3.setLastName("Strauss");
         person3.setAddress("3333 brodaway");
         person3.setCity("NYC");
         person3.setZip(79877);
@@ -60,28 +62,28 @@ public class DataTest {
         Medicalrecord medicalrecord1 = new Medicalrecord();
         medicalrecord1.setFirstName("John");
         medicalrecord1.setLastName("Schaffer");
-        medicalrecord1.setBirthdate(new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2007"));
+        medicalrecord1.setBirthdate(LocalDate.parse("12/12/2012", formatter));
         medicalrecord1.setMedications(getMedicationList1());
         medicalrecord1.setAllergies(getMedicationList2());
         medicalrecords.add(medicalrecord1);
         Medicalrecord medicalrecord2 = new Medicalrecord();
         medicalrecord2.setFirstName("Jeff");
         medicalrecord2.setLastName("Loomis");
-        medicalrecord2.setBirthdate(new SimpleDateFormat("dd/MM/yyyy").parse("05/19/1987"));
+        medicalrecord2.setBirthdate(LocalDate.parse("12/25/1978", formatter));
         medicalrecord2.setMedications(getMedicationList2());
         medicalrecord2.setAllergies(getMedicationList3());
         medicalrecords.add(medicalrecord2);
         Medicalrecord medicalrecord3 = new Medicalrecord();
-        medicalrecord3.setFirstName("Michael");
-        medicalrecord3.setLastName("Amott");
-        medicalrecord3.setBirthdate(new SimpleDateFormat("dd/MM/yyyy").parse("08/30/1977"));
+        medicalrecord3.setFirstName("Nita");
+        medicalrecord3.setLastName("Strauss");
+        medicalrecord3.setBirthdate(LocalDate.parse("12/02/1985", formatter));
         medicalrecord3.setMedications(getMedicationList4());
         medicalrecord3.setAllergies(getMedicationList3());
         medicalrecords.add(medicalrecord3);
         Medicalrecord medicalrecord4 = new Medicalrecord();
         medicalrecord4.setFirstName("Ola");
         medicalrecord4.setLastName("Englund");
-        medicalrecord4.setBirthdate(new SimpleDateFormat("dd/MM/yyyy").parse("08/30/2010"));
+        medicalrecord4.setBirthdate(LocalDate.parse("08/12/2009", formatter));
         medicalrecord4.setMedications(getMedicationList1());
         medicalrecord4.setAllergies(getMedicationList4());
         medicalrecords.add(medicalrecord4);
@@ -144,7 +146,14 @@ public class DataTest {
         return medicalrecords;
     }
 
-    public ArrayList<Firestation> getFirestations() {
+    public Set<Firestation> getFirestations() {
         return firestations;
+    }
+
+    public Firestation getFirestation1() {
+        Firestation firestation1 = new Firestation();
+        firestation1.setStation(1);
+        firestation1.setAddress("3333 broadway");
+        return firestation1;
     }
 }

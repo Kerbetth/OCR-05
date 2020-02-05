@@ -1,105 +1,66 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.getservices.*;
+import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.domain.PersonInfo;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetPersonInfoURLServicesTest {
 
     private DataTest dataTest = new DataTest();
-    JSONParser parser = new JSONParser();
-    ArrayList<Map<String, Object>> json;
-    Map<String, String> name = new HashMap<>();
 
     @Mock
-    static DTO dTOPersons;
+    static PersonDao dao;
     @Mock
-    static DTO dTOMedrec;
-
+    static Logger loggermock;
 
     @InjectMocks
-    GetPersonInfoURLService getURLService;
+    GetService getService;
 
-    @BeforeEach
-    public void setup() {
+    @Test
+    public void returnPersonInfoWithCorrectDate(){
+        //ARRANGE
+        List<Person> pl1 = new ArrayList<>();
+        pl1.add(dataTest.getPersonlist().get(1));
+        when(dao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(pl1);
+        when(dao.findMedicalrecordByPerson(any()))
+                .thenReturn(dataTest.getMedicalrecords().get(0))
+                .thenReturn(dataTest.getMedicalrecords().get(1));
 
+        //ACT
+        List<PersonInfo> personInfos = getService.personInfo("test","test");
+
+        //ASSERT
+        assertEquals(1, personInfos.size());
+        assertThat(personInfos.get(0)).extracting("name","address","email","medications","allergies")
+                .contains(pl1.get(0).getFirstName() + " " + pl1.get(0).getLastName(), pl1.get(0).getAddress(), pl1.get(0).getEmail(),dataTest.getMedicationList1(), dataTest.getMedicationList2());
     }
 
     @Test
-    public void returnPersonInfoMapContentWithCorrectData() throws ParseException {
-        //ARRANGE
-        name.put(DataEntry.FNAME.getString(), dataTest.getPersonsFirstNameList().get(0).toString());
-        name.put(DataEntry.LNAME.getString(), dataTest.getPersonsLastNameList().get(0).toString());
-        getURLService = new GetPersonInfoURLService(name, dTOPersons, dTOMedrec);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.EMAIL)).thenReturn(dataTest.getPersonsEmailList());
-        when(getURLService.dTOMedrec.getData(DataEntry.MEDIC)).thenReturn(dataTest.getMedMedicationsList());
-        when(getURLService.dTOMedrec.getData(DataEntry.ALLERGI)).thenReturn(dataTest.getMedAllergiesList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-
+    public void returnNoFireDataIfNumberStationDoesntExist(){
+        List<Person> emptylist = new ArrayList<>();
+        when(dao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(emptylist);
         //ACT
-        String output = getURLService.getRequest();
-        json = (ArrayList<Map<String, Object>>) parser.parse(output);
-
+        List<PersonInfo> personInfos = getService.personInfo("test","test");
         //ASSERT
-        ArrayList<String> medicationlist = (ArrayList<String>) json.get(0).get(DataEntry.MEDIC.getString());
-        ArrayList<String> allergieslist = (ArrayList<String>) json.get(0).get(DataEntry.MEDIC.getString());
-
-        assertEquals(dataTest.getPersonsFirstNameList().get(0), json.get(0).get(DataEntry.FNAME.getString()));
-        assertEquals(dataTest.getPersonsLastNameList().get(0), json.get(0).get(DataEntry.LNAME.getString()));
-        assertEquals(dataTest.getPersonsAddressList().get(0), json.get(0).get(DataEntry.ADDRESS.getString()));
-        assertEquals(dataTest.getPersonsEmailList().get(0), json.get(0).get(DataEntry.EMAIL.getString()));
-        ArrayList<String> johnMedlist = (ArrayList<String>) dataTest.getMedMedicationsList().get(0);
-        for (int i = 0; i < johnMedlist.size(); i++) {
-            assertEquals(johnMedlist.get(i), "\"" + medicationlist.get(i)+ "\"" );
-        }
-        ArrayList<String> johnAllerglist = (ArrayList<String>) dataTest.getMedAllergiesList().get(0);
-        for (int i = 0; i < johnAllerglist.size(); i++) {
-            assertEquals(johnAllerglist.get(i), "\"" + allergieslist.get(i)+ "\"" );
-        }
-        assertEquals(dataTest.getPersonsAgeList().get(0), json.get(0).get(DataEntry.AGE.getString()));
-        assertEquals(1, json.size());
-    }
-
-
-    @Test
-    public void returnNoPersonInfoIfNameDoesntExist() throws ParseException {
-        //ARRANGE
-        name.put(DataEntry.FNAME.getString(), "nonname");
-        name.put(DataEntry.FNAME.getString(), "lastnonname");
-        getURLService = new GetPersonInfoURLService(name, dTOPersons, dTOMedrec);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.EMAIL)).thenReturn(dataTest.getPersonsEmailList());
-        when(getURLService.dTOMedrec.getData(DataEntry.MEDIC)).thenReturn(dataTest.getMedMedicationsList());
-        when(getURLService.dTOMedrec.getData(DataEntry.ALLERGI)).thenReturn(dataTest.getMedAllergiesList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-
-        //ACT
-        String output = getURLService.getRequest();
-        json = (ArrayList<Map<String, Object>>) parser.parse(output);
-
-        //ASSERT
-        assertEquals(0, json.size());
+        verify(loggermock, times(1)).error(anyString());
+        assertEquals(0, personInfos.size());
     }
 }

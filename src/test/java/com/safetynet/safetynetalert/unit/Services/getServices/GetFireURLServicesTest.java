@@ -1,102 +1,75 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.getservices.GetFireURLService;
+import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetFireURLServicesTest {
 
     private DataTest dataTest = new DataTest();
-    JSONParser parser = new JSONParser();
-    Map<String, Object> json;
 
     @Mock
-    static DTO dTOPersons;
+    static PersonDao dao;
     @Mock
-    static DTO dTOMedrec;
+    static Logger loggermock;
 
     @InjectMocks
-    GetFireURLService getURLService;
-
+    GetService getService;
 
     @Test
-    public void returnFireMapContentWithCorrectData() throws ParseException {
+    public void returnFireContentWithCorrectData(){
         //ARRANGE
-        getURLService = new GetFireURLService("3333 broadway", dTOPersons, dTOMedrec);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOMedrec.getData(DataEntry.MEDIC)).thenReturn(dataTest.getMedMedicationsList());
-        when(getURLService.dTOMedrec.getData(DataEntry.ALLERGI)).thenReturn(dataTest.getMedAllergiesList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(getURLService.dTOPersons.getFirestationNumber("3333 broadway")).thenReturn("1");
+        List<Person> addressPerson = dataTest.getPersonlist();
+        addressPerson.remove(addressPerson.get(3));
+        addressPerson.remove(addressPerson.get(1));
+        when(dao.findFirestationByAddress(anyString())).thenReturn(dataTest.getFirestation1());
+        when(dao.findPersonByAddress(addressPerson.get(0).getAddress())).thenReturn(addressPerson);
+        when(dao.findMedicalrecordByPerson(any()))
+                .thenReturn(dataTest.getMedicalrecords().get(0))
+                .thenReturn(dataTest.getMedicalrecords().get(2));
 
         //ACT
-        String output = getURLService.getRequest();
-        json = (Map<String, Object>) parser.parse(output);
+        List<Object> getfire = getService.fire(dataTest.getPersonlist().get(0).getAddress());
 
         //ASSERT
-        ArrayList personslist = (ArrayList) json.get(DataEntry.PERSOBYSTATION.getString());
-        Map<String, Object> person = (Map) personslist.get(0);
-        ArrayList<Object> medicationlist = (ArrayList) person.get(DataEntry.MEDIC.getString());
-        ArrayList<Object> allergieslist = (ArrayList) person.get(DataEntry.ALLERGI.getString());
-
-        assertEquals(dataTest.getPersonsFirstNameList().get(0), person.get(DataEntry.FNAME.getString()));
-        assertEquals(dataTest.getPersonsLastNameList().get(0), person.get(DataEntry.LNAME.getString()));
-        assertEquals(dataTest.getPersonsPhoneList().get(0), person.get(DataEntry.PHONE.getString()));
-        ArrayList<String> johnMedlist = (ArrayList<String>) dataTest.getMedMedicationsList().get(0);
-        for (int i = 0; i < johnMedlist.size(); i++) {
-            assertEquals(johnMedlist.get(i), "\"" + medicationlist.get(i) + "\"");
-        }
-        ArrayList<String> johnAllerglist = (ArrayList<String>) dataTest.getMedAllergiesList().get(0);
-        for (int i = 0; i < johnAllerglist.size(); i++) {
-            assertEquals(johnAllerglist.get(i), "\"" + allergieslist.get(i) + "\"");
-        }
-        assertEquals(dataTest.getPersonsAgeList().get(0), person.get(DataEntry.AGE.getString()));
-        assertEquals(2, json.size());
-        assertEquals("1", json.get("stationNumber").toString());
-        assertEquals(2, personslist.size());
+        List<PersonFloodAndFire> personFloodAndFires = (List<PersonFloodAndFire>) getfire.get(1);
+        assertEquals(2, getfire.size());
+        assertEquals(1, (Integer) getfire.get(0));
+        assertEquals(2, personFloodAndFires.size());
+        Person p1 =  dataTest.getPersonlist().get(0);
+        Person p3 =  dataTest.getPersonlist().get(1);
+        assertThat(personFloodAndFires).extracting("name","phone","medications","allergies")
+                .contains(  tuple(p1.getFirstName() + " " + p1.getLastName(), p1.getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()),
+                        tuple(p3.getFirstName() + " " + p3.getLastName(), p3.getPhone(), dataTest.getMedicationList4(), dataTest.getMedicationList3()));
     }
 
     @Test
-    public void returnNoFireIfStationNumberDoesntExist() throws ParseException {
-        //ARRANGE
-        getURLService = new GetFireURLService("noAddress", dTOPersons, dTOMedrec);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOMedrec.getData(DataEntry.MEDIC)).thenReturn(dataTest.getMedMedicationsList());
-        when(getURLService.dTOMedrec.getData(DataEntry.ALLERGI)).thenReturn(dataTest.getMedAllergiesList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(getURLService.dTOPersons.getFirestationNumber("noAddress")).thenReturn("7");
+    public void returnNoFireDataIfNumberStationDoesntExist(){
 
         //ACT
-        String output = getURLService.getRequest();
-        json = (Map<String, Object>) parser.parse(output);
+        List<Object> getfire = getService.fire("noaddress");
 
         //ASSERT
-        ArrayList personslist = (ArrayList) json.get(DataEntry.PERSOBYSTATION.getString());
-        assertEquals(2, json.size());
-        assertEquals("7", json.get("stationNumber").toString());
-        assertEquals(0, personslist.size());
+        verify(loggermock, times(1)).error(anyString());
+        assertEquals(2, getfire.size());
+        assertEquals(0, (Integer) getfire.get(0));
     }
-
-
 }

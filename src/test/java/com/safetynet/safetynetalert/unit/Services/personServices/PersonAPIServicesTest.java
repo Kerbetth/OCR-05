@@ -1,150 +1,84 @@
 package com.safetynet.safetynetalert.unit.Services.personServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.personservices.PersonAPIService;
+import com.safetynet.safetynetalert.apiservices.PersonService;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonAPIServicesTest {
 
     private DataTest dataTest = new DataTest();
-    Map<String, String> person = new HashMap<>();
 
     @Mock
-    static DTO dTOPersonsMock;
+    static PersonDao personDao;
 
     @InjectMocks
-    PersonAPIService aPIService;
-
-    @BeforeEach
-    private void setup() {
-        aPIService = new PersonAPIService();
-        aPIService.dTOPersons = dTOPersonsMock;
-    }
+    PersonService aPIService;
 
 
     @Test
-    public void returnPersonMapContentWithCorrectDataEvenWithUselessEntryValueForPost() throws ParseException {
-        // Map person contain an entry named "Age", which do not belong of "persons" entries, so the Map contains
-        // 8 entries instead of the 7 required, let see if this supplement entry is correctly ignored:
+    public void returnPersonWithCorrectData() {
 
         //ARRANGE
-        doNothing().when(dTOPersonsMock).addData(any());
-        ArgumentCaptor<Map> personArgCapt = ArgumentCaptor.forClass(Map.class);
-        person = dataTest.getPersonData(0);
-        person.put(DataEntry.AGE.getString(), (String) dataTest.getPersonsAgeList().get(0));
+        doNothing().when(personDao).addPerson(any());
+        ArgumentCaptor<Person> personArgumentCaptor = ArgumentCaptor.forClass(Person.class);
 
         //ACT
-        aPIService.postMethod(person);
+        aPIService.postPerson(dataTest.getPersonlist().get(0));
 
         //ASSERT
-
-        verify(dTOPersonsMock).addData(personArgCapt.capture());
-        assertEquals(person.get(DataEntry.FNAME.getString()), personArgCapt.getValue().get(DataEntry.FNAME.getString()));
-        assertEquals(person.get(DataEntry.LNAME.getString()), personArgCapt.getValue().get(DataEntry.LNAME.getString()));
-        assertEquals(person.get(DataEntry.ADDRESS.getString()), personArgCapt.getValue().get(DataEntry.ADDRESS.getString()));
-        assertEquals(person.get(DataEntry.CITY.getString()), personArgCapt.getValue().get(DataEntry.CITY.getString()));
-        assertEquals(person.get(DataEntry.ZIP.getString()), personArgCapt.getValue().get(DataEntry.ZIP.getString()));
-        assertEquals(person.get(DataEntry.PHONE.getString()), personArgCapt.getValue().get(DataEntry.PHONE.getString()));
-        assertEquals(person.get(DataEntry.EMAIL.getString()), personArgCapt.getValue().get(DataEntry.EMAIL.getString()));
-        assertEquals(7, personArgCapt.getValue().size());
+        verify(personDao).addPerson(personArgumentCaptor.capture());
+        Person pl1 = dataTest.getPersonlist().get(0);
+        assertThat(personArgumentCaptor.getValue()).extracting("firstName","lastName","address","city","zip","phone","email")
+                .contains(pl1.getFirstName(), pl1.getLastName(), pl1.getAddress(), pl1.getCity(), pl1.getZip(), pl1.getPhone(), pl1.getEmail());
     }
 
+
     @Test
-    public void returnErrorIfSomeFieldIsMissing() throws ParseException {
+    public void returnPersonCorrectlyPut() {
         //ARRANGE
-        person = dataTest.getPersonData(0);
-        person.remove(DataEntry.FNAME.getString());
+        doNothing().when(personDao).setPerson(any());
+        when(personDao.findPersonByName(anyString())).thenReturn(dataTest.getPersonlist().get(0));
+        ArgumentCaptor<Person> medicalRecordArgCapt = ArgumentCaptor.forClass(Person.class);
 
         //ACT
-        String test = aPIService.postMethod(person);
+        aPIService.putPerson("name",dataTest.getPersonlist().get(1));
 
         //ASSERT
-        assertEquals("The " + DataEntry.FNAME.getString() + " value is not specify, operation aborted", test);
-    }
-
-
-    @Test
-    public void returnPersonMapContentWithCorrectDataEvenWithUselessEntryValueForPut() throws ParseException {
-        //ARRANGE
-        doNothing().when(dTOPersonsMock).setData(anyInt(), any());
-        ArgumentCaptor<Map> personArgCapt = ArgumentCaptor.forClass(Map.class);
-        person = dataTest.getPersonData(0);
-        person.put(DataEntry.AGE.getString(), (String) dataTest.getPersonsAgeList().get(0));
-        String firstNameLastName = DataEntry.FNAME.getString()+DataEntry.LNAME.getString();
-        when(dTOPersonsMock.getIdByName(firstNameLastName)).thenReturn(1);
-        when(dTOPersonsMock.getDataTypeContentwithID(anyInt())).thenReturn(dataTest.getPersonData(1));
-
-        //ACT
-        aPIService.putMethod(firstNameLastName,person);
-
-        //ASSERT
-        verify(dTOPersonsMock, times(1)).setData(any(),personArgCapt.capture());
-        assertEquals(false, person.get(DataEntry.FNAME.getString())== personArgCapt.getValue().get(DataEntry.FNAME.getString()));
-        assertEquals(false, person.get(DataEntry.LNAME.getString())== personArgCapt.getValue().get(DataEntry.LNAME.getString()));
-        assertEquals(person.get(DataEntry.ADDRESS.getString()), personArgCapt.getValue().get(DataEntry.ADDRESS.getString()));
-        assertEquals(person.get(DataEntry.CITY.getString()), personArgCapt.getValue().get(DataEntry.CITY.getString()));
-        assertEquals(person.get(DataEntry.ZIP.getString()), personArgCapt.getValue().get(DataEntry.ZIP.getString()));
-        assertEquals(person.get(DataEntry.PHONE.getString()), personArgCapt.getValue().get(DataEntry.PHONE.getString()));
-        assertEquals(person.get(DataEntry.EMAIL.getString()), personArgCapt.getValue().get(DataEntry.EMAIL.getString()));
-        assertEquals(7, personArgCapt.getValue().size());
+        verify(personDao).setPerson(medicalRecordArgCapt.capture());
+        Person pl1 = dataTest.getPersonlist().get(0);
+        Person pl2 = dataTest.getPersonlist().get(1);
+        assertThat(medicalRecordArgCapt.getValue()).extracting("firstName","lastName","address","city","zip","phone","email")
+                .contains(pl1.getFirstName(), pl1.getLastName(), pl2.getAddress(), pl2.getCity(), pl2.getZip(), pl2.getPhone(), pl2.getEmail());
     }
 
     @Test
-    public void returnPersonMapContentWithCorrectDataAfterPartialModificationForPut() throws ParseException {
-        //ARRANGE
-        doNothing().when(dTOPersonsMock).setData(anyInt(), any());
-        ArgumentCaptor<Map> personArgCapt = ArgumentCaptor.forClass(Map.class);
-        person = dataTest.getPersonData(0);
-        person.remove(DataEntry.CITY.getString());
-        person.remove(DataEntry.PHONE.getString());
-        String firstNameLastName = DataEntry.FNAME.getString()+DataEntry.LNAME.getString();
-        when(dTOPersonsMock.getIdByName(firstNameLastName)).thenReturn(1);
-        when(dTOPersonsMock.getDataTypeContentwithID(anyInt())).thenReturn(dataTest.getPersonData(1));
-
-        //ACT
-        aPIService.putMethod(firstNameLastName,person);
-
-        //ASSERT
-        verify(dTOPersonsMock, times(1)).setData(any(),personArgCapt.capture());
-        assertEquals(false, person.get(DataEntry.FNAME.getString())== personArgCapt.getValue().get(DataEntry.FNAME.getString()));
-        assertEquals(false, person.get(DataEntry.LNAME.getString())== personArgCapt.getValue().get(DataEntry.LNAME.getString()));
-        assertEquals(person.get(DataEntry.ADDRESS.getString()), personArgCapt.getValue().get(DataEntry.ADDRESS.getString()));
-        assertNotEquals(null, personArgCapt.getValue().get(DataEntry.CITY.getString()));
-        assertEquals(person.get(DataEntry.ZIP.getString()), personArgCapt.getValue().get(DataEntry.ZIP.getString()));
-        assertNotEquals(null, personArgCapt.getValue().get(DataEntry.PHONE.getString()));
-        assertEquals(person.get(DataEntry.EMAIL.getString()), personArgCapt.getValue().get(DataEntry.EMAIL.getString()));
-        assertEquals(7, personArgCapt.getValue().size());
-    }
-
-    @Test
-    public void personMapIsDeletedWithDelete() throws ParseException {
+    public void medicalRecordIsDeletedWithDelete() {
         //ARRANGE
         String name = "name";
-        when(dTOPersonsMock.getIdByName(name)).thenReturn(1);
-        doNothing().when(dTOPersonsMock).removeData(1);
+        when(personDao.getIdByName(anyString())).thenReturn(1);
+        ArgumentCaptor<Integer> numberArgCapt = ArgumentCaptor.forClass(Integer.class);
 
         //ACT
-        aPIService.deleteMethod(name);
+        ResponseEntity responseEntity = aPIService.deletePersonAndMedicalRecord("noname");
 
         //ASSERT
-        verify(dTOPersonsMock, times(1)).removeData(1);
+        verify(personDao).deleteMedicalRecordAndPersonEntry(numberArgCapt.capture());
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(1, numberArgCapt.getValue());
     }
 }

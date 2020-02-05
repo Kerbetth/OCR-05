@@ -1,11 +1,13 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.getservices.*;
+import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Firestation;
+import com.safetynet.safetynetalert.domain.HouseHold;
+import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,95 +15,68 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetFloodStationsURLServicesTest {
 
     private DataTest dataTest = new DataTest();
-    JSONParser parser = new JSONParser();
-    Map<String, Object> json;
 
     @Mock
-    static DTO dTOPersons;
+    static PersonDao dao;
     @Mock
-    static DTO dTOMedrec;
-    @Mock
-    static DTO dTOFirestation;
+    static Logger loggermock;
 
     @InjectMocks
-    GetFloodStationsURLService getURLService;
-
+    GetService getService;
 
     @Test
-    public void returnFireMapContentWithCorrectData() throws ParseException {
+    public void returnFloodStationsWithCorrectData(){
         //ARRANGE
-        getURLService = new GetFloodStationsURLService("1", dTOPersons, dTOMedrec, dTOFirestation);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOMedrec.getData(DataEntry.MEDIC)).thenReturn(dataTest.getMedMedicationsList());
-        when(getURLService.dTOMedrec.getData(DataEntry.ALLERGI)).thenReturn(dataTest.getMedAllergiesList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(getURLService.dTOFirestation.getStationAddresses("1")).thenReturn(Collections.singleton("3333 broadway"));
+        List<Person> pl1 = new ArrayList<>();
+        List<Person> pl2 = new ArrayList<>();
+        List<Person> pl3 = new ArrayList<>();
+        pl1.add(dataTest.getPersonlist().get(0));
+        pl1.add(dataTest.getPersonlist().get(2));
+        pl2.add(dataTest.getPersonlist().get(1));
+        pl3.add(dataTest.getPersonlist().get(3));
+        when(dao.getStationAddresses(anyString())).thenReturn(dataTest.getFirestations());
+        when(dao.findPersonByAddress(anyString()))
+                .thenReturn(pl1)
+                .thenReturn(pl2)
+                .thenReturn(pl3);
+        when(dao.findMedicalrecordByPerson(any()))
+                .thenReturn(dataTest.getMedicalrecords().get(0));
 
         //ACT
-        String output = getURLService.getRequest();
-        json =  (Map<String, Object>)parser.parse(output);
+        List<HouseHold> getfloodStations = getService.floodstations("1,2");
 
         //ASSERT
-        Map<String, Object> householdlist = (Map)json.get("station 1");
-        ArrayList personlist = (ArrayList)householdlist.get("3333 broadway");
-        Map<String, Object> person = (Map) personlist.get(0);
-
-        ArrayList<Object> medicationlist = (ArrayList) person.get(DataEntry.MEDIC.getString());
-        ArrayList<Object> allergieslist = (ArrayList) person.get(DataEntry.ALLERGI.getString());
-
-        assertEquals(dataTest.getPersonsFirstNameList().get(0), person.get(DataEntry.FNAME.getString()));
-        assertEquals(dataTest.getPersonsLastNameList().get(0), person.get(DataEntry.LNAME.getString()));
-        assertEquals(dataTest.getPersonsPhoneList().get(0), person.get(DataEntry.PHONE.getString()));
-        ArrayList<String> johnMedlist = (ArrayList<String>) dataTest.getMedMedicationsList().get(0);
-        for (int i = 0; i < johnMedlist.size(); i++) {
-            assertEquals(johnMedlist.get(i), "\"" + medicationlist.get(i)+ "\"" );
-        }
-        ArrayList<String> johnAllerglist = (ArrayList<String>) dataTest.getMedAllergiesList().get(0);
-        for (int i = 0; i < johnAllerglist.size(); i++) {
-            assertEquals(johnAllerglist.get(i), "\"" + allergieslist.get(i)+ "\"" );
-        }
-        assertEquals(dataTest.getPersonsAgeList().get(0), person.get(DataEntry.AGE.getString()));
-        assertEquals(1, json.size());
-        assertEquals(1, householdlist.size());
-        assertEquals(2, personlist.size());
+        List<PersonFloodAndFire> personFloodAndFires = getfloodStations.get(0).getPersonList();
+        assertEquals(3, getfloodStations.size());
+        assertEquals(2, personFloodAndFires.size());
+        assertThat(personFloodAndFires).extracting("name","phone","medications","allergies")
+                .contains(  tuple(pl1.get(0).getFirstName() + " " + pl1.get(0).getLastName(), pl1.get(0).getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()),
+                        tuple(pl1.get(1).getFirstName() + " " + pl1.get(1).getLastName(), pl1.get(1).getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()));
     }
 
     @Test
-    public void returnNoFireIfStationNumberDoesntExist() throws ParseException {
-        //ARRANGE
-        getURLService = new GetFloodStationsURLService("8", dTOPersons, dTOMedrec, dTOFirestation);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOMedrec.getData(DataEntry.MEDIC)).thenReturn(dataTest.getMedMedicationsList());
-        when(getURLService.dTOMedrec.getData(DataEntry.ALLERGI)).thenReturn(dataTest.getMedAllergiesList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(getURLService.dTOFirestation.getStationAddresses("8")).thenReturn(Collections.singleton(""));
-
+    public void returnNoFireDataIfNumberStationDoesntExist(){
+        Set<Firestation> emptylist = new HashSet<>();
+        when(dao.getStationAddresses(anyString())).thenReturn(emptylist);
         //ACT
-        String output = getURLService.getRequest();
-        json =  (Map<String, Object>)parser.parse(output);
-
+        List<HouseHold> getfloodStations = getService.floodstations("5");
         //ASSERT
-        Map<String, Object> householdlist = (Map)json.get("station 8");
-        ArrayList personlist = (ArrayList)householdlist.get("");
-        assertEquals(1, json.size());
-        assertEquals(1, householdlist.size());
-        assertEquals(true, personlist.isEmpty());
+        verify(loggermock, times(1)).error(anyString());
+        assertEquals(0, getfloodStations.size());
     }
-
 }

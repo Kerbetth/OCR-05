@@ -1,83 +1,59 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.getservices.*;
+import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetPhoneAlertURLServicesTest {
 
     private DataTest dataTest = new DataTest();
-    JSONParser parser = new JSONParser();
-    Map<String,ArrayList> json;
 
     @Mock
-    static DTO dTOPersons;
+    static PersonDao dao;
+    @Mock
+    static Logger loggermock;
 
     @InjectMocks
-    GetPhoneAlertURLService getURLService;
-
-
-    @Test
-    public void returnPhoneAlertMapContentWithCorrectData() throws ParseException {
-        //ARRANGE
-        getURLService = new GetPhoneAlertURLService(1, dTOPersons);
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOPersons.getFirestationAddress(1)).thenReturn("3333 broadway");
-        ArrayList<String> phoneNumberlist = new ArrayList<>();
-        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(0).toString());
-        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(2).toString());
-        //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
-        //ASSERT
-        assertEquals(phoneNumberlist, json.get(DataEntry.PHONEALERT.getString()));
-        assertEquals(1, json.size());
-        assertEquals(2, json.get(DataEntry.PHONEALERT.getString()).size());
-    }
+    GetService getService;
 
     @Test
-    public void returnAllPhoneAlertMapContentIfNoStationNumber() throws ParseException {
+    public void returnPersonInfoWithCorrectDate(){
         //ARRANGE
-        getURLService = new GetPhoneAlertURLService(null, dTOPersons);
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOPersons.getFirestationAddress(null)).thenReturn(null);
+        Set<Firestation> firestations = dataTest.getFirestations();
+        when(dao.getStationAddresses(anyString())).thenReturn(firestations);
+        when(dao.findPersonByAddress(any())).thenReturn(dataTest.getPersonlist());
+
         //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
+        Set<String> phoneAlert = getService.phoneAlert(0);
+
         //ASSERT
-        assertEquals(1, json.size());
-        assertEquals(4, json.get(DataEntry.PHONEALERT.getString()).size());
-    }
+        assertEquals(4, phoneAlert.size());
+        }
 
     @Test
-    public void returnNoPhoneAlertMapContentIfNoStationNumberAffiliate() throws ParseException {
-        //ARRANGE
-        getURLService = new GetPhoneAlertURLService(5, dTOPersons);
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOPersons.getFirestationAddress(5)).thenReturn("randomAddress");
+    public void returnNoFireDataIfNumberStationDoesntExist(){
+        Set<Firestation> emptylist = new HashSet<>();
+        when(dao.getStationAddresses(anyString())).thenReturn(emptylist);
         //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
+        Set<String> phoneAlert = getService.phoneAlert(0);
         //ASSERT
-        assertEquals(1, json.size());
-        assertEquals(0, json.get(DataEntry.PHONEALERT.getString()).size());
+        verify(loggermock, times(1)).error(anyString());
+        assertEquals(0, phoneAlert.size());
     }
 }

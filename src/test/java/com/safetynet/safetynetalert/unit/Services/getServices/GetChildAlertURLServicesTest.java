@@ -1,23 +1,23 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
 import com.safetynet.safetynetalert.apiservices.GetService;
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.getservices.GetChildAlertURLService;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.byLessThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -32,56 +32,61 @@ public class GetChildAlertURLServicesTest {
     @InjectMocks
     GetService getService;
 
-
-
     @Test
-    public void returnChildAlertMapContentWithCorrectData() throws ParseException {
+    public void returnChildAlertMapContentWithCorrectData(){
         //ARRANGE
         List<Person> addressPerson = dataTest.getPersonlist();
-        addressPerson.remove(1);
-        addressPerson.remove(3);
+        addressPerson.remove(addressPerson.get(1));
+        addressPerson.remove(addressPerson.get(2));
         when(dao.findPersonByAddress(dataTest.getPersonlist().get(0).getAddress())).thenReturn(addressPerson);
-        ArrayList<String> householdMembersList = new ArrayList<>();
-        householdMembersList.add("Jeff Loomis");
+        when(dao.findMedicalrecordByPerson(addressPerson.get(0))).thenReturn(dataTest.getMedicalrecords().get(0));
+        when(dao.findMedicalrecordByPerson(addressPerson.get(1))).thenReturn(dataTest.getMedicalrecords().get(1));
+
         //ACT
         List<Child> children = getService.childAlert(dataTest.getPersonlist().get(0).getAddress());
 
-        json = (ArrayList) parser.parse(output);
         //ASSERT
-        assertEquals("John", json.get(0).get(DataEntry.FNAME.getString()));
-        assertEquals("Schaffer", json.get(0).get(DataEntry.LNAME.getString()));
-        assertEquals("15", json.get(0).get(DataEntry.AGE.getString()));
-        assertEquals(householdMembersList, json.get(0).get(DataEntry.HOUSEMEMBERS.getString()));
-        assertEquals(1, json.size());
+        assertEquals(dataTest.getPersonlist().get(0).getFirstName(), children.get(0).getFirstName());
+        assertEquals(dataTest.getPersonlist().get(0).getLastName(), children.get(0).getLastName());
+        assertEquals(1, children.size());
+        assertEquals(1, children.get(0).getHouseHoldMembers().size());
+        double birthdateplusage = dataTest.getMedicalrecords().get(0).getBirthdate().getYear()+children.get(0).getAge();
+        assertThat((double)LocalDate.now().getYear()).isEqualTo(birthdateplusage, byLessThan(1.1));
+        assertThat(children.get(0).getAge()).isLessThan(18);
     }
 
     @Test
     public void returnNoChildAlertDataIfNoChildInSpecifyAddress() throws ParseException {
         //ARRANGE
-        getService = new GetChildAlertURLService("Edelstein", dao, dTOMedrec);
-        when(dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(dTOMedrec.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(dTOMedrec.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(dao.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
+        List<Person> addressPerson = new ArrayList<>();
+        when(dao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
+
         //ACT
-        String output= getService.getRequest();
-        json = (ArrayList) parser.parse(output);
+        List<Child> children = getService.childAlert("noaddress");
+
         //ASSERT
-        assertEquals(0, json.size());
+        assertEquals(null, children);
     }
 
     @Test
     public void returnAllChildAlertDataifNoAddressSpecify() throws ParseException {
         //ARRANGE
-        getService = new GetChildAlertURLService(null, dao, dTOMedrec);
-        when(dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(dTOMedrec.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(dTOMedrec.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(dao.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
+        List<Person> addressPerson = dataTest.getPersonlist();
+        addressPerson.remove(addressPerson.get(1));
+        addressPerson.remove(addressPerson.get(2));
+        when(dao.findPersonByAddress(dataTest.getPersonlist().get(0).getAddress())).thenReturn(addressPerson);
+        when(dao.findMedicalrecordByPerson(addressPerson.get(0))).thenReturn(dataTest.getMedicalrecords().get(0));
+        when(dao.findMedicalrecordByPerson(addressPerson.get(1))).thenReturn(dataTest.getMedicalrecords().get(1));
+
         //ACT
-        String output= getService.getRequest();
-        json = (ArrayList) parser.parse(output);
+        List<Child> children = getService.childAlert(dataTest.getPersonlist().get(0).getAddress());
+
         //ASSERT
-        assertEquals(2, json.size());
+        assertEquals(dataTest.getPersonlist().get(0).getFirstName(), children.get(0).getFirstName());
+        assertEquals(dataTest.getPersonlist().get(0).getLastName(), children.get(0).getLastName());
+        double age = dataTest.getMedicalrecords().get(0).getBirthdate().getYear()+children.get(0).getAge();
+        assertThat((double)LocalDate.now().getYear()).isEqualTo(age, byLessThan(1.1));
+        assertEquals(1, children.size());
+        assertEquals(1, children.get(0).getHouseHoldMembers().size());
     }
 }

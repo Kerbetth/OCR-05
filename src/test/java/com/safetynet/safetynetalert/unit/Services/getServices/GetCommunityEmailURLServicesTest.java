@@ -1,20 +1,22 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.getservices.GetPhoneAlertURLService;
+import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Child;
+import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.byLessThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -22,65 +24,62 @@ import static org.mockito.Mockito.when;
 public class GetCommunityEmailURLServicesTest {
 
     private DataTest dataTest = new DataTest();
-    JSONParser parser = new JSONParser();
-    Map<String,ArrayList> json;
+
     @Mock
-    static DTO dTOPersons;
-    @Mock
-    static DTO dTOMedrec;
-    @Mock
-    static DTO dTOFirestation;
+    static PersonDao dao;
 
     @InjectMocks
-    GetPhoneAlertURLService getURLService;
-
+    GetService getService;
 
     @Test
-    public void returnCommunityEmailMapContentWithCorrectData() throws ParseException {
+    public void returnCommunityEmailContentWithCorrectData(){
         //ARRANGE
-        getURLService = new GetPhoneAlertURLService(1, dTOPersons);
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOPersons.getFirestationAddress(1)).thenReturn("3333 broadway");
-        ArrayList<String> phoneNumberlist = new ArrayList<>();
-        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(0).toString());
-        phoneNumberlist.add(dataTest.getPersonsPhoneList().get(2).toString());
+        List<Person> addressPerson = dataTest.getPersonlist();
+        addressPerson.remove(addressPerson.get(1));
+        addressPerson.remove(addressPerson.get(2));
+        when(dao.findPersonByCity(dataTest.getPersonlist().get(0).getCity())).thenReturn(addressPerson);
+
         //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
+        List<String> emailList = getService.communityEmail(dataTest.getPersonlist().get(0).getCity());
+
         //ASSERT
-        assertEquals(phoneNumberlist, json.get(DataEntry.PHONEALERT.getString()));
-        assertEquals(1, json.size());
-        assertEquals(2, json.get(DataEntry.PHONEALERT.getString()).size());
+        assertEquals(2, emailList.size());
+        assertEquals(dataTest.getPersonlist().get(0).getEmail(), emailList.get(0));
+        assertEquals(dataTest.getPersonlist().get(1).getEmail(), emailList.get(1));
     }
 
     @Test
-    public void returnAllCommunityEmailMapContentIfNoStationNumber() throws ParseException {
+    public void returnNoCommunityEmailDataIfNoEmailInTheCity(){
         //ARRANGE
-        getURLService = new GetPhoneAlertURLService(null, dTOPersons);
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOPersons.getFirestationAddress(null)).thenReturn(null);
+        List<Person> addressPerson = new ArrayList<>();
+        when(dao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
+
         //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
+        List<Child> children = getService.childAlert("noaddress");
+
         //ASSERT
-        assertEquals(1, json.size());
-        assertEquals(4, json.get(DataEntry.PHONEALERT.getString()).size());
+        assertEquals(null, children);
     }
 
     @Test
-    public void returnNoCommunityEmailMapContentIfNoStationNumberAffiliate() throws ParseException {
+    public void returnAllCommunityEmailDataifNoAddressSpecify(){
         //ARRANGE
-        getURLService = new GetPhoneAlertURLService(5, dTOPersons);
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOPersons.getFirestationAddress(5)).thenReturn("randomAddress");
+        List<Person> addressPerson = dataTest.getPersonlist();
+        addressPerson.remove(addressPerson.get(1));
+        addressPerson.remove(addressPerson.get(2));
+        when(dao.findPersonByAddress(dataTest.getPersonlist().get(0).getAddress())).thenReturn(addressPerson);
+        when(dao.findMedicalrecordByPerson(addressPerson.get(0))).thenReturn(dataTest.getMedicalrecords().get(0));
+        when(dao.findMedicalrecordByPerson(addressPerson.get(1))).thenReturn(dataTest.getMedicalrecords().get(1));
+
         //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
+        List<Child> children = getService.childAlert(dataTest.getPersonlist().get(0).getAddress());
+
         //ASSERT
-        assertEquals(1, json.size());
-        assertEquals(0, json.get(DataEntry.PHONEALERT.getString()).size());
+        assertEquals(dataTest.getPersonlist().get(0).getFirstName(), children.get(0).getFirstName());
+        assertEquals(dataTest.getPersonlist().get(0).getLastName(), children.get(0).getLastName());
+        double age = dataTest.getMedicalrecords().get(0).getBirthdate().getYear()+children.get(0).getAge();
+        assertThat((double)LocalDate.now().getYear()).isEqualTo(age, byLessThan(1.1));
+        assertEquals(1, children.size());
+        assertEquals(1, children.get(0).getHouseHoldMembers().size());
     }
 }

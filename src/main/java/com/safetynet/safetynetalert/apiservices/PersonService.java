@@ -18,7 +18,7 @@ public class PersonService {
     @Autowired
     private PersonDao dao;
     String regexemail = "^(.+)@(.+)$";
-    String regexPhone = "^[0-9]{8,12}$";
+    String regexPhone = "^[0-9-]{8,12}$";
 
     public ResponseEntity postPerson(Person person) {
         Pattern patternEmail = Pattern.compile(regexemail);

@@ -1,121 +1,89 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
-import com.safetynet.safetynetalert.apiservices.dto.DTO;
-import com.safetynet.safetynetalert.apiservices.enumerations.DataEntry;
-import com.safetynet.safetynetalert.apiservices.getservices.*;
-
+import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Count;
+import com.safetynet.safetynetalert.domain.Firestation;
+import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.domain.PersonFirestation;
 import com.safetynet.safetynetalert.unit.DataTest;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetFirestationURLServicesTest {
 
     private DataTest dataTest = new DataTest();
-    JSONParser parser = new JSONParser();
-    Map<String, Object> json;
+
     @Mock
-    static DTO dTOPersons;
+    static PersonDao dao;
     @Mock
-    static DTO dTOMedrec;
-    @Mock
-    static DTO dTOFirestation;
+    static Logger loggermock;
 
     @InjectMocks
-    GetFirestationURLService getURLService;
-
-
+    GetService getService;
 
     @Test
-    public void returnFirestationMapContentWithCorrectData() throws ParseException {
+    public void returnFirestationContentWithCorrectData(){
         //ARRANGE
-        getURLService = new GetFirestationURLService("1", dTOPersons, dTOMedrec, dTOFirestation);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(getURLService.dTOFirestation.getStationAddresses("1")).thenReturn(dataTest.getStationAddresses());
+        List<Person> addressPerson = dataTest.getPersonlist();
+        addressPerson.remove(addressPerson.get(3));
+        Set<Firestation> firestations = dataTest.getFirestations();
+        firestations.remove(2);
+        when(dao.getStationAddresses("1")).thenReturn(firestations);
+        when(dao.findPersonByAddress(addressPerson.get(0).getAddress())).thenReturn(addressPerson);
+        when(dao.findMedicalrecordByPerson(any()))
+                .thenReturn(dataTest.getMedicalrecords().get(0))
+                .thenReturn(dataTest.getMedicalrecords().get(1))
+                .thenReturn(dataTest.getMedicalrecords().get(2));
 
         //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
+        List<Object> getfirestation = getService.firestation(1);
 
         //ASSERT
-        ArrayList personslist = (ArrayList) json.get(DataEntry.PERSOBYSTATION.getString());
-        Map<String, Object> person = (Map) personslist.get(1);
-        Map<String, String> counting = (Map) json.get(DataEntry.COUNT.getString());
-
-
-        assertEquals("1", counting.get(DataEntry.ADULTS.getString()));
-        assertEquals("1", counting.get(DataEntry.CHILDREN.getString()));
-        assertEquals("John", person.get(DataEntry.FNAME.getString()));
-        assertEquals("Schaffer", person.get(DataEntry.LNAME.getString()));
-        assertEquals("3333 broadway", person.get(DataEntry.ADDRESS.getString()));
-        assertEquals("555-555-555", person.get(DataEntry.PHONE.getString()));
-        assertEquals(2, personslist.size());
-    }
-
-
-    @Test
-    public void returnNoFirestationMapContentIfStationNumberDoesntExist() throws ParseException {
-        //ARRANGE
-        getURLService = new GetFirestationURLService("8", dTOPersons, dTOMedrec, dTOFirestation);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(getURLService.dTOFirestation.getStationAddresses("8")).thenReturn(dataTest.getWrongStationAddresses());
-
-        //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
-
-        //ASSERT
-        ArrayList personslist = (ArrayList) json.get(DataEntry.PERSOBYSTATION.getString());
-        Map<String, String> counting = (Map) json.get(DataEntry.COUNT.getString());
-        assertEquals("0", counting.get(DataEntry.ADULTS.getString()));
-        assertEquals("0", counting.get(DataEntry.CHILDREN.getString()));
-        assertEquals("0", counting.get(DataEntry.UNKNOWAGE.getString()));
-        assertEquals(0, personslist.size());
-        assertEquals(2, json.size());
+        Count count = (Count) getfirestation.get(1);
+        List<PersonFirestation> personFirestation = (List<PersonFirestation>) getfirestation.get(0);
+        assertEquals(2, getfirestation.size());
+        assertEquals(2, count.getAdults());
+        assertEquals(1, count.getChildren());
+        Person p1 =  dataTest.getPersonlist().get(0);
+        Person p2 =  dataTest.getPersonlist().get(1);
+        Person p3 =  dataTest.getPersonlist().get(2);
+        assertThat(personFirestation).extracting("firstName","lastName","address","phone")
+                .contains(  tuple(p1.getFirstName(), p1.getLastName(), p1.getAddress(), p1.getPhone()),
+                            tuple(p2.getFirstName(), p2.getLastName(), p2.getAddress(), p2.getPhone()),
+                            tuple(p3.getFirstName(), p3.getLastName(), p3.getAddress(), p3.getPhone()));
     }
 
     @Test
-    public void returnAllFirestationMapContentIfNoStationNumber() throws ParseException {
+    public void returnNoFirestationDataIfNumberStationDoesntExist(){
         //ARRANGE
-        getURLService = new GetFirestationURLService(null, dTOPersons, dTOMedrec, dTOFirestation);
-        when(getURLService.dTOPersons.getData(DataEntry.FNAME)).thenReturn(dataTest.getPersonsFirstNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.LNAME)).thenReturn(dataTest.getPersonsLastNameList());
-        when(getURLService.dTOPersons.getData(DataEntry.ADDRESS)).thenReturn(dataTest.getPersonsAddressList());
-        when(getURLService.dTOPersons.getData(DataEntry.PHONE)).thenReturn(dataTest.getPersonsPhoneList());
-        when(getURLService.dTOMedrec.getData(DataEntry.AGE)).thenReturn(dataTest.getPersonsAgeList());
-        when(getURLService.dTOFirestation.getStationAddresses(null)).thenReturn(null);
+        Set<Firestation> firestations = new HashSet<>();
+        when(dao.getStationAddresses("5")).thenReturn(firestations);
 
         //ACT
-        String output= getURLService.getRequest();
-        json = (Map) parser.parse(output);
+        List<Object> getfirestation = getService.firestation(5);
 
         //ASSERT
-        ArrayList personslist = (ArrayList) json.get(DataEntry.PERSOBYSTATION.getString());
-        Map<String, String> counting = (Map) json.get(DataEntry.COUNT.getString());
-        assertEquals("1", counting.get(DataEntry.ADULTS.getString()));
-        assertEquals("2", counting.get(DataEntry.CHILDREN.getString()));
-        assertEquals("1", counting.get(DataEntry.UNKNOWAGE.getString()));
-        assertEquals(4, personslist.size());
-        assertEquals(2, json.size());
+        verify(loggermock, times(1)).error(anyString());
+        Count count = (Count) getfirestation.get(1);
+        assertEquals(2, getfirestation.size());
+        assertEquals(0, count.getAdults());
+        assertEquals(0, count.getChildren());
     }
 }
