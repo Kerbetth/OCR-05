@@ -7,38 +7,27 @@ import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import org.springframework.stereotype.Repository;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class Dao {
+public class Dao{
 
-    Database database;
+    public Database database;
+    public String jsonPath = "data.json";
+    public JsonWriter jsonWriter = new JsonWriter();
 
-    public Dao() throws IOException {
-        database = new ObjectMapper()
-                .readerFor(Database.class)
-                .readValue(
-                        Optional.ofNullable(
-                                PersonDao.class.getClassLoader().getResourceAsStream("data.json")
-                        ).orElseThrow()
-                );
-    }
-
-    public void daoWriter(Database database){
-        ObjectMapper Obj = new ObjectMapper();
-        String jsonStr = "";
+    public Dao() {
         try {
-            jsonStr = Obj.writeValueAsString(database);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (FileWriter file = new FileWriter("src/main/resources/data.json")) {
-            file.write(jsonStr);
-        } catch (IOException e) {
+            database = new ObjectMapper()
+                    .readerFor(Database.class)
+                    .readValue(
+                            Optional.ofNullable(
+                                    PersonDao.class.getClassLoader().getResourceAsStream(jsonPath)
+                            ).orElseThrow()
+                    );
+        }catch (IOException e){
             e.printStackTrace();
         }
     }
@@ -83,14 +72,14 @@ public class Dao {
     }
 
     public Firestation findFirestationByAddress(String address) {
-            return database.getFirestations()
-                    .stream()
-                    .filter(firestation -> Objects.equals(address, firestation.getAddress()))
-                    .findFirst().get();
+        return database.getFirestations()
+                .stream()
+                .filter(firestation -> Objects.equals(address, firestation.getAddress()))
+                .findFirst().get();
     }
 
-    public Set<Firestation> getStationAddresses(String stationNumbers) {
-        Set<Firestation> stationAddressList = new HashSet<>();
+    public List<Firestation> findFirestationsByNumber(String stationNumbers) {
+        List<Firestation> stationAddressList = new ArrayList<>();
         if (stationNumbers != null) {
             Set<String> stationNumbersSet = new HashSet<>((Arrays.asList(stationNumbers.split(","))));
             for (String stationNumber : stationNumbersSet) {
@@ -105,6 +94,16 @@ public class Dao {
         }
     }
 
+    public Integer getIdByName(String firstNameLastName) {
+        Integer id = 0;
+        List<Person> persons = database.getPersons();
+        for (Person person : persons) {
+            if ((person.getFirstName()+person.getLastName()).equals(firstNameLastName)){
+                break;
+            } else id++;
+        }
+        return id;
+    }
     //***********Html Methods*************//
 
     public List<Person> loadPersons() {

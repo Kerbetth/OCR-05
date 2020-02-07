@@ -4,7 +4,7 @@ import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonInfo;
-import com.safetynet.safetynetalert.unit.DataTest;
+import com.safetynet.safetynetalert.DataTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;

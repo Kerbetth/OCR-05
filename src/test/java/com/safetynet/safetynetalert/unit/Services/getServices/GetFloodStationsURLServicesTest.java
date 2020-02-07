@@ -1,12 +1,12 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
+import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.HouseHold;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
-import com.safetynet.safetynetalert.unit.DataTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,9 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -49,7 +47,7 @@ public class GetFloodStationsURLServicesTest {
         pl1.add(dataTest.getPersonlist().get(2));
         pl2.add(dataTest.getPersonlist().get(1));
         pl3.add(dataTest.getPersonlist().get(3));
-        when(dao.getStationAddresses(anyString())).thenReturn(dataTest.getFirestations());
+        when(dao.findFirestationsByNumber(anyString())).thenReturn(dataTest.getFirestations());
         when(dao.findPersonByAddress(anyString()))
                 .thenReturn(pl1)
                 .thenReturn(pl2)
@@ -71,8 +69,8 @@ public class GetFloodStationsURLServicesTest {
 
     @Test
     public void returnNoFireDataIfNumberStationDoesntExist(){
-        Set<Firestation> emptylist = new HashSet<>();
-        when(dao.getStationAddresses(anyString())).thenReturn(emptylist);
+        List<Firestation> emptylist = new ArrayList<>();
+        when(dao.findFirestationsByNumber(anyString())).thenReturn(emptylist);
         //ACT
         List<HouseHold> getfloodStations = getService.floodstations("5");
         //ASSERT

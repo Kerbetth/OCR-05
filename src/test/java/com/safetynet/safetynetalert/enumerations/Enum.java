@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.enumerations;
 
-public enum DataEntry {
+public enum Enum {
 
     FNAME("firstName"),
     LNAME("lastName"),
@@ -8,16 +8,19 @@ public enum DataEntry {
     CITY("city"),
     ZIP("zip"),
     PHONE("phone"),
-    EMAIL("email");
+    EMAIL("email"),
+    BDATE("birthdate"),
+    MED("medications"),
+    ALLERG("allergies");
 
 
     private String dataEntry;
 
-    DataEntry(String dataEntry) {
+    Enum(String dataEntry) {
         this.dataEntry = dataEntry;
     }
 
-    public String getString() {
+    public String str() {
         return dataEntry;
     }
 }

@@ -1,10 +1,10 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
+import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.unit.DataTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,6 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.byLessThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -58,7 +59,7 @@ public class GetCommunityEmailURLServicesTest {
         List<Child> children = getService.childAlert("noaddress");
 
         //ASSERT
-        assertEquals(null, children);
+        assertNull(children);
     }
 
     @Test

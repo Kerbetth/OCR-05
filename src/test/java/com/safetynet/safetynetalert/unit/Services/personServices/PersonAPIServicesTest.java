@@ -3,7 +3,7 @@ package com.safetynet.safetynetalert.unit.Services.personServices;
 import com.safetynet.safetynetalert.apiservices.PersonService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.unit.DataTest;
+import com.safetynet.safetynetalert.DataTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

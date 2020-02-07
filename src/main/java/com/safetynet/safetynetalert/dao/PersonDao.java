@@ -6,16 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 @Repository
 public class PersonDao extends Dao{
 
     private static final Logger logger = LogManager.getLogger("PersonDao");
-
-    public PersonDao() throws IOException {
-    }
 
 
     public void addPerson(Person person) {
@@ -29,12 +25,12 @@ public class PersonDao extends Dao{
         } else {
             logger.error("Fatal Error, the number of persons and medicalRecords are not the same, please check the JSON file");
         }
-        daoWriter(database);
+        jsonWriter.writer(database, jsonPath);
     }
 
     public void setPerson(Person person) {
         database.getPersons().set(getIdByName(person.getFirstName()+person.getLastName()), person);
-        daoWriter(database);
+        jsonWriter.writer(database, jsonPath);
     }
 
     public void deleteMedicalRecordAndPersonEntry(Integer id){
@@ -43,17 +39,6 @@ public class PersonDao extends Dao{
         if (database.getPersons().size() != database.getMedicalrecords().size()) {
             logger.error("Fatal Error, the number of persons and medicalRecords are not the same, please check the JSON file");
         }
-        daoWriter(database);
-    }
-
-    public Integer getIdByName(String firstNameLastName) {
-        Integer id = 0;
-        List<Person> persons = database.getPersons();
-        for (Person person : persons) {
-            if ((person.getFirstName()+person.getLastName()).equals(firstNameLastName)){
-                break;
-            } else id++;
-        }
-        return id;
+        jsonWriter.writer(database, jsonPath);
     }
 }

@@ -1,28 +1,27 @@
-package com.safetynet.safetynetalert.unit;
+package com.safetynet.safetynetalert;
 
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.enumerations.DataEntry;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
 
 
 @ExtendWith(MockitoExtension.class)
 public class DataTest {
     private ArrayList<Person> personlist;
     private ArrayList<Medicalrecord> medicalrecords;
-    private Set<Firestation> firestations;
+    private ArrayList<Firestation> firestations;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public DataTest() {
         personlist = new ArrayList<>();
         medicalrecords = new ArrayList<>();
-        firestations = new HashSet<>();
+        firestations = new ArrayList<>();
         Person person1 = new Person();
         person1.setFirstName("John");
         person1.setLastName("Schaffer");
@@ -42,9 +41,9 @@ public class DataTest {
         person2.setEmail("ji@ji.co");
         personlist.add(person2);
         Person person3 = new Person();
-        person3.setFirstName("Nita");
-        person3.setLastName("Strauss");
-        person3.setAddress("3333 brodaway");
+        person3.setFirstName("Sarah");
+        person3.setLastName("Claudius");
+        person3.setAddress("3333 broadway");
         person3.setCity("NYC");
         person3.setZip(79877);
         person3.setPhone("558-44-484");
@@ -52,7 +51,7 @@ public class DataTest {
         personlist.add(person3);
         Person person4 = new Person();
         person4.setFirstName("Ola");
-        person4.setLastName("Englund");
+        person4.setLastName("Loomis");
         person4.setAddress("Edelstein");
         person4.setCity("Hamburg");
         person4.setZip(1177);
@@ -74,15 +73,15 @@ public class DataTest {
         medicalrecord2.setAllergies(getMedicationList3());
         medicalrecords.add(medicalrecord2);
         Medicalrecord medicalrecord3 = new Medicalrecord();
-        medicalrecord3.setFirstName("Nita");
-        medicalrecord3.setLastName("Strauss");
+        medicalrecord3.setFirstName("Sarah");
+        medicalrecord3.setLastName("Claudius");
         medicalrecord3.setBirthdate(LocalDate.parse("12/02/1985", formatter));
         medicalrecord3.setMedications(getMedicationList4());
         medicalrecord3.setAllergies(getMedicationList3());
         medicalrecords.add(medicalrecord3);
         Medicalrecord medicalrecord4 = new Medicalrecord();
         medicalrecord4.setFirstName("Ola");
-        medicalrecord4.setLastName("Englund");
+        medicalrecord4.setLastName("Loomis");
         medicalrecord4.setBirthdate(LocalDate.parse("08/12/2009", formatter));
         medicalrecord4.setMedications(getMedicationList1());
         medicalrecord4.setAllergies(getMedicationList4());
@@ -115,8 +114,7 @@ public class DataTest {
     }
 
     public ArrayList<String> getMedicationList3() {
-        ArrayList<String> med = new ArrayList<>();
-        return med;
+        return new ArrayList<>();
     }
 
     public ArrayList<String> getMedicationList4() {
@@ -126,15 +124,15 @@ public class DataTest {
         return med;
     }
 
-    public Map getNewPersonData() {
-        Map person = new HashMap();
-        person.put(DataEntry.FNAME.getString(), "newName");
-        person.put(DataEntry.LNAME.getString(), "newLastName");
-        person.put(DataEntry.ADDRESS.getString(), "newAddress");
-        person.put(DataEntry.CITY.getString(), "newCity");
-        person.put(DataEntry.ZIP.getString(), "newZip");
-        person.put(DataEntry.PHONE.getString(), "new-phone-000");
-        person.put(DataEntry.EMAIL.getString(), "new@mail");
+    public Person getNewPerson() {
+        Person person = new  Person();
+        person.setFirstName("newName");
+        person.setLastName("newLastName");
+        person.setAddress("newAddress");
+        person.setCity("newCity");
+        person.setZip(000);
+        person.setPhone("000000-000");
+        person.setEmail("new@mail.com");
         return person;
     }
 
@@ -146,7 +144,7 @@ public class DataTest {
         return medicalrecords;
     }
 
-    public Set<Firestation> getFirestations() {
+    public ArrayList<Firestation> getFirestations() {
         return firestations;
     }
 

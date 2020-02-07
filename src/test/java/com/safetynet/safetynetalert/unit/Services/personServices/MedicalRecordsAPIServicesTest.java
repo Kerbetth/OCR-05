@@ -3,7 +3,7 @@ package com.safetynet.safetynetalert.unit.Services.personServices;
 import com.safetynet.safetynetalert.apiservices.MedicalRecordService;
 import com.safetynet.safetynetalert.dao.MedicalrecordDao;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
-import com.safetynet.safetynetalert.unit.DataTest;
+import com.safetynet.safetynetalert.DataTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

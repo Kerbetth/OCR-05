@@ -1,17 +1,16 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
+import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.unit.DataTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.byLessThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +56,7 @@ public class GetChildAlertURLServicesTest {
     }
 
     @Test
-    public void returnNoChildAlertDataIfNoChildInSpecifyAddress() throws ParseException {
+    public void returnNoChildAlertDataIfNoChildInSpecifyAddress(){
         //ARRANGE
         List<Person> addressPerson = new ArrayList<>();
         when(dao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
@@ -65,11 +65,11 @@ public class GetChildAlertURLServicesTest {
         List<Child> children = getService.childAlert("noaddress");
 
         //ASSERT
-        assertEquals(null, children);
+        assertNull(children);
     }
 
     @Test
-    public void returnAllChildAlertDataifNoAddressSpecify() throws ParseException {
+    public void returnAllChildAlertDataifNoAddressSpecify(){
         //ARRANGE
         List<Person> addressPerson = dataTest.getPersonlist();
         addressPerson.remove(addressPerson.get(1));

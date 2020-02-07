@@ -1,12 +1,12 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
+import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Count;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFirestation;
-import com.safetynet.safetynetalert.unit.DataTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -43,9 +42,9 @@ public class GetFirestationURLServicesTest {
         //ARRANGE
         List<Person> addressPerson = dataTest.getPersonlist();
         addressPerson.remove(addressPerson.get(3));
-        Set<Firestation> firestations = dataTest.getFirestations();
+        List<Firestation> firestations = dataTest.getFirestations();
         firestations.remove(2);
-        when(dao.getStationAddresses("1")).thenReturn(firestations);
+        when(dao.findFirestationsByNumber("1")).thenReturn(firestations);
         when(dao.findPersonByAddress(addressPerson.get(0).getAddress())).thenReturn(addressPerson);
         when(dao.findMedicalrecordByPerson(any()))
                 .thenReturn(dataTest.getMedicalrecords().get(0))
@@ -73,8 +72,8 @@ public class GetFirestationURLServicesTest {
     @Test
     public void returnNoFirestationDataIfNumberStationDoesntExist(){
         //ARRANGE
-        Set<Firestation> firestations = new HashSet<>();
-        when(dao.getStationAddresses("5")).thenReturn(firestations);
+        List<Firestation> firestations = new ArrayList<>();
+        when(dao.findFirestationsByNumber("5")).thenReturn(firestations);
 
         //ACT
         List<Object> getfirestation = getService.firestation(5);

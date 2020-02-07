@@ -26,7 +26,7 @@ public class GetService {
         Integer children = 0;
         Count count = new Count();
         List<PersonFirestation> personFirestations = new ArrayList<>();
-        Set<Firestation> addressList = dao.getStationAddresses(stationNumber.toString());
+        List<Firestation> addressList = dao.findFirestationsByNumber(stationNumber.toString());
         List<Person> personsList = new ArrayList<>();
         for (Firestation firestation : addressList) {
             personsList.addAll(dao.findPersonByAddress(firestation.getAddress()));
@@ -45,7 +45,7 @@ public class GetService {
                 adults++;
             }
         }
-        if (result.size() == 0) {
+        if (personFirestations.size() == 0) {
             logger.error("Their is no station with the number \"" + stationNumber + "\"");
         }
         count.setAdults(adults);
@@ -90,8 +90,8 @@ public class GetService {
 
     public Set<String> phoneAlert(Integer stationNumber) {
         Set<String> result = new HashSet<>();
-        Set<Firestation> addressList = dao.getStationAddresses(stationNumber.toString());
-        if(addressList.size()>0){
+        List<Firestation> addressList = dao.findFirestationsByNumber(stationNumber.toString());
+        if(addressList!=null){
         for (Firestation firestation : addressList) {
             List<Person> personsList = dao.findPersonByAddress(firestation.getAddress());
             for (Person person : personsList) {
@@ -103,6 +103,7 @@ public class GetService {
             logger.error("Their is no station with the number \"" + stationNumber + "\"");
             return null;
         }
+
         return result;
     }
 
@@ -133,7 +134,7 @@ public class GetService {
 
     public List<HouseHold> floodstations(String numbersList) {
         List<HouseHold> result = new ArrayList<>();
-        Set<Firestation> addressList = dao.getStationAddresses(numbersList);
+        List<Firestation> addressList = dao.findFirestationsByNumber(numbersList);
         if (addressList.size() > 0) {
             for (Firestation address : addressList) {
                 HouseHold houseHold = new HouseHold();
