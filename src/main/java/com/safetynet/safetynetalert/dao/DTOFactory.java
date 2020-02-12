@@ -3,6 +3,8 @@ package com.safetynet.safetynetalert.dao;
 
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
+
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -28,5 +30,15 @@ public class DTOFactory {
         Period period = Period.between(birthdate, LocalDate.now());
         if (birthdate == null) return null;
         return period.getYears();
+    }
+
+    public static PersonFloodAndFire createPersonFloodAndFire(Person person, Medicalrecord medicalrecord) {
+        PersonFloodAndFire personFloodAndFire = new PersonFloodAndFire();
+        personFloodAndFire.setName(person.getFirstName() + " " + person.getLastName());
+        personFloodAndFire.setPhone(person.getPhone());
+        personFloodAndFire.setAge(DTOFactory.getAge(medicalrecord.getBirthdate()));
+        personFloodAndFire.setMedications(medicalrecord.getMedications());
+        personFloodAndFire.setAllergies(medicalrecord.getAllergies());
+        return personFloodAndFire;
     }
 }

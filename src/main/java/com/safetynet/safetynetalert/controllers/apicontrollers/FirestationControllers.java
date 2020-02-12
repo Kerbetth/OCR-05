@@ -1,35 +1,33 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.apiservices.FirestationService;
+import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.domain.Firestation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-@Controller
+@RestController
 public class FirestationControllers {
 
 
     @Autowired
-    private FirestationService firestationService;
+    private FirestationDao dao;
 
 
     @PostMapping(value = "/firestation")
-    public ResponseEntity addFirestationPost(@RequestParam String address, @RequestParam Integer stationNumber){
-        ResponseEntity response = firestationService.postFirestation(address, stationNumber);
-        return response;
+    public Firestation addFirestationPost(@RequestBody Firestation firestationData){
+        Firestation firestation = dao.addFirestation(firestationData);
+        return firestation;
     }
 
     @PutMapping(value = "/firestation/{address}")
-    public ResponseEntity setFirestationPut(@PathVariable String address, @RequestParam Integer stationNumber){
-        ResponseEntity response = firestationService.putFirestation(address, stationNumber);
-        return response;
+    public Firestation setFirestationPut(@PathVariable String address, @RequestParam Integer stationNumber){
+        Firestation firestation = dao.setFirestation(address, stationNumber);
+        return firestation;
     }
 
-    @DeleteMapping(value = "/firestation")
-    public ResponseEntity removeFirestationDelete(@RequestParam String address) {
-        ResponseEntity response = firestationService.deletetFirestation(address);
-        return response;
+    @DeleteMapping(value = "/firestation/{address}")
+    public void removeFirestationDelete(@PathVariable String address) {
+        dao.deleteFirestation(address);
     }
 }

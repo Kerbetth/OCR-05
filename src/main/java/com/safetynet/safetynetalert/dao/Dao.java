@@ -5,6 +5,9 @@ import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.exceptions.NoEntryException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -12,11 +15,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class Dao{
+public class Dao {
 
     public Database database;
     public String jsonPath = "data.json";
     public JsonWriter jsonWriter = new JsonWriter();
+    private static final Logger logger = LogManager.getLogger("Dao");
 
     public Dao() {
         try {
@@ -27,16 +31,21 @@ public class Dao{
                                     PersonDao.class.getClassLoader().getResourceAsStream(jsonPath)
                             ).orElseThrow()
                     );
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Person findPersonByName(String fnamelname) {
-        return database.getPersons()
-                .stream()
-                .filter(person -> Objects.equals(fnamelname, person.getFirstName()+person.getLastName()))
-                .findFirst().get();
+    public Person findPersonByName(String name) {
+        Optional<Person> person =
+                database.getPersons()
+                        .stream()
+                        .filter(currentPerson -> Objects.equals(name, currentPerson.getFirstName() + currentPerson.getLastName()))
+                        .findFirst();
+        if (person.isEmpty()) {
+            return null;
+        }
+        return person.get();
     }
 
     public List<Person> findPersonsWithSameFirstNameOrLastName(String firstName, String lastName) {
@@ -60,11 +69,16 @@ public class Dao{
                 .collect(Collectors.toList());
     }
 
-    public Medicalrecord findMedicalrecordByPerson(Person person) {
-        return database.getMedicalrecords()
-                .stream()
-                .filter(medicalrecord -> Objects.equals(medicalrecord.getFirstName(), person.getFirstName()) && Objects.equals(medicalrecord.getLastName(), person.getLastName()))
-                .findFirst().get();
+    public Medicalrecord findMedicalrecordByPerson(String name) {
+        Optional<Medicalrecord> medicalrecord =
+                database.getMedicalrecords()
+                        .stream()
+                        .filter(currentMed -> Objects.equals(name, currentMed.getFirstName() + currentMed.getLastName()))
+                        .findFirst();
+        if (medicalrecord.isEmpty()) {
+            throw new NoEntryException(name);
+        }
+        return medicalrecord.get();
     }
 
     public Medicalrecord findMedicalrecordByID(Integer id) {
@@ -72,10 +86,15 @@ public class Dao{
     }
 
     public Firestation findFirestationByAddress(String address) {
-        return database.getFirestations()
-                .stream()
-                .filter(firestation -> Objects.equals(address, firestation.getAddress()))
-                .findFirst().get();
+        Optional<Firestation> firestation1 =
+                database.getFirestations()
+                        .stream()
+                        .filter(firestation -> Objects.equals(address, firestation.getAddress()))
+                        .findFirst();
+        if (firestation1.isEmpty()) {
+            throw new NoEntryException(address);
+        }
+        return firestation1.get();
     }
 
     public List<Firestation> findFirestationsByNumber(String stationNumbers) {
@@ -88,30 +107,28 @@ public class Dao{
                         .filter(firestation -> Objects.equals(firestation.getStation(), Integer.parseInt(stationNumber)))
                         .collect(Collectors.toList()));
             }
+            if (stationAddressList.isEmpty()) {
+                return null;
+            }
             return stationAddressList;
         } else {
             return null;
         }
     }
 
-    public Integer getIdByName(String firstNameLastName) {
-        Integer id = 0;
-        List<Person> persons = database.getPersons();
-        for (Person person : persons) {
-            if ((person.getFirstName()+person.getLastName()).equals(firstNameLastName)){
-                break;
-            } else id++;
-        }
-        return id;
+    public void setDatabase(Database database){
+        this.database=database;
     }
     //***********Html Methods*************//
 
     public List<Person> loadPersons() {
         return database.getPersons();
     }
+
     public List<Firestation> loadFirestions() {
         return database.getFirestations();
     }
+
     public List<Medicalrecord> loadMedicalRecords() {
         return database.getMedicalrecords();
     }

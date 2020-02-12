@@ -8,17 +8,25 @@ import java.util.List;
 @Repository
 public class FirestationDao extends Dao{
 
-    public void addFirestation(Firestation firestation) {
+    public Firestation addFirestation(Firestation firestation) {
         database.getFirestations().add(firestation);
         jsonWriter.writer(database, jsonPath);
+        return firestation;
     }
 
-    public void setFirestation(Firestation firestation) {
-        database.getFirestations().set(getIdByAddress(firestation.getAddress()), firestation);
+    public Firestation setFirestation(String address, Integer stationNumber) {
+        Integer id = getIdByAddress(address);
+        List<Firestation> firestations= database.getFirestations();
+        Firestation firestationToUpdate = firestations.get(id);
+        firestationToUpdate.setStation(stationNumber);
+        firestations.set(id, firestationToUpdate);
+        database.setFirestations(firestations);
         jsonWriter.writer(database, jsonPath);
+        return firestationToUpdate;
     }
 
-    public void deleteFirestation(Integer id) {
+    public void deleteFirestation(String address) {
+        Integer id = getIdByAddress(address);
         database.getFirestations().remove(database.getFirestations().get(id));
         jsonWriter.writer(database, jsonPath);
     }

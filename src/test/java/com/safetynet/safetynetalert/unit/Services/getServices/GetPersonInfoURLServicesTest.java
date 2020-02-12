@@ -1,10 +1,11 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
+import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonInfo;
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.exceptions.NoFnameOrLnameException;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -58,9 +60,8 @@ public class GetPersonInfoURLServicesTest {
         List<Person> emptylist = new ArrayList<>();
         when(dao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(emptylist);
         //ACT
-        List<PersonInfo> personInfos = getService.personInfo("test","test");
+        assertThrows(NoFnameOrLnameException.class, () -> getService.personInfo("test","test"));
         //ASSERT
         verify(loggermock, times(1)).error(anyString());
-        assertEquals(0, personInfos.size());
     }
 }

@@ -1,8 +1,8 @@
-package com.safetynet.safetynetalert.unit.dto;
+package com.safetynet.safetynetalert.unit.dao;
 
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.dao.JsonWriter;
-import com.safetynet.safetynetalert.dao.MedicalrecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class MedicalrecordDAOTest {
+public class PersonDAOTest {
 
     private DataTest dataTest;
 
@@ -31,7 +31,7 @@ public class MedicalrecordDAOTest {
     @Mock
     static JsonWriter jsonWriterMock;
 
-    MedicalrecordDao personDao = new MedicalrecordDao();
+    PersonDao personDao = new PersonDao();
 
     @Before
     public void setup() {
@@ -50,39 +50,41 @@ public class MedicalrecordDAOTest {
         //ARRANGE
         ArgumentCaptor<List<Person>> personsArgCapt = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<List<Medicalrecord>> medicalRecordArgCapt = ArgumentCaptor.forClass(List.class);
-        Medicalrecord m = dataTest.getMedicalrecords().get(0);
+        Person p = dataTest.getNewPerson();
 
         //ACT
-        personDao.addMedicalrecord(m);
+        personDao.addPerson(p);
 
         //ASSERT
         verify(databaseMock).setPersons(personsArgCapt.capture());
         verify(databaseMock).setMedicalrecords(medicalRecordArgCapt.capture());
         assertEquals(personsArgCapt.getValue().size(), medicalRecordArgCapt.getValue().size());
         assertEquals(5, personsArgCapt.getValue().size());
+        assertThat(personsArgCapt.getValue().get(4)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
+                .contains(p.getFirstName(), p.getLastName(), p.getAddress(),p.getCity(),p.getZip(), p.getEmail(),p.getPhone());
     }
 
     @Test
     public void returnModifiedDataOfPerson() {
         //ARRANGE
-        Medicalrecord m = dataTest.getMedicalrecords().get(0);
-        m.setBirthdate(dataTest.getMedicalrecords().get(3).getBirthdate());
-        m.setAllergies(dataTest.getMedicationList3());
-        m.setMedications(dataTest.getMedicationList3());
+        Person p = dataTest.getPersonlist().get(0);
+        p.setAddress("modified");
+        p.setZip(5542);
+        p.setPhone("5544488775");
         //ACT
-        personDao.setMedicalrecord(m);
+        personDao.setPerson(p.getFirstName()+p.getLastName(), p);
 
         //ASSERT
-        assertEquals(4, databaseMock.getMedicalrecords().size());
-        assertThat(databaseMock.getMedicalrecords().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.BDATE.str(),Enum.MED.str(),Enum.ALLERG.str())
-                .contains(m.getFirstName(), m.getLastName(), m.getBirthdate(),m.getMedications(),m.getAllergies());
+        assertEquals(4, databaseMock.getPersons().size());
+        assertThat(databaseMock.getPersons().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
+                .contains(p.getFirstName(), p.getLastName(), p.getAddress(),p.getCity(),p.getZip(), p.getEmail(),p.getPhone());
     }
 
     @Test
     public void returnOnePointLessSizeOfPersonListAfterDelete() {
         //ARRANGE
         //ACT
-        personDao.deleteMedicalRecordAndPersonEntry(0);
+        personDao.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
 
         //ASSERT
         assertEquals(3, databaseMock.getPersons().size());

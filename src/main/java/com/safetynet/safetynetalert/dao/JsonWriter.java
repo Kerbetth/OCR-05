@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class JsonWriter {
-    public void writer(Database database, String jsonPath){
+    public void writer(Database database, String jsonFile){
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonStr = "";
         try {
@@ -16,7 +16,7 @@ public class JsonWriter {
         catch (IOException e) {
             e.printStackTrace();
         }
-        try (FileWriter file = new FileWriter(jsonPath)) {
+        try (FileWriter file = new FileWriter("src/main/resources/"+ jsonFile)) {
             file.write(jsonStr);
         } catch (IOException e) {
             e.printStackTrace();

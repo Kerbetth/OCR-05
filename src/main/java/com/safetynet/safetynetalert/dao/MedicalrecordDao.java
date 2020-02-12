@@ -2,42 +2,59 @@ package com.safetynet.safetynetalert.dao;
 
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;
+import com.safetynet.safetynetalert.loggerargument.LogArgs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MedicalrecordDao extends Dao{
+public class MedicalrecordDao extends PersAndMedDao{
 
-    private static final Logger logger = LogManager.getLogger("MedicalrecordDao");
+    public Logger logger = LogManager.getLogger("MedicalrecordDao");
 
-    public void addMedicalrecord(Medicalrecord medicalrecord) {
+    public List<Object> addMedicalrecord(Medicalrecord medicalrecord) {
         List<Medicalrecord> medicalrecords = database.getMedicalrecords();
         List<Person> persons = database.getPersons();
         if (medicalrecords.size() == persons.size()) {
-            medicalrecords.add(medicalrecord);
-            persons.add(DTOFactory.createdefaultPerson(medicalrecord.getFirstName(), medicalrecord.getLastName()));
-            database.setMedicalrecords(medicalrecords);
-            database.setPersons(persons);
+            if (findPersonByName(medicalrecord.getFirstName() + medicalrecord.getLastName()) == null) {
+                List<Object> result = new ArrayList<>();
+                medicalrecords.add(medicalrecord);
+                persons.add(DTOFactory.createdefaultPerson(medicalrecord.getFirstName(), medicalrecord.getLastName()));
+                database.setMedicalrecords(medicalrecords);
+                database.setPersons(persons);
+                jsonWriter.writer(database, jsonPath);
+                result.add(database.getMedicalrecords().get(database.getMedicalrecords().size() - 1));
+                result.add(database.getPersons().get(database.getPersons().size() - 1));
+                return result;
+            } else {
+                logger.error(LogArgs.getExistingNameMessage(medicalrecord.getFirstName() + medicalrecord.getLastName()));
+                return null;
+            }
         } else {
-            logger.error("Fatal Error, the number of persons and of medicalRecords are not the same, please check the JSON file");
+            logger.error(LogArgs.getNotEqualSizeMessage());
+            throw new NotEqualSizeListException();
         }
-        jsonWriter.writer(database, jsonPath);
     }
 
-    public void setMedicalrecord(Medicalrecord medicalrecord) {
-        database.getMedicalrecords().set(getIdByName(medicalrecord.getFirstName()+medicalrecord.getLastName()), medicalrecord);
+    public Medicalrecord setMedicalrecord(String firstNameLastName, Medicalrecord medrecEdit) {
+        Integer id = getIdByName(firstNameLastName);
+        Medicalrecord medicalRecordUpdated = findMedicalrecordByID(id);
+        if (medrecEdit.getBirthdate() != null) {
+            medicalRecordUpdated.setBirthdate(medrecEdit.getBirthdate());
+        }
+        if (medrecEdit.getMedications() != null) {
+            medicalRecordUpdated.setMedications(medrecEdit.getMedications());
+        }
+        if (medrecEdit.getAllergies() != null) {
+            medicalRecordUpdated.setAllergies(medrecEdit.getAllergies());
+        }
+        database.getMedicalrecords().set(id, medicalRecordUpdated);
         jsonWriter.writer(database, jsonPath);
+        return database.getMedicalrecords().get(id);
     }
 
-    public void deleteMedicalRecordAndPersonEntry(Integer id){
-        database.getMedicalrecords().remove(database.getMedicalrecords().get(id));
-        database.getPersons().remove(database.getPersons().get(id));
-        if (database.getPersons().size() != database.getMedicalrecords().size()) {
-            logger.error("Fatal Error, the number of persons and medicalRecords are not the same, please check the JSON file");
-        }
-        jsonWriter.writer(database, jsonPath);
-    }
 }

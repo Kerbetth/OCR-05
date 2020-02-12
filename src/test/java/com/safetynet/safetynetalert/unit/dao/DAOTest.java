@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.unit.dto;
+package com.safetynet.safetynetalert.unit.dao;
 
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.dao.Dao;
@@ -78,7 +78,7 @@ public class DAOTest {
     public void returnCorrectMedRecAccordingToThePerson() {
         //ACT
         Medicalrecord med = dao.findMedicalrecordByPerson(
-                dataTest.getPersonlist().get(0));
+                dataTest.getPersonlist().get(0).getFirstName()+dataTest.getPersonlist().get(0).getLastName());
 
         //ASSERT
         assertThat(dataTest.getPersonlist().get(0).getFirstName()).isEqualTo(med.getFirstName());

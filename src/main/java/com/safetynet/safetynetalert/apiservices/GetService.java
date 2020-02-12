@@ -2,6 +2,10 @@ package com.safetynet.safetynetalert.apiservices;
 
 import com.safetynet.safetynetalert.dao.DTOFactory;
 import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.exceptions.NoEntryByStationException;
+import com.safetynet.safetynetalert.exceptions.NoEntryException;
+import com.safetynet.safetynetalert.exceptions.NoFnameOrLnameException;
+import com.safetynet.safetynetalert.loggerargument.LogArgs;
 import com.safetynet.safetynetalert.domain.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +22,7 @@ public class GetService {
 
     private Logger logger = LogManager.getLogger("GetService");
     @Autowired
-    private Dao dao;
+    public Dao dao;
 
     public List<Object> firestation(Integer stationNumber) {
         List<Object> result = new ArrayList<>();
@@ -38,7 +42,7 @@ public class GetService {
             personFirestation.setAddress(person.getAddress());
             personFirestation.setPhone(person.getPhone());
             personFirestations.add(personFirestation);
-            Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person);
+            Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person.getFirstName() + person.getLastName());
             if (DTOFactory.getAge(medicalrecord.getBirthdate()) <= 18) {
                 children++;
             } else {
@@ -46,7 +50,8 @@ public class GetService {
             }
         }
         if (personFirestations.size() == 0) {
-            logger.error("Their is no station with the number \"" + stationNumber + "\"");
+            logger.error(LogArgs.getNoEntryByStationMessage(stationNumber.toString()));
+            throw new NoEntryByStationException(stationNumber.toString());
         }
         count.setAdults(adults);
         count.setChildren(children);
@@ -60,7 +65,7 @@ public class GetService {
         List<Person> personsList = dao.findPersonByAddress(address);
         if (personsList.size() > 0) {
             for (Person person : personsList) {
-                Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person);
+                Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person.getFirstName() + person.getLastName());
                 Integer age = DTOFactory.getAge(medicalrecord.getBirthdate());
                 if (age <= 18) {
                     Child child = new Child();
@@ -80,10 +85,11 @@ public class GetService {
             }
             if (result.size() == 0) {
                 logger.error("Their is no children at the address \"" + address + "\"");
+                return null;
             }
         } else {
-            logger.error("The address \"" + address + "\" doesn't exist in the repertory");
-            return null;
+            logger.error(LogArgs.getNoEntryMessage(address));
+            throw new NoEntryException(address);
         }
         return result;
     }
@@ -91,44 +97,37 @@ public class GetService {
     public Set<String> phoneAlert(Integer stationNumber) {
         Set<String> result = new HashSet<>();
         List<Firestation> addressList = dao.findFirestationsByNumber(stationNumber.toString());
-        if(addressList!=null){
-        for (Firestation firestation : addressList) {
-            List<Person> personsList = dao.findPersonByAddress(firestation.getAddress());
-            for (Person person : personsList) {
-                result.add(person.getPhone());
+        if (addressList != null) {
+            for (Firestation firestation : addressList) {
+                List<Person> personsList = dao.findPersonByAddress(firestation.getAddress());
+                for (Person person : personsList) {
+                    result.add(person.getPhone());
+                }
             }
-
-        }
         } else {
-            logger.error("Their is no station with the number \"" + stationNumber + "\"");
-            return null;
+            logger.error(LogArgs.getNoEntryByStationMessage(stationNumber.toString()));
+            throw new NoEntryByStationException(stationNumber.toString());
         }
-
         return result;
     }
 
     public List<Object> fire(String address) {
         List<Object> result = new ArrayList<>();
-        List<PersonFloodAndFire> personFloodsList = new ArrayList<>();
+        List<PersonFloodAndFire> fireList = new ArrayList<>();
         Integer station = 0;
         if (dao.findFirestationByAddress(address) != null) {
             station = dao.findFirestationByAddress(address).getStation();
             List<Person> personsList = dao.findPersonByAddress(address);
             for (Person person : personsList) {
-                PersonFloodAndFire personFire = new PersonFloodAndFire();
-                personFire.setName(person.getFirstName() + " " + person.getLastName());
-                personFire.setPhone(person.getPhone());
-                Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person);
-                personFire.setAge(DTOFactory.getAge(medicalrecord.getBirthdate()));
-                personFire.setMedications(medicalrecord.getMedications());
-                personFire.setAllergies(medicalrecord.getAllergies());
-                personFloodsList.add(personFire);
+                Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person.getFirstName() + person.getLastName());
+                PersonFloodAndFire personFire = DTOFactory.createPersonFloodAndFire(person, medicalrecord);
+                fireList.add(personFire);
             }
         } else {
-            logger.error("Their is no firestation at the address \"" + address + "\"");
+            logger.error(LogArgs.getNoEntryMessage(address));
         }
         result.add(station);
-        result.add(personFloodsList);
+        result.add(fireList);
         return result;
     }
 
@@ -142,20 +141,16 @@ public class GetService {
                 List<PersonFloodAndFire> personFloodsList = new ArrayList<>();
                 List<Person> personsList = dao.findPersonByAddress(address.getAddress());
                 for (Person person : personsList) {
-                    PersonFloodAndFire personFlood = new PersonFloodAndFire();
-                    personFlood.setName(person.getFirstName() + " " + person.getLastName());
-                    personFlood.setPhone(person.getPhone());
-                    Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person);
-                    personFlood.setAge(DTOFactory.getAge(medicalrecord.getBirthdate()));
-                    personFlood.setMedications(medicalrecord.getMedications());
-                    personFlood.setAllergies(medicalrecord.getAllergies());
-                    personFloodsList.add(personFlood);
+                    Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person.getFirstName() + person.getLastName());
+                    PersonFloodAndFire personFire = DTOFactory.createPersonFloodAndFire(person, medicalrecord);
+                    personFloodsList.add(personFire);
                 }
                 houseHold.setPersonList(personFloodsList);
                 result.add(houseHold);
             }
         } else {
-            logger.error("Their is no firestation with the following station numbers \"" + numbersList + "\"");
+            logger.error(LogArgs.getNoEntryByStationMessage(numbersList));
+            throw new NoEntryByStationException(numbersList);
         }
         return result;
     }
@@ -169,14 +164,15 @@ public class GetService {
                 personInfo.setName(person.getFirstName() + " " + person.getLastName());
                 personInfo.setAddress(person.getAddress());
                 personInfo.setEmail(person.getEmail());
-                Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person);
+                Medicalrecord medicalrecord = dao.findMedicalrecordByPerson(person.getFirstName() + person.getLastName());
                 personInfo.setAge(DTOFactory.getAge(medicalrecord.getBirthdate()));
                 personInfo.setMedications(medicalrecord.getMedications());
                 personInfo.setAllergies(medicalrecord.getAllergies());
                 result.add(personInfo);
             }
         } else {
-            logger.error("Their is no person with the firstname: \"" + firstName + "\" or lastname: \"" + firstName + "\"");
+            logger.error(LogArgs.getNoFnameOrLNameMessage(firstName,lastName));
+            throw new NoFnameOrLnameException(firstName,lastName);
         }
         return result;
     }

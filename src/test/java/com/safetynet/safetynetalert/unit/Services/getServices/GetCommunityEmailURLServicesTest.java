@@ -5,6 +5,8 @@ import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.exceptions.NoEntryException;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,9 +19,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.byLessThan;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetCommunityEmailURLServicesTest {
@@ -28,6 +30,8 @@ public class GetCommunityEmailURLServicesTest {
 
     @Mock
     static PersonDao dao;
+    @Mock
+    static Logger loggermock;
 
     @InjectMocks
     GetService getService;
@@ -56,10 +60,10 @@ public class GetCommunityEmailURLServicesTest {
         when(dao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
 
         //ACT
-        List<Child> children = getService.childAlert("noaddress");
+        assertThrows(NoEntryException.class, () -> getService.childAlert("noaddress"));
 
         //ASSERT
-        assertNull(children);
+        verify(loggermock, times(1)).error(anyString());
     }
 
     @Test
@@ -68,9 +72,11 @@ public class GetCommunityEmailURLServicesTest {
         List<Person> addressPerson = dataTest.getPersonlist();
         addressPerson.remove(addressPerson.get(1));
         addressPerson.remove(addressPerson.get(2));
+        String firstNameLastNamea = (addressPerson.get(0).getFirstName() + addressPerson.get(0).getLastName());
+        String firstNameLastNameb = (addressPerson.get(1).getFirstName() + addressPerson.get(1).getLastName());
         when(dao.findPersonByAddress(dataTest.getPersonlist().get(0).getAddress())).thenReturn(addressPerson);
-        when(dao.findMedicalrecordByPerson(addressPerson.get(0))).thenReturn(dataTest.getMedicalrecords().get(0));
-        when(dao.findMedicalrecordByPerson(addressPerson.get(1))).thenReturn(dataTest.getMedicalrecords().get(1));
+        when(dao.findMedicalrecordByPerson(firstNameLastNamea)).thenReturn(dataTest.getMedicalrecords().get(0));
+        when(dao.findMedicalrecordByPerson(firstNameLastNameb)).thenReturn(dataTest.getMedicalrecords().get(1));
 
         //ACT
         List<Child> children = getService.childAlert(dataTest.getPersonlist().get(0).getAddress());

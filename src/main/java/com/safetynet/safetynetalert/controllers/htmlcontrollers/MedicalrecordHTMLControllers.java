@@ -38,13 +38,13 @@ public class MedicalrecordHTMLControllers {
 
     @RequestMapping(value = "/medrec/setting")
     public String updatingMedicalRecord(Medicalrecord medicalRecord) {
-        medicalrecordDao.setMedicalrecord(medicalRecord);
+        medicalrecordDao.setMedicalrecord(medicalRecord.getFirstName()+medicalRecord.getLastName(),medicalRecord);
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/medrec/del/{firstName}/{lastName}")
-    public String deletingMedicalRecord(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName) {
-        medicalrecordDao.deleteMedicalRecordAndPersonEntry(medicalrecordDao.getIdByName(firstName+lastName));
+    @RequestMapping(value = "/medrec/del/{name}")
+    public String deletingMedicalRecord(@PathVariable("name") String name) {
+        medicalrecordDao.deleteMedicalRecordAndPersonEntry(name);
         return "redirect:/";
     }
 

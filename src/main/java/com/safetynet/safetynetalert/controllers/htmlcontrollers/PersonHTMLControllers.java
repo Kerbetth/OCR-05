@@ -39,13 +39,13 @@ public class PersonHTMLControllers {
 
     @RequestMapping(value = "/person/setting")
     public String updatingPerson(Person person){
-        personDao.setPerson(person);
+        personDao.setPerson(person.getFirstName()+person.getLastName(),person);
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/person/del/{firstName}/{lastName}")
-    public String deletingPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName){
-        personDao.deleteMedicalRecordAndPersonEntry(personDao.getIdByName(firstName+lastName));
+    @RequestMapping(value = "/person/del/{name}")
+    public String deletingPerson(@PathVariable("name") String name){
+        personDao.deleteMedicalRecordAndPersonEntry(name);
         return "redirect:/";
     }
 

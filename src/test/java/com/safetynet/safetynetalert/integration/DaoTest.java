@@ -1,19 +1,18 @@
-package com.safetynet.safetynetalert;
+package com.safetynet.safetynetalert.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import org.springframework.stereotype.Repository;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
 
 @Repository
-public class DaoTest {
+public class DaoTest  extends Dao {
 
-    Database database;
-    String path = "src/main/resources/datatest.json";
+    private Database database;
 
     public DaoTest() {
         try {
@@ -28,20 +27,7 @@ public class DaoTest {
             e.printStackTrace();
         }
     }
-
-    public void daoWriter(Database database){
-        ObjectMapper Obj = new ObjectMapper();
-        String jsonStr = "";
-        try {
-            jsonStr = Obj.writeValueAsString(database);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (FileWriter file = new FileWriter(path)) {
-            file.write(jsonStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Database getDatabase(){
+        return database;
     }
 }

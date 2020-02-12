@@ -1,40 +1,36 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.apiservices.PersonService;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Person;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 
-@Controller
+@RestController
 public class PersonControllers {
 
 
     @Autowired
-    private PersonService personService;
+    private PersonDao personDao;
 
 
     @PostMapping(value = "/person")
-    public ResponseEntity addPersonPost(@RequestBody Person person){
-        ResponseEntity response = personService.postPerson(person);
-        return response;
+    public List<Object> addPersonPost(@RequestBody Person person){
+        return personDao.addPerson(person);
     }
 
     @PutMapping(value = "/person/{name}")
     //"name" has to be declared in format "FirstnameLastname"
-    public ResponseEntity setPersonPut(@PathVariable String name, @RequestBody Person personData){
-        ResponseEntity response =  personService.putPerson(name, personData);
-        return response;
+    public Person setPersonPut(@PathVariable String name, @RequestBody Person personData){
+        Person person1  =  personDao.setPerson(name, personData);
+        return person1;
     }
 
-    @DeleteMapping(value = "/person")
-    public ResponseEntity removePersonDelete(@RequestParam String name) {
-        ResponseEntity response = personService.deletePersonAndMedicalRecord(name);
-        return response;
+    @DeleteMapping(value = "/person/{name}")
+    public void removePersonDelete(@PathVariable String name) {
+        personDao.deleteMedicalRecordAndPersonEntry(name);
     }
 
 }

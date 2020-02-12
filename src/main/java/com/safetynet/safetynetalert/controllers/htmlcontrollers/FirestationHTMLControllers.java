@@ -40,13 +40,13 @@ public class FirestationHTMLControllers {
 
     @RequestMapping(value = "/station/setting")
     public String updatingfirestation(Firestation firestation) {
-        firestationDao.setFirestation(firestation);
+        firestationDao.setFirestation(firestation.getAddress(), firestation.getStation());
         return "redirect:/";
     }
 
     @RequestMapping(value = "/station/del/{address}")
     public String deletingfirestation(@PathVariable("address") String address) {
-        firestationDao.deleteFirestation(firestationDao.getIdByAddress(address));
+        firestationDao.deleteFirestation(address);
         return "redirect:/";
     }
 

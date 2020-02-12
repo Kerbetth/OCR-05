@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.unit.dto;
+package com.safetynet.safetynetalert.unit.dao;
 
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.dao.FirestationDao;
@@ -53,8 +53,9 @@ public class FirestationDAOTest {
         //ARRANGE
         Firestation m = dataTest.getFirestation1();
         m.setStation(8);
+
         //ACT
-        firestationDao.setFirestation(m);
+        firestationDao.setFirestation("3333 Broadway",8);
 
         //ASSERT
         assertEquals(3, databaseMock.getFirestations().size());
@@ -65,7 +66,7 @@ public class FirestationDAOTest {
     public void returnOnePointLessSizeOfPersonListAfterDelete() {
         //ARRANGE
         //ACT
-        firestationDao.deleteFirestation(2);
+        firestationDao.deleteFirestation("3333 Broadway");
 
         //ASSERT
         assertEquals(2, databaseMock.getFirestations().size());

@@ -1,11 +1,15 @@
 package com.safetynet.safetynetalert;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ public class DataTest {
     private ArrayList<Medicalrecord> medicalrecords;
     private ArrayList<Firestation> firestations;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private Database database;
 
     public DataTest() {
         personlist = new ArrayList<>();
@@ -98,6 +103,10 @@ public class DataTest {
         firestation3.setStation(2);
         firestation3.setAddress("Edelstein");
         firestations.add(firestation3);
+        database = new Database();
+        database.setMedicalrecords(medicalrecords);
+        database.setFirestations(firestations);
+        database.setPersons(personlist);
     }
 
     public ArrayList<String> getMedicationList1() {
@@ -135,6 +144,23 @@ public class DataTest {
         person.setEmail("new@mail.com");
         return person;
     }
+
+    public void writingCleanJsonDataTest(){
+        ObjectMapper Obj = new ObjectMapper();
+        String jsonStr = "";
+        try {
+            jsonStr = Obj.writeValueAsString(database);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileWriter file = new FileWriter("src/main/resources/datatest.json")) {
+            file.write(jsonStr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public ArrayList<Person> getPersonlist() {
         return personlist;

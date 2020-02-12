@@ -1,5 +1,6 @@
-package com.safetynet.safetynetalert.unit.Services.personServices;
+package com.safetynet.safetynetalert.unit.Services.postPutDeleteServices;
 
+import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.FirestationService;
 import com.safetynet.safetynetalert.dao.FirestationDao;
 import com.safetynet.safetynetalert.domain.Firestation;
@@ -9,7 +10,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class FirestationAPIServicesTest {
 
+    private DataTest dataTest = new DataTest();
 
     @Mock
     static FirestationDao firestationDao;
@@ -35,16 +36,16 @@ public class FirestationAPIServicesTest {
         ArgumentCaptor<Firestation> firestationArgCapt = ArgumentCaptor.forClass(Firestation.class);
 
         //ACT
-        aPIService.postFirestation("randomaddress",1);
+        aPIService.postFirestation(dataTest.getFirestations().get(0));
 
         //ASSERT
         verify(firestationDao).addFirestation(firestationArgCapt.capture());
-        assertEquals("randomaddress", firestationArgCapt.getValue().getAddress());
+        assertEquals(dataTest.getFirestations().get(0).getAddress(), firestationArgCapt.getValue().getAddress());
         assertEquals(1, firestationArgCapt.getValue().getStation());
     }
 
     @Test
-    public void medicalRecordCorrectlyPut() {
+    public void firestationCorrectlyPut() {
         //ARRANGE
         Firestation firestation =new Firestation();
         firestation.setStation(1);
@@ -55,11 +56,10 @@ public class FirestationAPIServicesTest {
         ArgumentCaptor<Firestation> firestationArgCapt = ArgumentCaptor.forClass(Firestation.class);
 
         //ACT
-        ResponseEntity responseEntity = aPIService.putFirestation("randomaddress",2);
+        aPIService.putFirestation("randomaddress",2);
 
         //ASSERT
         verify(firestationDao).setFirestation(firestationArgCapt.capture());
-        assertEquals(200, responseEntity.getStatusCodeValue());
         assertEquals(2, firestationArgCapt.getValue().getStation());
     }
 
@@ -71,11 +71,10 @@ public class FirestationAPIServicesTest {
         ArgumentCaptor<Integer> numberArgCapt = ArgumentCaptor.forClass(Integer.class);
 
         //ACT
-        ResponseEntity responseEntity = aPIService.deletetFirestation("randomaddress");
+        aPIService.deletetFirestation("randomaddress");
 
         //ASSERT
         verify(firestationDao).deleteFirestation(numberArgCapt.capture());
-        assertEquals(200, responseEntity.getStatusCodeValue());
         assertEquals(1, numberArgCapt.getValue());
     }
 }
