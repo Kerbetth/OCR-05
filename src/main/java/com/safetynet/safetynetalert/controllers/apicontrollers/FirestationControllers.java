@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.apiservices.firestationservice.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,19 +11,17 @@ public class FirestationControllers {
 
 
     @Autowired
-    private FirestationDao dao;
+    private FirestationService dao;
 
 
     @PostMapping(value = "/firestation")
     public Firestation addFirestationPost(@RequestBody Firestation firestationData){
-        Firestation firestation = dao.addFirestation(firestationData);
-        return firestation;
+        return dao.addFirestation(firestationData);
     }
 
     @PutMapping(value = "/firestation/{address}")
     public Firestation setFirestationPut(@PathVariable String address, @RequestParam Integer stationNumber){
-        Firestation firestation = dao.setFirestation(address, stationNumber);
-        return firestation;
+        return dao.setFirestation(address, stationNumber);
     }
 
     @DeleteMapping(value = "/firestation/{address}")

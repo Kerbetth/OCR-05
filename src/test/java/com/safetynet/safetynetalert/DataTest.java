@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalert;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
@@ -8,8 +7,6 @@ import com.safetynet.safetynetalert.domain.Person;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -111,14 +108,14 @@ public class DataTest {
 
     public ArrayList<String> getMedicationList1() {
         ArrayList<String> med = new ArrayList<>();
-        med.add("\"bric\"");
-        med.add("\"broc\"");
+        med.add("bric");
+        med.add("broc");
         return med;
     }
 
     public ArrayList<String> getMedicationList2() {
         ArrayList<String> med = new ArrayList<>();
-        med.add("\"paracet\"");
+        med.add("paracet");
         return med;
     }
 
@@ -128,8 +125,8 @@ public class DataTest {
 
     public ArrayList<String> getMedicationList4() {
         ArrayList<String> med = new ArrayList<>();
-        med.add("\"virus\"");
-        med.add("\"othervirus\"");
+        med.add("virus");
+        med.add("othervirus");
         return med;
     }
 
@@ -139,30 +136,17 @@ public class DataTest {
         person.setLastName("newLastName");
         person.setAddress("newAddress");
         person.setCity("newCity");
-        person.setZip(000);
+        person.setZip(8000);
         person.setPhone("000000-000");
         person.setEmail("new@mail.com");
         return person;
     }
 
-    public void writingCleanJsonDataTest(){
-        ObjectMapper Obj = new ObjectMapper();
-        String jsonStr = "";
-        try {
-            jsonStr = Obj.writeValueAsString(database);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (FileWriter file = new FileWriter("src/main/resources/datatest.json")) {
-            file.write(jsonStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Database getDatabase() {
+        return database;
     }
 
-
-    public ArrayList<Person> getPersonlist() {
+    public ArrayList<Person> getPersons() {
         return personlist;
     }
 

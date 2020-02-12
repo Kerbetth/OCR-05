@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalert.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalert.apiservices.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,10 +19,10 @@ import java.util.stream.Collectors;
 @Repository
 public class Dao {
 
-    public Database database;
-    public String jsonPath = "data.json";
-    public JsonWriter jsonWriter = new JsonWriter();
+    private Database database;
     private static final Logger logger = LogManager.getLogger("Dao");
+    public String jsonfile = "src/main/resources/data.json";
+
 
     public Dao() {
         try {
@@ -28,9 +30,25 @@ public class Dao {
                     .readerFor(Database.class)
                     .readValue(
                             Optional.ofNullable(
-                                    PersonDao.class.getClassLoader().getResourceAsStream(jsonPath)
+                                    Dao.class.getClassLoader().getResourceAsStream("data.json")
                             ).orElseThrow()
                     );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writer(Database database){
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonStr = "";
+        try {
+            jsonStr = objectMapper.writeValueAsString(database);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileWriter file = new FileWriter(jsonfile)) {
+            file.write(jsonStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,9 +134,18 @@ public class Dao {
         }
     }
 
-    public void setDatabase(Database database){
-        this.database=database;
+    public void setDatabase(Database database) {
+        this.database = database;
     }
+
+    public Database getDtb() {
+        return database;
+    }
+
+    public void setJsonWriter(String jsonFile) {
+        jsonfile = jsonFile;
+    }
+
     //***********Html Methods*************//
 
     public List<Person> loadPersons() {

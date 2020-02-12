@@ -4,7 +4,7 @@ package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 
 import com.safetynet.safetynetalert.domain.Medicalrecord;
-import com.safetynet.safetynetalert.dao.MedicalrecordDao;
+import com.safetynet.safetynetalert.apiservices.persandmedservice.MedicalrecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MedicalrecordHTMLControllers {
 
     @Autowired
-    private MedicalrecordDao medicalrecordDao;
+    private MedicalrecordService medicalrecordDao;
 
     @RequestMapping("/medrec/new")
     public String newmedicalRecord(Model model) {

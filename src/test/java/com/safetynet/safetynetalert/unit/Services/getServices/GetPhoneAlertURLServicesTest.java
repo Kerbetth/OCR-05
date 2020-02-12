@@ -1,9 +1,10 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
-import com.safetynet.safetynetalert.apiservices.GetService;
-import com.safetynet.safetynetalert.dao.PersonDao;
-import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.domain.Firestation;
+import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -26,7 +27,7 @@ public class GetPhoneAlertURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static PersonDao dao;
+    static Dao dao;
     @Mock
     static Logger loggermock;
     @InjectMocks
@@ -37,7 +38,7 @@ public class GetPhoneAlertURLServicesTest {
         //ARRANGE
         List<Firestation> firestations = dataTest.getFirestations();
         when(dao.findFirestationsByNumber(anyString())).thenReturn(firestations);
-        when(dao.findPersonByAddress(any())).thenReturn(dataTest.getPersonlist());
+        when(dao.findPersonByAddress(any())).thenReturn(dataTest.getPersons());
 
         //ACT
         Set<String> phoneAlert = getService.phoneAlert(0);
@@ -50,9 +51,8 @@ public class GetPhoneAlertURLServicesTest {
     public void returnNoFireDataIfNumberStationDoesntExist(){
         when(dao.findFirestationsByNumber(anyString())).thenReturn(null);
         //ACT
-        Set<String> phoneAlert = getService.phoneAlert(0);
+        assertThrows(NoEntryException.class, () ->  getService.phoneAlert(0));
         //ASSERT
         verify(loggermock, times(1)).error(anyString());
-        assertNull(phoneAlert);
     }
 }

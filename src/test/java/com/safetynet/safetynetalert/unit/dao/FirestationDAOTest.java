@@ -1,14 +1,16 @@
 package com.safetynet.safetynetalert.unit.dao;
 
+import com.safetynet.safetynetalert.DaoTest;
 import com.safetynet.safetynetalert.DataTest;
-import com.safetynet.safetynetalert.dao.FirestationDao;
-import com.safetynet.safetynetalert.dao.JsonWriter;
-import com.safetynet.safetynetalert.domain.Database;
+import com.safetynet.safetynetalert.apiservices.firestationservice.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,21 +21,19 @@ import static org.mockito.Mockito.*;
 public class FirestationDAOTest {
 
     private DataTest dataTest;
-
     @Mock
-    static Database databaseMock;
-    @Mock
-    static JsonWriter jsonWriterMock;
+    static Logger loggerMock;
 
-    FirestationDao firestationDao = new FirestationDao();
+    @Spy
+    DaoTest dao = new DaoTest();
+
+    @InjectMocks
+    FirestationService firestationService = new FirestationService();
 
     @Before
     public void setup() {
         dataTest = new DataTest();
-        firestationDao.database =databaseMock;
-        firestationDao.jsonWriter =jsonWriterMock;
-        when(databaseMock.getFirestations()).thenReturn(dataTest.getFirestations());
-        doNothing().when(jsonWriterMock).writer(any(),anyString());
+        doNothing().when(dao).writer(any());
     }
 
     @Test
@@ -42,10 +42,10 @@ public class FirestationDAOTest {
         Firestation m = dataTest.getFirestation1();
 
         //ACT
-        firestationDao.addFirestation(m);
+        firestationService.addFirestation(m);
 
         //ASSERT
-        assertEquals(4, databaseMock.getFirestations().size());
+        assertEquals(4, firestationService.getDtb().getFirestations().size());
     }
 
     @Test
@@ -55,20 +55,20 @@ public class FirestationDAOTest {
         m.setStation(8);
 
         //ACT
-        firestationDao.setFirestation("3333 Broadway",8);
+        firestationService.setFirestation("3333 broadway",8);
 
         //ASSERT
-        assertEquals(3, databaseMock.getFirestations().size());
-        assertEquals(8, databaseMock.getFirestations().get(0).getStation());
+        assertEquals(3, firestationService.getDtb().getFirestations().size());
+        assertEquals(8, firestationService.getDtb().getFirestations().get(0).getStation());
     }
 
     @Test
     public void returnOnePointLessSizeOfPersonListAfterDelete() {
         //ARRANGE
         //ACT
-        firestationDao.deleteFirestation("3333 Broadway");
+        firestationService.deleteFirestation("3333 broadway");
 
         //ASSERT
-        assertEquals(2, databaseMock.getFirestations().size());
+        assertEquals(2, firestationService.getDtb().getFirestations().size());
     }
 }

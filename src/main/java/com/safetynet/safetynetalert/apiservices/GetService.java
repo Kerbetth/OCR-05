@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalert.apiservices;
 
-import com.safetynet.safetynetalert.dao.DTOFactory;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.exceptions.NoEntryByStationException;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
@@ -21,8 +20,9 @@ import java.util.Set;
 public class GetService {
 
     private Logger logger = LogManager.getLogger("GetService");
+
     @Autowired
-    public Dao dao;
+    private Dao dao;
 
     public List<Object> firestation(Integer stationNumber) {
         List<Object> result = new ArrayList<>();
@@ -192,5 +192,9 @@ public class GetService {
             return null;
         }
         return result;
+    }
+
+    public void setDao(Dao dao) {
+        this.dao = dao;
     }
 }

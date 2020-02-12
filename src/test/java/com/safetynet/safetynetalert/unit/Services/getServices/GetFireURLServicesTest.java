@@ -1,10 +1,10 @@
 package com.safetynet.safetynetalert.unit.Services.getServices;
 
+import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
-import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
-import com.safetynet.safetynetalert.DataTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ public class GetFireURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static PersonDao dao;
+    static Dao dao;
     @Mock
     static Logger loggermock;
 
@@ -37,7 +37,7 @@ public class GetFireURLServicesTest {
     @Test
     public void returnFireContentWithCorrectData(){
         //ARRANGE
-        List<Person> addressPerson = dataTest.getPersonlist();
+        List<Person> addressPerson = dataTest.getPersons();
         addressPerson.remove(addressPerson.get(3));
         addressPerson.remove(addressPerson.get(1));
         when(dao.findFirestationByAddress(anyString())).thenReturn(dataTest.getFirestation1());
@@ -47,15 +47,15 @@ public class GetFireURLServicesTest {
                 .thenReturn(dataTest.getMedicalrecords().get(2));
 
         //ACT
-        List<Object> getfire = getService.fire(dataTest.getPersonlist().get(0).getAddress());
+        List<Object> getfire = getService.fire(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
         List<PersonFloodAndFire> personFloodAndFires = (List<PersonFloodAndFire>) getfire.get(1);
         assertEquals(2, getfire.size());
         assertEquals(1, (Integer) getfire.get(0));
         assertEquals(2, personFloodAndFires.size());
-        Person p1 =  dataTest.getPersonlist().get(0);
-        Person p3 =  dataTest.getPersonlist().get(1);
+        Person p1 =  dataTest.getPersons().get(0);
+        Person p3 =  dataTest.getPersons().get(1);
         assertThat(personFloodAndFires).extracting("name","phone","medications","allergies")
                 .contains(  tuple(p1.getFirstName() + " " + p1.getLastName(), p1.getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()),
                         tuple(p3.getFirstName() + " " + p3.getLastName(), p3.getPhone(), dataTest.getMedicationList4(), dataTest.getMedicationList3()));

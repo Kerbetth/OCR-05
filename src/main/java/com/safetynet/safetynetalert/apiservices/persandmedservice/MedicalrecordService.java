@@ -1,5 +1,7 @@
-package com.safetynet.safetynetalert.dao;
+package com.safetynet.safetynetalert.apiservices.persandmedservice;
 
+import com.safetynet.safetynetalert.apiservices.DTOFactory;
+import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;
@@ -12,23 +14,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MedicalrecordDao extends PersAndMedDao{
+public class MedicalrecordService extends PersAndMedService {
 
     public Logger logger = LogManager.getLogger("MedicalrecordDao");
 
+
+
     public List<Object> addMedicalrecord(Medicalrecord medicalrecord) {
-        List<Medicalrecord> medicalrecords = database.getMedicalrecords();
-        List<Person> persons = database.getPersons();
+        List<Medicalrecord> medicalrecords = dao.getDtb().getMedicalrecords();
+        List<Person> persons = dao.getDtb().getPersons();
         if (medicalrecords.size() == persons.size()) {
-            if (findPersonByName(medicalrecord.getFirstName() + medicalrecord.getLastName()) == null) {
+            if (dao.findPersonByName(medicalrecord.getFirstName() + medicalrecord.getLastName()) == null) {
                 List<Object> result = new ArrayList<>();
                 medicalrecords.add(medicalrecord);
                 persons.add(DTOFactory.createdefaultPerson(medicalrecord.getFirstName(), medicalrecord.getLastName()));
-                database.setMedicalrecords(medicalrecords);
-                database.setPersons(persons);
-                jsonWriter.writer(database, jsonPath);
-                result.add(database.getMedicalrecords().get(database.getMedicalrecords().size() - 1));
-                result.add(database.getPersons().get(database.getPersons().size() - 1));
+                dao.getDtb().setMedicalrecords(medicalrecords);
+                dao.getDtb().setPersons(persons);
+                dao.writer(dao.getDtb());
+                result.add(dao.getDtb().getMedicalrecords().get(dao.getDtb().getMedicalrecords().size() - 1));
+                result.add(dao.getDtb().getPersons().get(dao.getDtb().getPersons().size() - 1));
                 return result;
             } else {
                 logger.error(LogArgs.getExistingNameMessage(medicalrecord.getFirstName() + medicalrecord.getLastName()));
@@ -42,7 +46,7 @@ public class MedicalrecordDao extends PersAndMedDao{
 
     public Medicalrecord setMedicalrecord(String firstNameLastName, Medicalrecord medrecEdit) {
         Integer id = getIdByName(firstNameLastName);
-        Medicalrecord medicalRecordUpdated = findMedicalrecordByID(id);
+        Medicalrecord medicalRecordUpdated = dao.findMedicalrecordByID(id);
         if (medrecEdit.getBirthdate() != null) {
             medicalRecordUpdated.setBirthdate(medrecEdit.getBirthdate());
         }
@@ -52,9 +56,16 @@ public class MedicalrecordDao extends PersAndMedDao{
         if (medrecEdit.getAllergies() != null) {
             medicalRecordUpdated.setAllergies(medrecEdit.getAllergies());
         }
-        database.getMedicalrecords().set(id, medicalRecordUpdated);
-        jsonWriter.writer(database, jsonPath);
-        return database.getMedicalrecords().get(id);
+        dao.getDtb().getMedicalrecords().set(id, medicalRecordUpdated);
+        dao.writer(dao.getDtb());
+        return dao.getDtb().getMedicalrecords().get(id);
     }
 
+
+
+    //***********Html Methods*************//
+
+    public Medicalrecord findMedicalrecordByID(int id){
+        return dao.findMedicalrecordByID(id);
+    }
 }

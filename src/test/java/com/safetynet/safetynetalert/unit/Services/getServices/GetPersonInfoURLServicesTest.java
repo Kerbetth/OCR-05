@@ -2,7 +2,7 @@ package com.safetynet.safetynetalert.unit.Services.getServices;
 
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
-import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonInfo;
 import com.safetynet.safetynetalert.exceptions.NoFnameOrLnameException;
@@ -29,7 +29,7 @@ public class GetPersonInfoURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static PersonDao dao;
+    static Dao dao;
     @Mock
     static Logger loggermock;
 
@@ -40,7 +40,7 @@ public class GetPersonInfoURLServicesTest {
     public void returnPersonInfoWithCorrectDate(){
         //ARRANGE
         List<Person> pl1 = new ArrayList<>();
-        pl1.add(dataTest.getPersonlist().get(1));
+        pl1.add(dataTest.getPersons().get(1));
         when(dao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(pl1);
         when(dao.findMedicalrecordByPerson(any()))
                 .thenReturn(dataTest.getMedicalrecords().get(0))

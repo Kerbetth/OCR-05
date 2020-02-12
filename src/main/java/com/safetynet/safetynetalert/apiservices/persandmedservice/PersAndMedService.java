@@ -1,34 +1,39 @@
-package com.safetynet.safetynetalert.dao;
+package com.safetynet.safetynetalert.apiservices.persandmedservice;
 
+import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;
 import com.safetynet.safetynetalert.loggerargument.LogArgs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class PersAndMedDao extends Dao{
+public class PersAndMedService {
 
     private static final Logger logger = LogManager.getLogger("PersAndMedDao");
 
+    @Autowired
+    Dao dao;
     public void deleteMedicalRecordAndPersonEntry(String name) {
         int id = getIdByName(name);
-        database.getMedicalrecords().remove(database.getMedicalrecords().get(id));
-        database.getPersons().remove(database.getPersons().get(id));
-        if (database.getPersons().size() != database.getMedicalrecords().size()) {
+        dao.getDtb().getMedicalrecords().remove(dao.getDtb().getMedicalrecords().get(id));
+        dao.getDtb().getPersons().remove(dao.getDtb().getPersons().get(id));
+        if (dao.getDtb().getPersons().size() != dao.getDtb().getMedicalrecords().size()) {
             logger.error(LogArgs.getNotEqualSizeMessage());
             throw new NotEqualSizeListException();
         }
-        jsonWriter.writer(database, jsonPath);
+        dao.writer(dao.getDtb());
     }
 
     public Integer getIdByName(String name) {
         int id = 0;
-        List<Person> persons = database.getPersons();
+        List<Person> persons = dao.getDtb().getPersons();
         for (Person person : persons) {
             if ((person.getFirstName() + person.getLastName()).equals(name)) {
                 break;
@@ -40,4 +45,11 @@ public class PersAndMedDao extends Dao{
         return id;
     }
 
+    public Dao getDao() {
+        return dao;
+    }
+
+    public Database getDtb() {
+        return dao.getDtb();
+    }
 }

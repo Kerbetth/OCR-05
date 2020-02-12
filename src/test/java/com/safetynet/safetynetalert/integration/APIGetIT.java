@@ -1,6 +1,8 @@
 package com.safetynet.safetynetalert.integration;
 
+import com.safetynet.safetynetalert.DaoTest;
 import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.WritingCleanJsonData;
 import com.safetynet.safetynetalert.apiservices.GetService;
 import com.safetynet.safetynetalert.domain.*;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
@@ -19,7 +21,8 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,9 +30,9 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class APIGetIT {
 
-    DataTest dataTest = new DataTest();
+    DataTest dataTest;
     @Spy
-    private DaoTest dao = new DaoTest();
+    private DaoTest dao;
     @Spy
     private Logger logger = LogManager.getLogger("GetServiceTest");
 
@@ -38,15 +41,15 @@ public class APIGetIT {
     Person p3;
 
     @InjectMocks
-    private GetService getService = new GetService();
+    private GetService getService;
 
     @Before
     public void setup() {
-        dataTest.writingCleanJsonDataTest();
-        getService.dao.setDatabase(dao.getDatabase());
-        p1 = dataTest.getPersonlist().get(0);
-        p2 = dataTest.getPersonlist().get(1);
-        p3 = dataTest.getPersonlist().get(2);
+        WritingCleanJsonData.writingCleanJsonDataTest();
+        dataTest = new DataTest();
+        p1 = dataTest.getPersons().get(0);
+        p2 = dataTest.getPersons().get(1);
+        p3 = dataTest.getPersons().get(2);
     }
 
     @Test
@@ -72,8 +75,8 @@ public class APIGetIT {
         List<String> emailList = getService.communityEmail("NYC");
         //ASSERT
         Assertions.assertEquals(2, emailList.size());
-        Assertions.assertEquals(dataTest.getPersonlist().get(0).getEmail(), emailList.get(0));
-        Assertions.assertEquals(dataTest.getPersonlist().get(2).getEmail(), emailList.get(1));
+        Assertions.assertEquals(dataTest.getPersons().get(0).getEmail(), emailList.get(0));
+        Assertions.assertEquals(dataTest.getPersons().get(2).getEmail(), emailList.get(1));
     }
 
     @Test
@@ -97,7 +100,7 @@ public class APIGetIT {
     @Test
     public void returnCorrectFireData() {
         //ACT
-        List<Object> getfire = getService.fire(dataTest.getPersonlist().get(0).getAddress());
+        List<Object> getfire = getService.fire(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
         List<PersonFloodAndFire> personFloodAndFires = (List<PersonFloodAndFire>) getfire.get(1);

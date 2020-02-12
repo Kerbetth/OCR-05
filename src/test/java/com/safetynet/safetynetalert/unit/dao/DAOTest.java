@@ -2,11 +2,11 @@ package com.safetynet.safetynetalert.unit.dao;
 
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.dao.Dao;
-import com.safetynet.safetynetalert.dao.JsonWriter;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.enumerations.Enum;
+import net.minidev.json.reader.JsonWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,23 +32,20 @@ public class DAOTest {
     @Before
     public void setup() {
         dataTest = new DataTest();
-        dao.database.setPersons(dataTest.getPersonlist());
-        dao.database.setMedicalrecords(dataTest.getMedicalrecords());
-        dao.database.setFirestations(dataTest.getFirestations());
-        dao.jsonWriter =jsonWriterMock;
+        dao.setDatabase(dataTest.getDatabase());
     }
 
     @Test
     public void returnCorrectPersonByGivingTheName() {
         //ACT
         Person byName = dao.findPersonByName(
-                dataTest.getPersonlist().get(0).getFirstName()+
-                dataTest.getPersonlist().get(0).getLastName());
+                dataTest.getPersons().get(0).getFirstName()+
+                dataTest.getPersons().get(0).getLastName());
         List<Person> byAddress = dao.findPersonByAddress(
-                dataTest.getPersonlist().get(0).getAddress());
+                dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        assertThat(dataTest.getPersonlist().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
+        assertThat(dataTest.getPersons().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
                 .contains(byName.getFirstName(), byName.getLastName(), byName.getAddress(),byName.getCity(),byName.getZip(), byName.getEmail(),byName.getPhone());
 
         assertThat(byAddress.size()).isEqualTo(2);
@@ -58,7 +55,7 @@ public class DAOTest {
     public void returnCorrectNumberOfPersonsLivingAtTheAddress() {
         //ACT
         List<Person> byAddress = dao.findPersonByAddress(
-                dataTest.getPersonlist().get(0).getAddress());
+                dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
         assertThat(byAddress.size()).isEqualTo(2);
@@ -68,7 +65,7 @@ public class DAOTest {
     public void returnCorrectNumberOfPersonsLivingAtTheCity() {
         //ACT
         List<Person> byAddress = dao.findPersonByCity(
-                dataTest.getPersonlist().get(0).getCity());
+                dataTest.getPersons().get(0).getCity());
 
         //ASSERT
         assertThat(byAddress.size()).isEqualTo(2);
@@ -78,11 +75,11 @@ public class DAOTest {
     public void returnCorrectMedRecAccordingToThePerson() {
         //ACT
         Medicalrecord med = dao.findMedicalrecordByPerson(
-                dataTest.getPersonlist().get(0).getFirstName()+dataTest.getPersonlist().get(0).getLastName());
+                dataTest.getPersons().get(0).getFirstName()+dataTest.getPersons().get(0).getLastName());
 
         //ASSERT
-        assertThat(dataTest.getPersonlist().get(0).getFirstName()).isEqualTo(med.getFirstName());
-        assertThat(dataTest.getPersonlist().get(0).getLastName()).isEqualTo(med.getLastName());
+        assertThat(dataTest.getPersons().get(0).getFirstName()).isEqualTo(med.getFirstName());
+        assertThat(dataTest.getPersons().get(0).getLastName()).isEqualTo(med.getLastName());
     }
 
     @Test
@@ -91,14 +88,14 @@ public class DAOTest {
         Medicalrecord med = dao.findMedicalrecordByID(0);
 
         //ASSERT
-        assertThat(dataTest.getPersonlist().get(0).getFirstName()).isEqualTo(med.getFirstName());
-        assertThat(dataTest.getPersonlist().get(0).getLastName()).isEqualTo(med.getLastName());
+        assertThat(dataTest.getPersons().get(0).getFirstName()).isEqualTo(med.getFirstName());
+        assertThat(dataTest.getPersons().get(0).getLastName()).isEqualTo(med.getLastName());
     }
 
     @Test
     public void returnCorrectFirestationAccordingToTheAddress() {
         //ACT
-        Firestation firestation = dao.findFirestationByAddress(dataTest.getPersonlist().get(0).getAddress());
+        Firestation firestation = dao.findFirestationByAddress(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
         assertThat(dataTest.getFirestation1().getAddress()).isEqualTo(firestation.getAddress());
@@ -130,7 +127,7 @@ public class DAOTest {
     @Test
     public void returnCorrectOfPersonWithTheSameName() {
         //ACT
-        List<Person> persons = dao.findPersonsWithSameFirstNameOrLastName(dataTest.getPersonlist().get(1).getFirstName(),dataTest.getPersonlist().get(1).getLastName());
+        List<Person> persons = dao.findPersonsWithSameFirstNameOrLastName(dataTest.getPersons().get(1).getFirstName(),dataTest.getPersons().get(1).getLastName());
 
         //ASSERT
         assertThat(persons.get(0).getLastName()).isEqualTo(persons.get(1).getLastName());

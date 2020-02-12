@@ -2,7 +2,7 @@ package com.safetynet.safetynetalert.unit.Services.getServices;
 
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
-import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
@@ -19,7 +19,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.byLessThan;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -29,7 +30,7 @@ public class GetCommunityEmailURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static PersonDao dao;
+    static Dao dao;
     @Mock
     static Logger loggermock;
 
@@ -39,18 +40,18 @@ public class GetCommunityEmailURLServicesTest {
     @Test
     public void returnCommunityEmailContentWithCorrectData(){
         //ARRANGE
-        List<Person> addressPerson = dataTest.getPersonlist();
+        List<Person> addressPerson = dataTest.getPersons();
         addressPerson.remove(addressPerson.get(1));
         addressPerson.remove(addressPerson.get(2));
-        when(dao.findPersonByCity(dataTest.getPersonlist().get(0).getCity())).thenReturn(addressPerson);
+        when(dao.findPersonByCity(dataTest.getPersons().get(0).getCity())).thenReturn(addressPerson);
 
         //ACT
-        List<String> emailList = getService.communityEmail(dataTest.getPersonlist().get(0).getCity());
+        List<String> emailList = getService.communityEmail(dataTest.getPersons().get(0).getCity());
 
         //ASSERT
         assertEquals(2, emailList.size());
-        assertEquals(dataTest.getPersonlist().get(0).getEmail(), emailList.get(0));
-        assertEquals(dataTest.getPersonlist().get(1).getEmail(), emailList.get(1));
+        assertEquals(dataTest.getPersons().get(0).getEmail(), emailList.get(0));
+        assertEquals(dataTest.getPersons().get(1).getEmail(), emailList.get(1));
     }
 
     @Test
@@ -69,21 +70,21 @@ public class GetCommunityEmailURLServicesTest {
     @Test
     public void returnAllCommunityEmailDataifNoAddressSpecify(){
         //ARRANGE
-        List<Person> addressPerson = dataTest.getPersonlist();
+        List<Person> addressPerson = dataTest.getPersons();
         addressPerson.remove(addressPerson.get(1));
         addressPerson.remove(addressPerson.get(2));
         String firstNameLastNamea = (addressPerson.get(0).getFirstName() + addressPerson.get(0).getLastName());
         String firstNameLastNameb = (addressPerson.get(1).getFirstName() + addressPerson.get(1).getLastName());
-        when(dao.findPersonByAddress(dataTest.getPersonlist().get(0).getAddress())).thenReturn(addressPerson);
+        when(dao.findPersonByAddress(dataTest.getPersons().get(0).getAddress())).thenReturn(addressPerson);
         when(dao.findMedicalrecordByPerson(firstNameLastNamea)).thenReturn(dataTest.getMedicalrecords().get(0));
         when(dao.findMedicalrecordByPerson(firstNameLastNameb)).thenReturn(dataTest.getMedicalrecords().get(1));
 
         //ACT
-        List<Child> children = getService.childAlert(dataTest.getPersonlist().get(0).getAddress());
+        List<Child> children = getService.childAlert(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        assertEquals(dataTest.getPersonlist().get(0).getFirstName(), children.get(0).getFirstName());
-        assertEquals(dataTest.getPersonlist().get(0).getLastName(), children.get(0).getLastName());
+        assertEquals(dataTest.getPersons().get(0).getFirstName(), children.get(0).getFirstName());
+        assertEquals(dataTest.getPersons().get(0).getLastName(), children.get(0).getLastName());
         double age = dataTest.getMedicalrecords().get(0).getBirthdate().getYear()+children.get(0).getAge();
         assertThat((double)LocalDate.now().getYear()).isEqualTo(age, byLessThan(1.1));
         assertEquals(1, children.size());

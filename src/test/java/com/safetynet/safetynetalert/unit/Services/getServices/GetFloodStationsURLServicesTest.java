@@ -2,11 +2,12 @@ package com.safetynet.safetynetalert.unit.Services.getServices;
 
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.apiservices.GetService;
-import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.HouseHold;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
+import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -30,7 +32,7 @@ public class GetFloodStationsURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static PersonDao dao;
+    static Dao dao;
     @Mock
     static Logger loggermock;
 
@@ -43,10 +45,10 @@ public class GetFloodStationsURLServicesTest {
         List<Person> pl1 = new ArrayList<>();
         List<Person> pl2 = new ArrayList<>();
         List<Person> pl3 = new ArrayList<>();
-        pl1.add(dataTest.getPersonlist().get(0));
-        pl1.add(dataTest.getPersonlist().get(2));
-        pl2.add(dataTest.getPersonlist().get(1));
-        pl3.add(dataTest.getPersonlist().get(3));
+        pl1.add(dataTest.getPersons().get(0));
+        pl1.add(dataTest.getPersons().get(2));
+        pl2.add(dataTest.getPersons().get(1));
+        pl3.add(dataTest.getPersons().get(3));
         when(dao.findFirestationsByNumber(anyString())).thenReturn(dataTest.getFirestations());
         when(dao.findPersonByAddress(anyString()))
                 .thenReturn(pl1)
@@ -72,9 +74,8 @@ public class GetFloodStationsURLServicesTest {
         List<Firestation> emptylist = new ArrayList<>();
         when(dao.findFirestationsByNumber(anyString())).thenReturn(emptylist);
         //ACT
-        List<HouseHold> getfloodStations = getService.floodstations("5");
+        assertThrows(NoEntryException.class, () ->  getService.floodstations("5"));
         //ASSERT
         verify(loggermock, times(1)).error(anyString());
-        assertEquals(0, getfloodStations.size());
     }
 }
