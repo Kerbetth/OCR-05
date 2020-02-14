@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalert.unit.dao;
 
 import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.SafetyNetAlertApplication;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
@@ -9,18 +10,23 @@ import com.safetynet.safetynetalert.enumerations.Enum;
 import net.minidev.json.reader.JsonWriter;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-@RunWith(MockitoJUnitRunner.class)
-public class DAOTest {
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {Dao.class})
+public class DaoTest {
 
     private DataTest dataTest;
 

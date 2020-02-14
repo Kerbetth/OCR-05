@@ -1,7 +1,6 @@
 package com.safetynet.safetynetalert.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalert.apiservices.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;

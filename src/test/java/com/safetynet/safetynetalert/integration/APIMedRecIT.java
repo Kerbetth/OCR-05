@@ -1,9 +1,9 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoTest;
+import com.safetynet.safetynetalert.DaoAccessTest;
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
-import com.safetynet.safetynetalert.apiservices.persandmedservice.MedicalrecordService;
+import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.enumerations.Enum;
 import org.apache.logging.log4j.LogManager;
@@ -16,8 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -26,7 +24,7 @@ public class APIMedRecIT {
 
     DataTest dataTest = new DataTest();
     @Spy
-    private DaoTest dao = new DaoTest();
+    private DaoAccessTest dao = new DaoAccessTest();
     @Spy
     private Logger logger = LogManager.getLogger("GetServiceSpy");
 
@@ -55,7 +53,7 @@ public class APIMedRecIT {
         medicalrecordService.addMedicalrecord(m1);
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(5, dao2.getDtb().getMedicalrecords().size());
         assertEquals(5, dao2.getDtb().getPersons().size());
         WritingCleanJsonData.writingCleanJsonDataTest();
@@ -67,7 +65,7 @@ public class APIMedRecIT {
         medicalrecordService.setMedicalrecord("JeffLoomis", m1);
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(4, dao2.getDtb().getMedicalrecords().size());
         assertThat(dao2.getDtb().getMedicalrecords().get(1)).extracting(Enum.FNAME.str(), Enum.LNAME.str(), Enum.BDATE.str(), Enum.MED.str(), Enum.ALLERG.str())
                 .contains("Jeff", "Loomis", m1.getBirthdate(), m1.getMedications(), m1.getAllergies());
@@ -78,7 +76,7 @@ public class APIMedRecIT {
         //ACT
         medicalrecordService.deleteMedicalRecordAndPersonEntry("JeffLoomis");
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(3,dao2.getDtb().getPersons().size());
         assertEquals(3,dao2.getDtb().getMedicalrecords().size());
     }

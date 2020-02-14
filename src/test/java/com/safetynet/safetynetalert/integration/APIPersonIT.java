@@ -1,9 +1,9 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoTest;
+import com.safetynet.safetynetalert.DaoAccessTest;
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
-import com.safetynet.safetynetalert.apiservices.persandmedservice.PersonService;
+import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.enumerations.Enum;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +24,7 @@ public class APIPersonIT {
 
     DataTest dataTest = new DataTest();
     @Spy
-    private DaoTest dao = new DaoTest();
+    private DaoAccessTest dao = new DaoAccessTest();
     @Spy
     private Logger logger = LogManager.getLogger("GetServiceSpy");
 
@@ -52,7 +52,7 @@ public class APIPersonIT {
         personService.addPerson(p1);
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(5, dao2.getDtb().getPersons().size());
     }
 
@@ -62,7 +62,7 @@ public class APIPersonIT {
         personService.setPerson("JeffLoomis",p1);
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(4, dao2.getDtb().getPersons().size());
         assertThat(dao2.getDtb().getPersons().get(1)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
                 .contains("Jeff", "Loomis", p1.getAddress(),p1.getCity(),p1.getZip(), p1.getEmail(),p1.getPhone());
@@ -75,7 +75,7 @@ public class APIPersonIT {
         personService.deleteMedicalRecordAndPersonEntry("JeffLoomis");
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(3, dao2.getDtb().getPersons().size());
         assertEquals(3, dao2.getDtb().getMedicalrecords().size());
     }

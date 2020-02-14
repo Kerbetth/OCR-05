@@ -4,7 +4,7 @@ package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.apiservices.persandmedservice.PersonService;
+import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

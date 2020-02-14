@@ -1,9 +1,9 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoTest;
+import com.safetynet.safetynetalert.DaoAccessTest;
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
-import com.safetynet.safetynetalert.apiservices.firestationservice.FirestationService;
+import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +22,7 @@ public class APIFirestationIT {
 
     DataTest dataTest = new DataTest();
     @Spy
-    private DaoTest dao = new DaoTest();
+    private DaoAccessTest dao = new DaoAccessTest();
     @Spy
     private Logger logger = LogManager.getLogger("GetServiceSpy");
 
@@ -51,7 +51,7 @@ public class APIFirestationIT {
         firestation.addFirestation(f1);
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(4, dao2.getDtb().getFirestations().size());
     }
 
@@ -61,7 +61,7 @@ public class APIFirestationIT {
         firestation.setFirestation("3333 broadway",3);
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(3, dao2.getDtb().getFirestations().get(0).getStation());
         assertEquals("3333 broadway", dao2.getDtb().getFirestations().get(0).getAddress());
         assertEquals(3, dao2.getDtb().getFirestations().size());
@@ -74,7 +74,7 @@ public class APIFirestationIT {
         firestation.deleteFirestation("3333 broadway");
 
         //ASSERT
-        DaoTest dao2 = new DaoTest();
+        DaoAccessTest dao2 = new DaoAccessTest();
         assertEquals(2, dao2.getDtb().getFirestations().size());
     }
 

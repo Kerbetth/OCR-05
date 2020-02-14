@@ -1,7 +1,6 @@
-package com.safetynet.safetynetalert.apiservices.persandmedservice;
+package com.safetynet.safetynetalert.service.persandmedservice;
 
-import com.safetynet.safetynetalert.apiservices.DTOFactory;
-import com.safetynet.safetynetalert.domain.Database;
+import com.safetynet.safetynetalert.service.DTOFactory;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;

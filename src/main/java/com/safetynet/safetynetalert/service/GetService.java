@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.apiservices;
+package com.safetynet.safetynetalert.service;
 
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.exceptions.NoEntryByStationException;

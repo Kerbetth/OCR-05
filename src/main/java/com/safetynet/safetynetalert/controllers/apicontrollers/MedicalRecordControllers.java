@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.apiservices.persandmedservice.MedicalrecordService;
+import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

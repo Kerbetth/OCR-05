@@ -1,8 +1,8 @@
-package com.safetynet.safetynetalert.unit.dao;
+package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DaoTest;
+import com.safetynet.safetynetalert.DaoAccessTest;
 import com.safetynet.safetynetalert.DataTest;
-import com.safetynet.safetynetalert.apiservices.persandmedservice.PersonService;
+import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.enumerations.Enum;
 import org.apache.logging.log4j.Logger;
@@ -20,14 +20,14 @@ import static org.mockito.Mockito.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class PersonDAOTest {
+public class PersonServicesTest {
 
     private DataTest dataTest;
     @Mock
     static Logger loggerMock;
 
     @Spy
-    DaoTest dao = new DaoTest();
+    DaoAccessTest dao = new DaoAccessTest();
 
     @InjectMocks
     PersonService personService = new PersonService();

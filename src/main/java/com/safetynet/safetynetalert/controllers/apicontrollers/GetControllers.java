@@ -3,7 +3,7 @@ package com.safetynet.safetynetalert.controllers.apicontrollers;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.HouseHold;
 import com.safetynet.safetynetalert.domain.PersonInfo;
-import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.service.GetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

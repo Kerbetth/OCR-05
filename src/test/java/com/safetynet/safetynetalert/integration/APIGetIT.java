@@ -1,9 +1,9 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoTest;
+import com.safetynet.safetynetalert.DaoAccessTest;
 import com.safetynet.safetynetalert.DataTest;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
-import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.domain.*;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +32,7 @@ public class APIGetIT {
 
     DataTest dataTest;
     @Spy
-    private DaoTest dao;
+    private DaoAccessTest dao;
     @Spy
     private Logger logger = LogManager.getLogger("GetServiceTest");
 

@@ -1,7 +1,7 @@
-package com.safetynet.safetynetalert.unit.Services.getServices;
+package com.safetynet.safetynetalert.unit.service;
 
 import com.safetynet.safetynetalert.DataTest;
-import com.safetynet.safetynetalert.apiservices.GetService;
+import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Count;
 import com.safetynet.safetynetalert.domain.Firestation;

@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.apiservices.persandmedservice;
+package com.safetynet.safetynetalert.service.persandmedservice;
 
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Database;
