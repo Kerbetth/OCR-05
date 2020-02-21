@@ -1,38 +1,35 @@
 package com.safetynet.safetynetalert.unit.service;
-
-import com.safetynet.safetynetalert.DaoAccessTest;
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.enumerations.Enum;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class PersonServicesTest {
 
     private DataTest dataTest;
     @Mock
     static Logger loggerMock;
-
     @Spy
-    DaoAccessTest dao = new DaoAccessTest();
+    Dao dao = new Dao();
 
     @InjectMocks
     PersonService personService = new PersonService();
 
-    @Before
+    @BeforeEach
     public void setup() {
         dataTest = new DataTest();
         personService.logger = loggerMock;
@@ -48,8 +45,8 @@ public class PersonServicesTest {
         personService.addPerson(p);
 
         //ASSERT
-        assertEquals(personService.getDtb().getPersons().size(), personService.getDtb().getMedicalrecords().size());
-        assertEquals(5, personService.getDtb().getPersons().size());
+        assertThat(personService.getDtb().getPersons()).hasSize(5);
+        assertThat(personService.getDtb().getMedicalrecords()).hasSize(5);
         assertThat(personService.getDtb().getPersons().get(4)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
                 .contains(p.getFirstName(), p.getLastName(), p.getAddress(),p.getCity(),p.getZip(), p.getEmail(),p.getPhone());
     }
@@ -65,7 +62,7 @@ public class PersonServicesTest {
         personService.setPerson(p.getFirstName()+p.getLastName(), p);
 
         //ASSERT
-        assertEquals(4, personService.getDtb().getPersons().size());
+        assertThat(personService.getDtb().getPersons()).hasSize(4);
         assertThat(personService.getDtb().getPersons().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
                 .contains(p.getFirstName(), p.getLastName(), p.getAddress(),p.getCity(),p.getZip(), p.getEmail(),p.getPhone());
     }
@@ -77,7 +74,7 @@ public class PersonServicesTest {
         personService.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
 
         //ASSERT
-        assertEquals(3, personService.getDtb().getPersons().size());
-        assertEquals(3, personService.getDtb().getPersons().size());
+        assertThat(personService.getDtb().getPersons()).hasSize(3);
+        assertThat(personService.getDtb().getMedicalrecords()).hasSize(3);
     }
 }

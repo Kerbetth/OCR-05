@@ -1,17 +1,25 @@
 package com.safetynet.safetynetalert.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
+import com.sun.jdi.ObjectCollectedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,19 +28,26 @@ public class Dao {
 
     private Database database;
     private static final Logger logger = LogManager.getLogger("Dao");
-    public String jsonfile = "src/main/resources/data.json";
+    @Value("${jsonFileName}")
+    public String jsonFile;
 
 
     public Dao() {
+        String content = null;
+        System.out.println(jsonFile);
+        try
+        {
+            content = new String ( Files.readAllBytes( Paths.get(jsonFile) ) );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         try {
             database = new ObjectMapper()
-                    .readerFor(Database.class)
-                    .readValue(
-                            Optional.ofNullable(
-                                    Dao.class.getClassLoader().getResourceAsStream("data.json")
-                            ).orElseThrow()
+                    .readValue(content, Database.class
                     );
-        } catch (IOException e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
@@ -46,7 +61,7 @@ public class Dao {
         catch (IOException e) {
             e.printStackTrace();
         }
-        try (FileWriter file = new FileWriter(jsonfile)) {
+        try (FileWriter file = new FileWriter(jsonFile)) {
             file.write(jsonStr);
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,16 +148,9 @@ public class Dao {
         }
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
 
     public Database getDtb() {
         return database;
-    }
-
-    public void setJsonWriter(String jsonFile) {
-        jsonfile = jsonFile;
     }
 
     //***********Html Methods*************//

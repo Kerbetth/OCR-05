@@ -1,81 +1,81 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoAccessTest;
-import com.safetynet.safetynetalert.DataTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalert.controllers.apicontrollers.FirestationControllers;
+import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
-import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.io.File;
+import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class APIFirestationIT {
 
-    DataTest dataTest = new DataTest();
-    @Spy
-    private DaoAccessTest dao = new DaoAccessTest();
-    @Spy
-    private Logger logger = LogManager.getLogger("GetServiceSpy");
+    @Value("${jsonFileName}")
+    public String jsonFile;
 
-    Firestation f1;
+    FirestationControllers firestationControllers = new FirestationControllers();
 
-    @InjectMocks
-    private FirestationService firestation = new FirestationService();
-
-    @Before
+    @BeforeEach
     public void setup() {
         WritingCleanJsonData.writingCleanJsonDataTest();
-        firestation.getDao().setDatabase(dao.getDtb());
-        firestation.getDao().setJsonWriter("target/classes/datatest.json");
-        f1 = dataTest.getFirestations().get(0);
-
     }
 
-    @After
+    @AfterEach
     public void finish() {
         WritingCleanJsonData.writingCleanJsonDataTest();
     }
+
+    public Database getDatabase(){
+        Database database = new Database();
+        try {
+            database = new ObjectMapper()
+                    .readerFor(Database.class)
+                    .readValue(new File(jsonFile)
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return database;
+    }
+
     @Test
     public void addFirestationWithCorrectData() {
-
+        Firestation f1 = new Firestation();
+        f1.setStation(4);
+        f1.setAddress("newAddress");
         //ACT
-        firestation.addFirestation(f1);
-
+        firestationControllers.addFirestationPost(f1);
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(4, dao2.getDtb().getFirestations().size());
+        assertThat(getDatabase().getFirestations()).hasSize(4);
     }
 
     @Test
     public void setFirestationWithCorrectData() {
         //ACT
-        firestation.setFirestation("3333 broadway",3);
+        firestationControllers.setFirestationPut("3333 broadway", 3);
 
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(3, dao2.getDtb().getFirestations().get(0).getStation());
-        assertEquals("3333 broadway", dao2.getDtb().getFirestations().get(0).getAddress());
-        assertEquals(3, dao2.getDtb().getFirestations().size());
+        assertThat(getDatabase().getFirestations()).hasSize(3);
+        assertThat(getDatabase().getFirestations().get(0).getStation()).isEqualTo(3);
+        assertThat(getDatabase().getFirestations().get(0).getAddress()).isEqualTo("3333 broadway");
 
     }
 
     @Test
     public void assertDeleteFirestation() {
         //ACT
-        firestation.deleteFirestation("3333 broadway");
+        firestationControllers.removeFirestationDelete("3333 broadway");
 
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(2, dao2.getDtb().getFirestations().size());
+        assertThat(getDatabase().getFirestations()).hasSize(2);
     }
 
 }

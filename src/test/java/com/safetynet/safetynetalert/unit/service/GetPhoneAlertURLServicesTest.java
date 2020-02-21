@@ -1,27 +1,27 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class GetPhoneAlertURLServicesTest {
 
     private DataTest dataTest = new DataTest();
@@ -44,7 +44,7 @@ public class GetPhoneAlertURLServicesTest {
         Set<String> phoneAlert = getService.phoneAlert(0);
 
         //ASSERT
-        assertEquals(4, phoneAlert.size());
+        assertThat(phoneAlert).hasSize(4);
         }
 
     @Test

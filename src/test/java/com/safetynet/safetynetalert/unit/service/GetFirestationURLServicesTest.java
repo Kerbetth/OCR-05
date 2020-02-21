@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Count;
@@ -10,10 +10,10 @@ import com.safetynet.safetynetalert.domain.PersonFirestation;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class GetFirestationURLServicesTest {
 
     private DataTest dataTest = new DataTest();
@@ -59,6 +59,7 @@ public class GetFirestationURLServicesTest {
         //ASSERT
         Count count = (Count) getfirestation.get(1);
         List<PersonFirestation> personFirestation = (List<PersonFirestation>) getfirestation.get(0);
+
         assertEquals(2, getfirestation.size());
         assertEquals(2, count.getAdults());
         assertEquals(1, count.getChildren());

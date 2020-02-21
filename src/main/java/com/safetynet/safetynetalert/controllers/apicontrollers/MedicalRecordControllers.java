@@ -13,23 +13,23 @@ public class MedicalRecordControllers {
 
 
     @Autowired
-    private MedicalrecordService medicalrecordDao;
+    private MedicalrecordService medicalrecordService;
 
 
     @PostMapping(value = "/medicalRecord")
     public List<Object> addMedicalRecordPost(@RequestBody Medicalrecord medicalrecord){
-        return medicalrecordDao.addMedicalrecord(medicalrecord);
+        return medicalrecordService.addMedicalrecord(medicalrecord);
     }
 
     @PutMapping(value = "/medicalRecord/{name}")
     //"name" has to be declared in format "FirstnameLastname"
     public Medicalrecord setMedicalRecordPut(@PathVariable String name, @RequestBody Medicalrecord medicalrecord){
-        return medicalrecordDao.setMedicalrecord(name, medicalrecord);
+        return medicalrecordService.setMedicalrecord(name, medicalrecord);
     }
 
     @DeleteMapping(value = "/medicalRecord/{name}")
     public void removeMedicalRecordDelete(@PathVariable String name) {
-        medicalrecordDao.deleteMedicalRecordAndPersonEntry(name);
+        medicalrecordService.deleteMedicalRecordAndPersonEntry(name);
     }
 
 }

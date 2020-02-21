@@ -17,13 +17,13 @@ public class PersonControllers {
 
 
     @PostMapping(value = "/person")
-    public List<Object> addPersonPost(@RequestBody Person person){
+    public List<Object> addPersonPost(@RequestBody Person person) {
         return personService.addPerson(person);
     }
 
     @PutMapping(value = "/person/{name}")
     //"name" has to be declared in format "FirstnameLastname"
-    public Person setPersonPut(@PathVariable String name, @RequestBody Person personData){
+    public Person setPersonPut(@PathVariable String name, @RequestBody Person personData) {
         return personService.setPerson(name, personData);
     }
 

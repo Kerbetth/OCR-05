@@ -2,6 +2,7 @@ package com.safetynet.safetynetalert;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalert.domain.Database;
+import com.safetynet.safetynetalert.unit.DataTest;
 
 import java.io.FileWriter;
 import java.io.IOException;

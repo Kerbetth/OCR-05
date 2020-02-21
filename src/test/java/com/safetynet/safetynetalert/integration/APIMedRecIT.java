@@ -1,50 +1,59 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoAccessTest;
-import com.safetynet.safetynetalert.DataTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalert.domain.Database;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
 import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.enumerations.Enum;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class APIMedRecIT {
 
+    @Value("${jsonFileName}")
+    public String jsonFile;
+
     DataTest dataTest = new DataTest();
-    @Spy
-    private DaoAccessTest dao = new DaoAccessTest();
-    @Spy
-    private Logger logger = LogManager.getLogger("GetServiceSpy");
 
     Medicalrecord m1;
 
-    @InjectMocks
     private MedicalrecordService medicalrecordService = new MedicalrecordService();
 
-        @Before
+        @BeforeEach
         public void setup() {
             WritingCleanJsonData.writingCleanJsonDataTest();
-            medicalrecordService.getDao().setDatabase(dao.getDtb());
-            medicalrecordService.getDao().setJsonWriter("target/classes/datatest.json");
             m1 = dataTest.getMedicalrecords().get(0);
         }
 
-        @After
+        @AfterEach
         public void finish() {
             WritingCleanJsonData.writingCleanJsonDataTest();
         }
+
+    public Database getDatabase(){
+        Database database = new Database();
+        try {
+            database = new ObjectMapper()
+                    .readerFor(Database.class)
+                    .readValue(new File(jsonFile)
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return database;
+    }
 
     @Test
     public void addPersonWithCorrectData() {
@@ -53,9 +62,8 @@ public class APIMedRecIT {
         medicalrecordService.addMedicalrecord(m1);
 
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(5, dao2.getDtb().getMedicalrecords().size());
-        assertEquals(5, dao2.getDtb().getPersons().size());
+        assertThat(getDatabase().getPersons()).hasSize(5);
+        assertThat(getDatabase().getMedicalrecords()).hasSize(5);
         WritingCleanJsonData.writingCleanJsonDataTest();
     }
 
@@ -65,9 +73,9 @@ public class APIMedRecIT {
         medicalrecordService.setMedicalrecord("JeffLoomis", m1);
 
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(4, dao2.getDtb().getMedicalrecords().size());
-        assertThat(dao2.getDtb().getMedicalrecords().get(1)).extracting(Enum.FNAME.str(), Enum.LNAME.str(), Enum.BDATE.str(), Enum.MED.str(), Enum.ALLERG.str())
+        assertThat(getDatabase().getPersons()).hasSize(4);
+        assertThat(getDatabase().getMedicalrecords()).hasSize(4);
+        assertThat(getDatabase().getMedicalrecords().get(1)).extracting(Enum.FNAME.str(), Enum.LNAME.str(), Enum.BDATE.str(), Enum.MED.str(), Enum.ALLERG.str())
                 .contains("Jeff", "Loomis", m1.getBirthdate(), m1.getMedications(), m1.getAllergies());
     }
 
@@ -76,9 +84,8 @@ public class APIMedRecIT {
         //ACT
         medicalrecordService.deleteMedicalRecordAndPersonEntry("JeffLoomis");
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(3,dao2.getDtb().getPersons().size());
-        assertEquals(3,dao2.getDtb().getMedicalrecords().size());
+        assertThat(getDatabase().getPersons()).hasSize(3);
+        assertThat(getDatabase().getMedicalrecords()).hasSize(3);
     }
 
 }

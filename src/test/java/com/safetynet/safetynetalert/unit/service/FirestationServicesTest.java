@@ -1,36 +1,32 @@
 package com.safetynet.safetynetalert.unit.service;
-
-import com.safetynet.safetynetalert.DaoAccessTest;
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
-import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class FirestationServicesTest {
 
     private DataTest dataTest;
-    @Mock
-    static Logger loggerMock;
+
 
     @Spy
-    DaoAccessTest dao = new DaoAccessTest();
+    Dao dao = new Dao();
 
     @InjectMocks
     FirestationService firestationService = new FirestationService();
 
-    @Before
+    @BeforeEach
     public void setup() {
         dataTest = new DataTest();
         doNothing().when(dao).writer(any());
@@ -45,7 +41,7 @@ public class FirestationServicesTest {
         firestationService.addFirestation(m);
 
         //ASSERT
-        assertEquals(4, firestationService.getDtb().getFirestations().size());
+        assertThat(firestationService.getDtb().getFirestations()).hasSize(4);
     }
 
     @Test
@@ -58,8 +54,8 @@ public class FirestationServicesTest {
         firestationService.setFirestation("3333 broadway",8);
 
         //ASSERT
-        assertEquals(3, firestationService.getDtb().getFirestations().size());
-        assertEquals(8, firestationService.getDtb().getFirestations().get(0).getStation());
+        assertThat(firestationService.getDtb().getFirestations()).hasSize(3);
+        assertThat(firestationService.getDtb().getFirestations().get(0).getStation()).isEqualTo(8);
     }
 
     @Test
@@ -69,6 +65,6 @@ public class FirestationServicesTest {
         firestationService.deleteFirestation("3333 broadway");
 
         //ASSERT
-        assertEquals(2, firestationService.getDtb().getFirestations().size());
+        assertThat(firestationService.getDtb().getFirestations()).hasSize(2);
     }
 }

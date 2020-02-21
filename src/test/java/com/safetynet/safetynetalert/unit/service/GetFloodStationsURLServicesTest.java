@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Firestation;
@@ -9,24 +9,23 @@ import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class GetFloodStationsURLServicesTest {
 
     private DataTest dataTest = new DataTest();
@@ -62,8 +61,8 @@ public class GetFloodStationsURLServicesTest {
 
         //ASSERT
         List<PersonFloodAndFire> personFloodAndFires = getfloodStations.get(0).getPersonList();
-        assertEquals(3, getfloodStations.size());
-        assertEquals(2, personFloodAndFires.size());
+        assertThat(getfloodStations).hasSize(3);
+        assertThat(personFloodAndFires).hasSize(2);
         assertThat(personFloodAndFires).extracting("name","phone","medications","allergies")
                 .contains(  tuple(pl1.get(0).getFirstName() + " " + pl1.get(0).getLastName(), pl1.get(0).getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()),
                         tuple(pl1.get(1).getFirstName() + " " + pl1.get(1).getLastName(), pl1.get(1).getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()));

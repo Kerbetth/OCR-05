@@ -11,21 +11,21 @@ public class FirestationControllers {
 
 
     @Autowired
-    private FirestationService dao;
+    private FirestationService firestationService;
 
 
     @PostMapping(value = "/firestation")
     public Firestation addFirestationPost(@RequestBody Firestation firestationData){
-        return dao.addFirestation(firestationData);
+        return firestationService.addFirestation(firestationData);
     }
 
     @PutMapping(value = "/firestation/{address}")
     public Firestation setFirestationPut(@PathVariable String address, @RequestParam Integer stationNumber){
-        return dao.setFirestation(address, stationNumber);
+        return firestationService.setFirestation(address, stationNumber);
     }
 
     @DeleteMapping(value = "/firestation/{address}")
     public void removeFirestationDelete(@PathVariable String address) {
-        dao.deleteFirestation(address);
+        firestationService.deleteFirestation(address);
     }
 }

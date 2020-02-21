@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert;
+package com.safetynet.safetynetalert.unit;
 
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;

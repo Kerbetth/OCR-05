@@ -1,29 +1,28 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonInfo;
 import com.safetynet.safetynetalert.exceptions.NoFnameOrLnameException;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class GetPersonInfoURLServicesTest {
 
     private DataTest dataTest = new DataTest();
@@ -50,7 +49,7 @@ public class GetPersonInfoURLServicesTest {
         List<PersonInfo> personInfos = getService.personInfo("test","test");
 
         //ASSERT
-        assertEquals(1, personInfos.size());
+        assertThat(personInfos).hasSize(1);
         assertThat(personInfos.get(0)).extracting("name","address","email","medications","allergies")
                 .contains(pl1.get(0).getFirstName() + " " + pl1.get(0).getLastName(), pl1.get(0).getAddress(), pl1.get(0).getEmail(),dataTest.getMedicationList1(), dataTest.getMedicationList2());
     }

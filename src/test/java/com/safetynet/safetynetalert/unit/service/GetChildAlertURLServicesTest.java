@@ -1,30 +1,32 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.assertj.core.api.Assertions.byLessThan;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class GetChildAlertURLServicesTest {
 
     private DataTest dataTest = new DataTest();
@@ -38,7 +40,7 @@ public class GetChildAlertURLServicesTest {
     GetService getService;
 
     @Test
-    public void returnChildAlertMapContentWithCorrectData(){
+    public void returnChildAlertMapContentWithCorrectData() {
         //ARRANGE
         List<Person> addressPerson = dataTest.getPersons();
         addressPerson.remove(addressPerson.get(1));
@@ -53,17 +55,17 @@ public class GetChildAlertURLServicesTest {
         List<Child> children = getService.childAlert(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        assertEquals(dataTest.getPersons().get(0).getFirstName(), children.get(0).getFirstName());
-        assertEquals(dataTest.getPersons().get(0).getLastName(), children.get(0).getLastName());
-        assertEquals(1, children.size());
-        assertEquals(1, children.get(0).getHouseHoldMembers().size());
-        double birthdateplusage = dataTest.getMedicalrecords().get(0).getBirthdate().getYear()+children.get(0).getAge();
-        assertThat((double)LocalDate.now().getYear()).isEqualTo(birthdateplusage, byLessThan(1.1));
+        assertThat(children.get(0).getFirstName()).isEqualTo(dataTest.getPersons().get(0).getFirstName());
+        assertThat(children.get(0).getLastName()).isEqualTo(dataTest.getPersons().get(0).getLastName());
+        assertThat(children).hasSize(1);
+        assertThat(children.get(0).getHouseHoldMembers()).hasSize(1);
+        double birthdateplusage = dataTest.getMedicalrecords().get(0).getBirthdate().getYear() + children.get(0).getAge();
+        assertThat((double) LocalDate.now().getYear()).isEqualTo(birthdateplusage, byLessThan(1.1));
         assertThat(children.get(0).getAge()).isLessThan(18);
     }
 
     @Test
-    public void returnNoChildAlertDataIfNoChildInSpecifyAddress(){
+    public void returnNoChildAlertDataIfNoChildInSpecifyAddress() {
         //ARRANGE
         List<Person> addressPerson = new ArrayList<>();
         when(dao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
@@ -76,7 +78,7 @@ public class GetChildAlertURLServicesTest {
     }
 
     @Test
-    public void returnAllChildAlertDataifNoAddressSpecify(){
+    public void returnAllChildAlertDataifNoAddressSpecify() {
         //ARRANGE
         List<Person> addressPerson = dataTest.getPersons();
         addressPerson.remove(addressPerson.get(1));
@@ -91,11 +93,11 @@ public class GetChildAlertURLServicesTest {
         List<Child> children = getService.childAlert(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        assertEquals(dataTest.getPersons().get(0).getFirstName(), children.get(0).getFirstName());
-        assertEquals(dataTest.getPersons().get(0).getLastName(), children.get(0).getLastName());
-        double age = dataTest.getMedicalrecords().get(0).getBirthdate().getYear()+children.get(0).getAge();
-        assertThat((double)LocalDate.now().getYear()).isEqualTo(age, byLessThan(1.1));
-        assertEquals(1, children.size());
-        assertEquals(1, children.get(0).getHouseHoldMembers().size());
+        assertThat(children.get(0).getFirstName()).isEqualTo(dataTest.getPersons().get(0).getFirstName());
+        assertThat(children.get(0).getLastName()).isEqualTo(dataTest.getPersons().get(0).getLastName());
+        assertThat(children).hasSize(1);
+        assertThat(children.get(0).getHouseHoldMembers()).hasSize(1);
+        double age = dataTest.getMedicalrecords().get(0).getBirthdate().getYear() + children.get(0).getAge();
+        assertThat((double) LocalDate.now().getYear()).isEqualTo(age, byLessThan(1.1));
     }
 }

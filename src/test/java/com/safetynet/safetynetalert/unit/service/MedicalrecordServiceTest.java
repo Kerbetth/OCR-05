@@ -1,25 +1,24 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DaoAccessTest;
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.enumerations.Enum;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class MedicalrecordServiceTest {
 
     private DataTest dataTest;
@@ -27,12 +26,12 @@ public class MedicalrecordServiceTest {
     static Logger loggerMock;
 
     @Spy
-    DaoAccessTest dao = new DaoAccessTest();
+    Dao dao = new Dao();
 
     @InjectMocks
     MedicalrecordService medicalrecordDao = new MedicalrecordService();
 
-    @Before
+    @BeforeEach
     public void setup() {
         dataTest = new DataTest();
         medicalrecordDao.logger = loggerMock;
@@ -48,8 +47,8 @@ public class MedicalrecordServiceTest {
         //ACT
         medicalrecordDao.addMedicalrecord(m);
         //ASSERT
-        assertEquals(5, medicalrecordDao.getDtb().getMedicalrecords().size());
-        assertEquals(5, medicalrecordDao.getDtb().getPersons().size());
+        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(5);
+        assertThat(medicalrecordDao.getDtb().getPersons()).hasSize(5);
     }
 
     @Test
@@ -62,7 +61,7 @@ public class MedicalrecordServiceTest {
 
         //ASSERT
         verify(loggerMock, times(1)).error(anyString());
-        assertEquals(medicalrecordDao.getDtb().getMedicalrecords().size(), 4);
+        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(4);
     }
 
     @Test
@@ -77,7 +76,7 @@ public class MedicalrecordServiceTest {
         medicalrecordDao.setMedicalrecord(m.getFirstName() + m.getLastName(), m);
 
         //ASSERT
-        assertEquals(4, medicalrecordDao.getDtb().getMedicalrecords().size());
+        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(4);
         assertThat(medicalrecordDao.getDtb().getMedicalrecords().get(0)).extracting(Enum.FNAME.str(), Enum.LNAME.str(), Enum.BDATE.str(), Enum.MED.str(), Enum.ALLERG.str())
                 .contains(m.getFirstName(), m.getLastName(), m.getBirthdate(), m.getMedications(), m.getAllergies());
     }
@@ -89,7 +88,7 @@ public class MedicalrecordServiceTest {
         medicalrecordDao.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
 
         //ASSERT
-        assertEquals(3, medicalrecordDao.getDtb().getPersons().size());
-        assertEquals(3, medicalrecordDao.getDtb().getMedicalrecords().size());
+        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(3);
+        assertThat(medicalrecordDao.getDtb().getPersons()).hasSize(3);
     }
 }

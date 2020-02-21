@@ -1,70 +1,81 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoAccessTest;
-import com.safetynet.safetynetalert.DataTest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalert.controllers.apicontrollers.PersonControllers;
+import com.safetynet.safetynetalert.domain.Database;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
-import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.enumerations.Enum;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class APIPersonIT {
 
-    DataTest dataTest = new DataTest();
-    @Spy
-    private DaoAccessTest dao = new DaoAccessTest();
-    @Spy
-    private Logger logger = LogManager.getLogger("GetServiceSpy");
+    @Value("${jsonFileName}")
+    public String jsonFile;
 
     Person p1;
 
-    @InjectMocks
-    private PersonService personService = new PersonService();
+    private PersonControllers personControllers = new PersonControllers();
 
-    @Before
+    @BeforeEach
     public void setup() {
         WritingCleanJsonData.writingCleanJsonDataTest();
-        personService.getDao().setDatabase(dao.getDtb());
-        personService.getDao().setJsonWriter("target/classes/datatest.json");
-        p1 = dataTest.getPersons().get(0);
+        p1 = new DataTest().getPersons().get(0);
     }
-    @After
+    @AfterEach
     public void finish() {
         WritingCleanJsonData.writingCleanJsonDataTest();
+    }
+
+    public Database getDatabase(){
+        Database database = new Database();
+        try {
+            database = new ObjectMapper()
+                    .readerFor(Database.class)
+                    .readValue(new File(jsonFile)
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return database;
     }
 
     @Test
     public void addPersonWithCorrectData() {
         //ACT
         p1.setFirstName("newname");
-        personService.addPerson(p1);
+        personControllers.addPersonPost(p1);
 
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(5, dao2.getDtb().getPersons().size());
+        assertThat(getDatabase().getPersons()).hasSize(5);
     }
 
     @Test
     public void setPersonWithCorrectData() {
         //ACT
-        personService.setPerson("JeffLoomis",p1);
+        personControllers.setPersonPut("JeffLoomis",p1);
 
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(4, dao2.getDtb().getPersons().size());
-        assertThat(dao2.getDtb().getPersons().get(1)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
+        assertThat(getDatabase().getPersons()).hasSize(4);
+        assertThat(getDatabase().getPersons().get(1)).extracting(
+                Person::getFirstName,
+                Person::getLastName,
+                Person::getAddress,
+                Person::getCity,
+                Person::getZip,
+                Person::getPhone,
+                Person::getEmail)
                 .contains("Jeff", "Loomis", p1.getAddress(),p1.getCity(),p1.getZip(), p1.getEmail(),p1.getPhone());
 
     }
@@ -72,12 +83,11 @@ public class APIPersonIT {
     @Test
     public void assertDeletePerson() {
         //ACT
-        personService.deleteMedicalRecordAndPersonEntry("JeffLoomis");
+        personControllers.removePersonDelete("JeffLoomis");
 
         //ASSERT
-        DaoAccessTest dao2 = new DaoAccessTest();
-        assertEquals(3, dao2.getDtb().getPersons().size());
-        assertEquals(3, dao2.getDtb().getMedicalrecords().size());
+        assertThat(getDatabase().getPersons()).hasSize(3);
+        assertThat(getDatabase().getMedicalrecords()).hasSize(3);
     }
 
 }

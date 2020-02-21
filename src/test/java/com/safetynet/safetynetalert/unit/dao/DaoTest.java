@@ -1,44 +1,38 @@
 package com.safetynet.safetynetalert.unit.dao;
 
-import com.safetynet.safetynetalert.DataTest;
-import com.safetynet.safetynetalert.SafetyNetAlertApplication;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.enumerations.Enum;
 import net.minidev.json.reader.JsonWriter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Dao.class})
 public class DaoTest {
 
     private DataTest dataTest;
+
 
     @Mock
     static JsonWriter jsonWriterMock;
 
     Dao dao = new Dao();
 
-    @Before
+    @BeforeEach
     public void setup() {
         dataTest = new DataTest();
-        dao.setDatabase(dataTest.getDatabase());
     }
 
     @Test
@@ -54,7 +48,7 @@ public class DaoTest {
         assertThat(dataTest.getPersons().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
                 .contains(byName.getFirstName(), byName.getLastName(), byName.getAddress(),byName.getCity(),byName.getZip(), byName.getEmail(),byName.getPhone());
 
-        assertThat(byAddress.size()).isEqualTo(2);
+        assertThat(byAddress).hasSize(2);
     }
 
     @Test
@@ -64,7 +58,7 @@ public class DaoTest {
                 dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        assertThat(byAddress.size()).isEqualTo(2);
+        assertThat(byAddress).hasSize(2);
     }
 
     @Test
@@ -74,7 +68,7 @@ public class DaoTest {
                 dataTest.getPersons().get(0).getCity());
 
         //ASSERT
-        assertThat(byAddress.size()).isEqualTo(2);
+        assertThat(byAddress).hasSize(2);
     }
 
     @Test
@@ -115,7 +109,7 @@ public class DaoTest {
         //ASSERT
         assertThat(dataTest.getFirestations().get(0)).isEqualTo(firestations.get(0));
         assertThat(dataTest.getFirestations().get(1)).isEqualTo(firestations.get(1));
-        assertEquals(2,firestations.size());
+        assertThat(firestations).hasSize(2);
     }
 
     @Test
@@ -127,7 +121,7 @@ public class DaoTest {
         assertThat(firestations.get(0).getStation()).isEqualTo(1);
         assertThat(firestations.get(1).getStation()).isEqualTo(1);
         assertThat(firestations.get(2).getStation()).isEqualTo(2);
-        assertEquals(3,firestations.size());
+        assertThat(firestations).hasSize(3);
     }
 
     @Test
@@ -137,6 +131,6 @@ public class DaoTest {
 
         //ASSERT
         assertThat(persons.get(0).getLastName()).isEqualTo(persons.get(1).getLastName());
-        assertEquals(2,persons.size());
+        assertThat(persons).hasSize(2);
     }
 }

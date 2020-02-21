@@ -20,6 +20,7 @@ public class PersAndMedService {
 
     @Autowired
     Dao dao;
+
     public void deleteMedicalRecordAndPersonEntry(String name) {
         int id = getIdByName(name);
         dao.getDtb().getMedicalrecords().remove(dao.getDtb().getMedicalrecords().get(id));

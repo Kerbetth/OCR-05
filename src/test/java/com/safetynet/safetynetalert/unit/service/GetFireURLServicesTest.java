@@ -1,27 +1,26 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class GetFireURLServicesTest {
 
     private DataTest dataTest = new DataTest();
@@ -51,9 +50,9 @@ public class GetFireURLServicesTest {
 
         //ASSERT
         List<PersonFloodAndFire> personFloodAndFires = (List<PersonFloodAndFire>) getfire.get(1);
-        assertEquals(2, getfire.size());
-        assertEquals(1, (Integer) getfire.get(0));
-        assertEquals(2, personFloodAndFires.size());
+        assertThat(getfire).hasSize(2);
+        assertThat(personFloodAndFires).hasSize(2);
+        assertThat(getfire.get(0)).isEqualTo(1);
         Person p1 =  dataTest.getPersons().get(0);
         Person p3 =  dataTest.getPersons().get(1);
         assertThat(personFloodAndFires).extracting("name","phone","medications","allergies")
@@ -69,7 +68,7 @@ public class GetFireURLServicesTest {
 
         //ASSERT
         verify(loggermock, times(1)).error(anyString());
-        assertEquals(2, getfire.size());
-        assertEquals(0, (Integer) getfire.get(0));
+        assertThat(getfire).hasSize(2);
+        assertThat(getfire.get(0)).isEqualTo(0);
     }
 }

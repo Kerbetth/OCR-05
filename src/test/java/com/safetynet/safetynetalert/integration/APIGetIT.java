@@ -1,49 +1,39 @@
 package com.safetynet.safetynetalert.integration;
 
-import com.safetynet.safetynetalert.DaoAccessTest;
-import com.safetynet.safetynetalert.DataTest;
+import com.safetynet.safetynetalert.controllers.apicontrollers.GetControllers;
+import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.WritingCleanJsonData;
-import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.domain.*;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import com.safetynet.safetynetalert.service.GetService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class APIGetIT {
 
-    DataTest dataTest;
-    @Spy
-    private DaoAccessTest dao;
-    @Spy
-    private Logger logger = LogManager.getLogger("GetServiceTest");
+    @Value("${jsonFileName}")
+    public String jsonFile;
 
+    GetControllers getControllers = new GetControllers();
+
+    DataTest dataTest = new DataTest();
     Person p1;
     Person p2;
     Person p3;
 
-    @InjectMocks
-    private GetService getService;
-
-    @Before
+    @BeforeEach
     public void setup() {
         WritingCleanJsonData.writingCleanJsonDataTest();
         dataTest = new DataTest();
@@ -55,43 +45,42 @@ public class APIGetIT {
     @Test
     public void returnCorrectChildAlertData() {
         //ACT
-        List<Child> children = getService.childAlert("3333 broadway");
+        List<Child> children = getControllers.childAlert("3333 broadway");
         //ASSERT
-        Assertions.assertEquals(1, children.size());
-        Assertions.assertEquals("JohnSchaffer", children.get(0).getFirstName() + children.get(0).getLastName());
+        assertThat(children).hasSize(1);
+        assertThat("JohnSchaffer").isEqualTo(children.get(0).getFirstName() + children.get(0).getLastName());
     }
 
     @Test
     public void throwErrorIfAddressDoesntExistForChildAlert() {
         //ACT
-        assertThrows(NoEntryException.class, () -> getService.childAlert("noaddress"));
-        //ASSERT
-        verify(logger, times(1)).error(anyString());
+        assertThrows(NoEntryException.class, () -> getControllers.childAlert("noaddress"));
     }
 
     @Test
     public void returnCorrectCommunityEmailData() {
         //ACT
-        List<String> emailList = getService.communityEmail("NYC");
+        List<String> emailList = getControllers.communityEmail("NYC");
         //ASSERT
-        Assertions.assertEquals(2, emailList.size());
-        Assertions.assertEquals(dataTest.getPersons().get(0).getEmail(), emailList.get(0));
-        Assertions.assertEquals(dataTest.getPersons().get(2).getEmail(), emailList.get(1));
+        assertThat(emailList).hasSize(2);
     }
 
     @Test
     public void returnCorrectFirestationData() {
         //ACT
-        List<Object> getfirestation = getService.firestation(1);
+        List<Object> getfirestation = getControllers.firestation(1);
 
         //ASSERT
         Count count = (Count) getfirestation.get(1);
         List<PersonFirestation> personFirestation = (List<PersonFirestation>) getfirestation.get(0);
-        assertEquals(2, getfirestation.size());
-        assertEquals(2, count.getAdults());
-        assertEquals(1, count.getChildren());
-
-        assertThat(personFirestation).extracting("firstName", "lastName", "address", "phone")
+        assertThat(getfirestation).hasSize(2);
+        assertThat(count.getAdults()).isEqualTo(2);
+        assertThat(count.getChildren()).isEqualTo(1);
+        assertThat(personFirestation).extracting(
+                PersonFirestation::getFirstName,
+                PersonFirestation::getLastName,
+                PersonFirestation::getAddress,
+                PersonFirestation::getPhone)
                 .contains(tuple(p1.getFirstName(), p1.getLastName(), p1.getAddress(), p1.getPhone()),
                         tuple(p2.getFirstName(), p2.getLastName(), p2.getAddress(), p2.getPhone()),
                         tuple(p3.getFirstName(), p3.getLastName(), p3.getAddress(), p3.getPhone()));
@@ -100,13 +89,13 @@ public class APIGetIT {
     @Test
     public void returnCorrectFireData() {
         //ACT
-        List<Object> getfire = getService.fire(dataTest.getPersons().get(0).getAddress());
+        List<Object> getfire = getControllers.fire(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
         List<PersonFloodAndFire> personFloodAndFires = (List<PersonFloodAndFire>) getfire.get(1);
-        assertEquals(2, getfire.size());
-        assertEquals(1, (Integer) getfire.get(0));
-        assertEquals(2, personFloodAndFires.size());
+        assertThat(getfire).hasSize(2);
+        assertThat(getfire.get(0)).isEqualTo(1);
+        assertThat(personFloodAndFires).hasSize(2);
         assertThat(personFloodAndFires).extracting("name", "phone", "medications", "allergies")
                 .contains(tuple(p1.getFirstName() + " " + p1.getLastName(), p1.getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()),
                         tuple(p3.getFirstName() + " " + p3.getLastName(), p3.getPhone(), dataTest.getMedicationList4(), dataTest.getMedicationList3()));
@@ -115,13 +104,12 @@ public class APIGetIT {
     @Test
     public void returnCorrectFloodStationData() {
         //ACT
-        List<HouseHold> getfloodStations = getService.floodstations("1,2");
+        List<HouseHold> getfloodStations = getControllers.floodStation("1,2");
 
         //ASSERT
         List<PersonFloodAndFire> personFloodAndFires = getfloodStations.get(0).getPersonList();
-        assertEquals(3, getfloodStations.size());
-        assertEquals(2, personFloodAndFires.size());
-
+        assertThat(getfloodStations).hasSize(3);
+        assertThat(personFloodAndFires).hasSize(2);
         assertThat(personFloodAndFires).extracting("name", "phone", "medications", "allergies")
                 .contains(tuple(p1.getFirstName() + " " + p1.getLastName(), p1.getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()),
                         tuple(p3.getFirstName() + " " + p3.getLastName(), p3.getPhone(), dataTest.getMedicationList4(), dataTest.getMedicationList3()));
@@ -130,28 +118,26 @@ public class APIGetIT {
     @Test
     public void returnCorrectPersonInfoData() {
         //ACT
-        List<PersonInfo> personInfos = getService.personInfo("John","Schaffer");
+        List<PersonInfo> personInfos = getControllers.personInfo("John", "Schaffer");
 
         //ASSERT
-        assertEquals(1, personInfos.size());
-        assertThat(personInfos.get(0)).extracting("name","address","email","medications","allergies")
-                .contains(p1.getFirstName() + " " + p1.getLastName(), p1.getAddress(), p1.getEmail(),dataTest.getMedicationList1(), dataTest.getMedicationList2());
+        assertThat(personInfos).hasSize(1);
+        assertThat(personInfos.get(0)).extracting("name", "address", "email", "medications", "allergies")
+                .contains(p1.getFirstName() + " " + p1.getLastName(), p1.getAddress(), p1.getEmail(), dataTest.getMedicationList1(), dataTest.getMedicationList2());
     }
 
     @Test
     public void returnCorrectPhoneAlertData() {
         //ACT
-        Set<String> phoneAlert = getService.phoneAlert(1);
+        Set<String> phoneAlert = getControllers.phoneAlert(1);
         //ASSERT
-        assertEquals(3, phoneAlert.size());
+        assertThat(phoneAlert).hasSize(3);
     }
 
     @Test
     public void returnErrorIfStationNumberDoesntExist() {
         //ACT
-        assertThrows(NullPointerException.class, () ->  getService.phoneAlert(0));
-        //ASSERT
-        verify(logger, times(1)).error(anyString());
+        assertThrows(NullPointerException.class, () -> getControllers.phoneAlert(0));
     }
 
 }
