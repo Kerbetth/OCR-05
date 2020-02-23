@@ -6,11 +6,10 @@ import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.enumerations.Enum;
-import net.minidev.json.reader.JsonWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -22,21 +21,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 public class DaoTest {
 
-    private DataTest dataTest;
+    private DataTest dataTest=new DataTest();
 
-
-    @Mock
-    static JsonWriter jsonWriterMock;
-
-    Dao dao = new Dao();
-
-    @BeforeEach
-    public void setup() {
-        dataTest = new DataTest();
-    }
+    @Autowired
+    Dao dao;
 
     @Test
     public void returnCorrectPersonByGivingTheName() {
+
         //ACT
         Person byName = dao.findPersonByName(
                 dataTest.getPersons().get(0).getFirstName()+
@@ -107,8 +99,8 @@ public class DaoTest {
         List<Firestation> firestations = dao.findFirestationsByNumber("1");
 
         //ASSERT
-        assertThat(dataTest.getFirestations().get(0)).isEqualTo(firestations.get(0));
-        assertThat(dataTest.getFirestations().get(1)).isEqualTo(firestations.get(1));
+        assertThat(dataTest.getFirestations().get(0).getStation()).isEqualTo(firestations.get(0).getStation());
+        assertThat(dataTest.getFirestations().get(1).getAddress()).isEqualTo(firestations.get(1).getAddress());
         assertThat(firestations).hasSize(2);
     }
 

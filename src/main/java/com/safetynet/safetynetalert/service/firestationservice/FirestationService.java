@@ -41,6 +41,7 @@ public class FirestationService {
         Integer id = 0;
         List<Firestation> firestations = dao.getDtb().getFirestations();
         for (Firestation firestation :firestations) {
+            System.out.println(firestation.getAddress());
             if ((firestation.getAddress()).equals(address)){
                 break;
             } else id++;
@@ -48,13 +49,10 @@ public class FirestationService {
         return id;
     }
 
-    public Dao getDao() {
-        return dao;
-    }
-
     public Database getDtb() {
         return dao.getDtb();
     }
+
     //***********Html Methods*************//
 
     public Firestation findFirestationByAddress(String address){

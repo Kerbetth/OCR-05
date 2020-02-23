@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalert.unit.service;
 import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
@@ -21,10 +22,11 @@ import static org.mockito.Mockito.*;
 public class PersonServicesTest {
 
     private DataTest dataTest;
+    private Database database;
     @Mock
     static Logger loggerMock;
-    @Spy
-    Dao dao = new Dao();
+    @Mock
+    Dao dao = new Dao("datatest.json");
 
     @InjectMocks
     PersonService personService = new PersonService();
@@ -34,13 +36,15 @@ public class PersonServicesTest {
         dataTest = new DataTest();
         personService.logger = loggerMock;
         doNothing().when(dao).writer(any());
+        database = dataTest.getDatabase();
+        when(dao.getDtb()).thenReturn(database);
     }
 
     @Test
     public void returnCorrectDataOfPersonAndEqualityOfSizeForMedRecAndPersons() {
         //ARRANGE
         Person p = dataTest.getNewPerson();
-
+        when(dao.findPersonByName(anyString())).thenReturn(null);
         //ACT
         personService.addPerson(p);
 
@@ -54,6 +58,7 @@ public class PersonServicesTest {
     @Test
     public void returnModifiedDataOfPerson() {
         //ARRANGE
+        when(dao.findPersonByName(anyString())).thenReturn(database.getPersons().get(0));
         Person p = dataTest.getPersons().get(0);
         p.setAddress("modified");
         p.setZip(5542);
@@ -70,6 +75,7 @@ public class PersonServicesTest {
     @Test
     public void returnOnePointLessSizeOfPersonListAfterDelete() {
         //ARRANGE
+
         //ACT
         personService.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
 

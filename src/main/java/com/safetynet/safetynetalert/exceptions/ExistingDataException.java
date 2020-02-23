@@ -8,6 +8,6 @@ public class ExistingDataException extends IllegalArgumentException {
      */
 
     public ExistingDataException(String argument) {
-        super(LogArgs.getWrongFormatMessage(argument));
+        super(LogArgs.getExistingNameMessage(argument));
     }
 }

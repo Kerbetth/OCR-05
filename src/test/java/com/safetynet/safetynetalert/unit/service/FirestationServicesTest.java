@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalert.unit.service;
 import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
@@ -7,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Spy;
+import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,10 +19,10 @@ import static org.mockito.Mockito.*;
 public class FirestationServicesTest {
 
     private DataTest dataTest;
+private Database database;
 
-
-    @Spy
-    Dao dao = new Dao();
+    @Mock
+    Dao dao = new Dao("datatest.json");
 
     @InjectMocks
     FirestationService firestationService = new FirestationService();
@@ -29,7 +30,10 @@ public class FirestationServicesTest {
     @BeforeEach
     public void setup() {
         dataTest = new DataTest();
+        database = dataTest.getDatabase();
         doNothing().when(dao).writer(any());
+        when(dao.getDtb()).thenReturn(database);
+
     }
 
     @Test

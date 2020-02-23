@@ -1,17 +1,18 @@
 package com.safetynet.safetynetalert.integration;
 
+import com.safetynet.safetynetalert.SafetyNetAlertApplication;
+import com.safetynet.safetynetalert.SafetyNetAlertApplicationTests;
 import com.safetynet.safetynetalert.controllers.apicontrollers.GetControllers;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.WritingCleanJsonData;
 import com.safetynet.safetynetalert.domain.*;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
-import com.safetynet.safetynetalert.service.GetService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 import java.util.Set;
@@ -21,21 +22,20 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class APIGetIT {
 
-    @Value("${jsonFileName}")
-    public String jsonFile;
-
-    GetControllers getControllers = new GetControllers();
+    @Autowired
+    GetControllers getControllers;
 
     DataTest dataTest = new DataTest();
     Person p1;
     Person p2;
     Person p3;
 
+
     @BeforeEach
     public void setup() {
-        WritingCleanJsonData.writingCleanJsonDataTest();
         dataTest = new DataTest();
         p1 = dataTest.getPersons().get(0);
         p2 = dataTest.getPersons().get(1);

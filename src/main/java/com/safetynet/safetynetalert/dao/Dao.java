@@ -7,19 +7,13 @@ import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
-import com.sun.jdi.ObjectCollectedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,37 +22,26 @@ public class Dao {
 
     private Database database;
     private static final Logger logger = LogManager.getLogger("Dao");
-    @Value("${jsonFileName}")
     public String jsonFile;
 
-
-    public Dao() {
-        String content = null;
-        System.out.println(jsonFile);
-        try
-        {
-            content = new String ( Files.readAllBytes( Paths.get(jsonFile) ) );
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+    public Dao(@Value("${jsonFileName}") String jsonfile) {
         try {
+            FileReader fileString = new FileReader(getClass().getClassLoader().getResource(jsonfile).getFile());
             database = new ObjectMapper()
-                    .readValue(content, Database.class
+                    .readValue(fileString,
+                            Database.class
                     );
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+            this.jsonFile = jsonfile;
+        } catch (IOException e) {
+            e.printStackTrace();}
     }
 
-    public void writer(Database database){
+    public void writer(Database database) {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonStr = "";
         try {
             jsonStr = objectMapper.writeValueAsString(database);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         try (FileWriter file = new FileWriter(jsonFile)) {
@@ -69,6 +52,8 @@ public class Dao {
     }
 
     public Person findPersonByName(String name) {
+        System.out.println(database);
+        System.out.println(jsonFile);
         Optional<Person> person =
                 database.getPersons()
                         .stream()
@@ -166,6 +151,4 @@ public class Dao {
     public List<Medicalrecord> loadMedicalRecords() {
         return database.getMedicalrecords();
     }
-
-
 }

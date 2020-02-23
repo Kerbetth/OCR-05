@@ -9,7 +9,7 @@ import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFirestation;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,7 +20,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -32,7 +31,7 @@ public class GetFirestationURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static Dao dao;
+    private  Dao dao = new Dao("datatest.json");
     @Mock
     static Logger loggermock;
 
@@ -59,14 +58,13 @@ public class GetFirestationURLServicesTest {
         //ASSERT
         Count count = (Count) getfirestation.get(1);
         List<PersonFirestation> personFirestation = (List<PersonFirestation>) getfirestation.get(0);
-
-        assertEquals(2, getfirestation.size());
-        assertEquals(2, count.getAdults());
-        assertEquals(1, count.getChildren());
+        assertThat(getfirestation).hasSize(2);
+        assertThat(count.getAdults()).isEqualTo(2);
+        assertThat(count.getChildren()).isEqualTo(1);
         Person p1 =  dataTest.getPersons().get(0);
         Person p2 =  dataTest.getPersons().get(1);
         Person p3 =  dataTest.getPersons().get(2);
-        assertThat(personFirestation).extracting("firstName","lastName","address","phone")
+        assertThat(personFirestation).extracting(PersonFirestation::getFirstName,PersonFirestation::getLastName,PersonFirestation::getAddress,PersonFirestation::getPhone)
                 .contains(  tuple(p1.getFirstName(), p1.getLastName(), p1.getAddress(), p1.getPhone()),
                             tuple(p2.getFirstName(), p2.getLastName(), p2.getAddress(), p2.getPhone()),
                             tuple(p3.getFirstName(), p3.getLastName(), p3.getAddress(), p3.getPhone()));
