@@ -5,7 +5,6 @@ import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
-import com.safetynet.safetynetalert.enumerations.Enum;
 import org.junit.jupiter.api.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +68,12 @@ public class APIMedRecIT {
         //ASSERT
         assertThat(getDatabase().getPersons()).hasSize(4);
         assertThat(getDatabase().getMedicalrecords()).hasSize(4);
-        assertThat(getDatabase().getMedicalrecords().get(1)).extracting(Enum.FNAME.str(), Enum.LNAME.str(), Enum.BDATE.str(), Enum.MED.str(), Enum.ALLERG.str())
+        assertThat(getDatabase().getMedicalrecords().get(1)).extracting(
+                Medicalrecord::getFirstName,
+                Medicalrecord::getLastName,
+                Medicalrecord::getBirthdate,
+                Medicalrecord::getMedications,
+                Medicalrecord::getAllergies)
                 .contains("Jeff", "Loomis", m1.getBirthdate(), m1.getMedications(), m1.getAllergies());
     }
 

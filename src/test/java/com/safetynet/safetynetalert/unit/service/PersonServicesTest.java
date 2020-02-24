@@ -4,14 +4,12 @@ import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.enumerations.Enum;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +49,14 @@ public class PersonServicesTest {
         //ASSERT
         assertThat(personService.getDtb().getPersons()).hasSize(5);
         assertThat(personService.getDtb().getMedicalrecords()).hasSize(5);
-        assertThat(personService.getDtb().getPersons().get(4)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
+        assertThat(personService.getDtb().getPersons().get(4)).extracting(
+                Person::getFirstName,
+                Person::getLastName,
+                Person::getAddress,
+                Person::getCity,
+                Person::getZip,
+                Person::getPhone,
+                Person::getEmail)
                 .contains(p.getFirstName(), p.getLastName(), p.getAddress(),p.getCity(),p.getZip(), p.getEmail(),p.getPhone());
     }
 
@@ -68,7 +73,14 @@ public class PersonServicesTest {
 
         //ASSERT
         assertThat(personService.getDtb().getPersons()).hasSize(4);
-        assertThat(personService.getDtb().getPersons().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
+        assertThat(personService.getDtb().getPersons().get(0)).extracting(
+                Person::getFirstName,
+                Person::getLastName,
+                Person::getAddress,
+                Person::getCity,
+                Person::getZip,
+                Person::getPhone,
+                Person::getEmail)
                 .contains(p.getFirstName(), p.getLastName(), p.getAddress(),p.getCity(),p.getZip(), p.getEmail(),p.getPhone());
     }
 

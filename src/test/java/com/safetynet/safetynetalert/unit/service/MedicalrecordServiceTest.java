@@ -5,14 +5,12 @@ import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
-import com.safetynet.safetynetalert.enumerations.Enum;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,7 +82,12 @@ public class MedicalrecordServiceTest {
 
         //ASSERT
         assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(4);
-        assertThat(medicalrecordDao.getDtb().getMedicalrecords().get(0)).extracting(Enum.FNAME.str(), Enum.LNAME.str(), Enum.BDATE.str(), Enum.MED.str(), Enum.ALLERG.str())
+        assertThat(medicalrecordDao.getDtb().getMedicalrecords().get(0)).extracting(
+                Medicalrecord::getFirstName,
+                Medicalrecord::getLastName,
+                Medicalrecord::getBirthdate,
+                Medicalrecord::getMedications,
+                Medicalrecord::getAllergies)
                 .contains(m.getFirstName(), m.getLastName(), m.getBirthdate(), m.getMedications(), m.getAllergies());
     }
 

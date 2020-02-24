@@ -5,8 +5,6 @@ import com.safetynet.safetynetalert.dao.Dao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.enumerations.Enum;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,14 @@ public class DaoTest {
                 dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        assertThat(dataTest.getPersons().get(0)).extracting(Enum.FNAME.str(),Enum.LNAME.str(),Enum.ADDRESS.str(),Enum.CITY.str(),Enum.ZIP.str(),Enum.PHONE.str(),Enum.EMAIL.str())
+        assertThat(dataTest.getPersons().get(0)).extracting(
+                Person::getFirstName,
+                Person::getLastName,
+                Person::getAddress,
+                Person::getCity,
+                Person::getZip,
+                Person::getPhone,
+                Person::getEmail)
                 .contains(byName.getFirstName(), byName.getLastName(), byName.getAddress(),byName.getCity(),byName.getZip(), byName.getEmail(),byName.getPhone());
 
         assertThat(byAddress).hasSize(2);

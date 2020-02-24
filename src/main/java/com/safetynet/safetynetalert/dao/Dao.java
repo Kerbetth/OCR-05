@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalert.dao;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
@@ -9,11 +8,11 @@ import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,12 +25,13 @@ public class Dao {
 
     public Dao(@Value("${jsonFileName}") String jsonfile) {
         try {
-            FileReader fileString = new FileReader(getClass().getClassLoader().getResource(jsonfile).getFile());
+            FileReader fileString = new FileReader(getClass().getClassLoader().getResource(jsonfile).getFile(), StandardCharsets.UTF_8);
             database = new ObjectMapper()
                     .readValue(fileString,
                             Database.class
                     );
             this.jsonFile = jsonfile;
+            fileString.close();
         } catch (IOException e) {
             e.printStackTrace();}
     }
