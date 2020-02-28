@@ -21,5 +21,4 @@ public class IndexHTMLControllers {
         model.addAttribute("firestations", dao.loadFirestions());
         return "Index";
     }
-
 }
