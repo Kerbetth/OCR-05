@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MedicalrecordService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SafetyNetAlert</a> &gt; <a href="index.source.html" class="el_package">com.safetynet.safetynetalert.service.persandmedservice</a> &gt; <span class="el_source">MedicalrecordService.java</span></div><h1>MedicalrecordService.java</h1><pre class="source lang-java linenums">package com.safetynet.safetynetalert.service.persandmedservice;
+
+import com.safetynet.safetynetalert.service.DTOFactory;
+import com.safetynet.safetynetalert.domain.Medicalrecord;
+import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;
+import com.safetynet.safetynetalert.loggerargument.LogArgs;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Repository
+<span class="fc" id="L16">public class MedicalrecordService extends PersAndMedService {</span>
+
+<span class="fc" id="L18">    public Logger logger = LogManager.getLogger(&quot;MedicalrecordDao&quot;);</span>
+
+    /**
+     * addMedicalrecord add a new MedicalReord entry with a corresponding new Person entry
+     * setMedicalrecord set birthdate, medication and allergies if a corresponding param exist in the request
+     *
+     */
+
+    public List&lt;Object&gt; addMedicalrecord(Medicalrecord medicalrecord) {
+<span class="fc" id="L27">        List&lt;Medicalrecord&gt; medicalrecords = dao.getDtb().getMedicalrecords();</span>
+<span class="fc" id="L28">        List&lt;Person&gt; persons = dao.getDtb().getPersons();</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        if (medicalrecords.size() == persons.size()) {</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            if (dao.findPersonByName(medicalrecord.getFirstName() + medicalrecord.getLastName()) == null) {</span>
+<span class="fc" id="L31">                List&lt;Object&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L32">                medicalrecords.add(medicalrecord);</span>
+<span class="fc" id="L33">                persons.add(DTOFactory.createdefaultPerson(medicalrecord.getFirstName(), medicalrecord.getLastName()));</span>
+<span class="fc" id="L34">                dao.getDtb().setMedicalrecords(medicalrecords);</span>
+<span class="fc" id="L35">                dao.getDtb().setPersons(persons);</span>
+<span class="fc" id="L36">                dao.writer(dao.getDtb());</span>
+<span class="fc" id="L37">                result.add(dao.getDtb().getMedicalrecords().get(dao.getDtb().getMedicalrecords().size() - 1));</span>
+<span class="fc" id="L38">                result.add(dao.getDtb().getPersons().get(dao.getDtb().getPersons().size() - 1));</span>
+<span class="fc" id="L39">                return result;</span>
+            } else {
+<span class="fc" id="L41">                logger.error(LogArgs.getExistingNameMessage(medicalrecord.getFirstName() + medicalrecord.getLastName()));</span>
+<span class="fc" id="L42">                return null;</span>
+            }
+        } else {
+<span class="nc" id="L45">            logger.error(LogArgs.getNotEqualSizeMessage());</span>
+<span class="nc" id="L46">            throw new NotEqualSizeListException();</span>
+        }
+    }
+
+    public Medicalrecord setMedicalrecord(String firstNameLastName, Medicalrecord medrecEdit) {
+<span class="fc" id="L51">        Integer id = getIdByName(firstNameLastName);</span>
+<span class="fc" id="L52">        Medicalrecord medicalRecordUpdated = dao.findMedicalrecordByID(id);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (medrecEdit.getBirthdate() != null) {</span>
+<span class="fc" id="L54">            medicalRecordUpdated.setBirthdate(medrecEdit.getBirthdate());</span>
+        }
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (medrecEdit.getMedications() != null) {</span>
+<span class="fc" id="L57">            medicalRecordUpdated.setMedications(medrecEdit.getMedications());</span>
+        }
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (medrecEdit.getAllergies() != null) {</span>
+<span class="fc" id="L60">            medicalRecordUpdated.setAllergies(medrecEdit.getAllergies());</span>
+        }
+<span class="fc" id="L62">        dao.getDtb().getMedicalrecords().set(id, medicalRecordUpdated);</span>
+<span class="fc" id="L63">        dao.writer(dao.getDtb());</span>
+<span class="fc" id="L64">        return dao.getDtb().getMedicalrecords().get(id);</span>
+    }
+
+
+
+    //***********Html Methods*************//
+
+    public Medicalrecord findMedicalrecordByID(int id){
+<span class="nc" id="L72">        return dao.findMedicalrecordByID(id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirestationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SafetyNetAlert</a> &gt; <a href="index.source.html" class="el_package">com.safetynet.safetynetalert.service.firestationservice</a> &gt; <span class="el_source">FirestationService.java</span></div><h1>FirestationService.java</h1><pre class="source lang-java linenums">package com.safetynet.safetynetalert.service.firestationservice;
+
+import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.domain.Database;
+import com.safetynet.safetynetalert.domain.Firestation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+<span class="fc" id="L12">public class FirestationService {</span>
+
+    @Autowired
+    private Dao dao;
+
+    /**
+     * classic CRUD method for Firestations management, get, add, set, and delete
+     *
+     */
+
+    public Firestation addFirestation(Firestation firestation) {
+<span class="fc" id="L23">        dao.getDtb().getFirestations().add(firestation);</span>
+<span class="fc" id="L24">        dao.writer(dao.getDtb());</span>
+<span class="fc" id="L25">        return firestation;</span>
+    }
+
+    public Firestation setFirestation(String address, Integer stationNumber) {
+<span class="fc" id="L29">        Integer id = getIdByAddress(address);</span>
+<span class="fc" id="L30">        List&lt;Firestation&gt; firestations= dao.getDtb().getFirestations();</span>
+<span class="fc" id="L31">        Firestation firestationToUpdate = firestations.get(id);</span>
+<span class="fc" id="L32">        firestationToUpdate.setStation(stationNumber);</span>
+<span class="fc" id="L33">        firestations.set(id, firestationToUpdate);</span>
+<span class="fc" id="L34">        dao.getDtb().setFirestations(firestations);</span>
+<span class="fc" id="L35">        dao.writer(dao.getDtb());</span>
+<span class="fc" id="L36">        return firestationToUpdate;</span>
+    }
+
+    public void deleteFirestation(String address) {
+<span class="fc" id="L40">        Integer id = getIdByAddress(address);</span>
+<span class="fc" id="L41">        dao.getDtb().getFirestations().remove(dao.getDtb().getFirestations().get(id));</span>
+<span class="fc" id="L42">        dao.writer(dao.getDtb());</span>
+<span class="fc" id="L43">    }</span>
+
+    public Integer getIdByAddress(String address) {
+<span class="fc" id="L46">        Integer id = 0;</span>
+<span class="fc" id="L47">        List&lt;Firestation&gt; firestations = dao.getDtb().getFirestations();</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        for (Firestation firestation :firestations) {</span>
+<span class="fc" id="L49">            System.out.println(firestation.getAddress());</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">            if ((firestation.getAddress()).equals(address)){</span>
+<span class="fc" id="L51">                break;</span>
+<span class="nc" id="L52">            } else id++;</span>
+<span class="nc" id="L53">        }</span>
+<span class="fc" id="L54">        return id;</span>
+    }
+
+    public Database getDtb() {
+<span class="fc" id="L58">        return dao.getDtb();</span>
+    }
+
+    //***********Html Methods*************//
+
+    public Firestation findFirestationByAddress(String address){
+<span class="nc" id="L64">        return dao.findFirestationByAddress(address);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

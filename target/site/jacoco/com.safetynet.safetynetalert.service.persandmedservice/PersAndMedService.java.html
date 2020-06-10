@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersAndMedService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SafetyNetAlert</a> &gt; <a href="index.source.html" class="el_package">com.safetynet.safetynetalert.service.persandmedservice</a> &gt; <span class="el_source">PersAndMedService.java</span></div><h1>PersAndMedService.java</h1><pre class="source lang-java linenums">package com.safetynet.safetynetalert.service.persandmedservice;
+
+import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.domain.Database;
+import com.safetynet.safetynetalert.domain.Person;
+import com.safetynet.safetynetalert.exceptions.NoEntryException;
+import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;
+import com.safetynet.safetynetalert.loggerargument.LogArgs;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+<span class="fc" id="L17">public class PersAndMedService {</span>
+
+<span class="fc" id="L19">    private static final Logger logger = LogManager.getLogger(&quot;PersAndMedDao&quot;);</span>
+
+    /**
+     * deleteMedicalRecordAndPersonEntryn Delete the two corresponding entry of the same person
+     * getIdByName get the id according to the firstname followed by the lastname
+     *
+     */
+
+    @Autowired
+    Dao dao;
+
+    public void deleteMedicalRecordAndPersonEntry(String name) {
+<span class="fc" id="L31">        int id = getIdByName(name);</span>
+<span class="fc" id="L32">        dao.getDtb().getMedicalrecords().remove(dao.getDtb().getMedicalrecords().get(id));</span>
+<span class="fc" id="L33">        dao.getDtb().getPersons().remove(dao.getDtb().getPersons().get(id));</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (dao.getDtb().getPersons().size() != dao.getDtb().getMedicalrecords().size()) {</span>
+<span class="nc" id="L35">            logger.error(LogArgs.getNotEqualSizeMessage());</span>
+<span class="nc" id="L36">            throw new NotEqualSizeListException();</span>
+        }
+<span class="fc" id="L38">        dao.writer(dao.getDtb());</span>
+<span class="fc" id="L39">    }</span>
+
+    public Integer getIdByName(String name) {
+<span class="fc" id="L42">        int id = 0;</span>
+<span class="fc" id="L43">        List&lt;Person&gt; persons = dao.getDtb().getPersons();</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        for (Person person : persons) {</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">            if ((person.getFirstName() + person.getLastName()).equals(name)) {</span>
+<span class="fc" id="L46">                break;</span>
+<span class="nc" id="L47">            } else id++;</span>
+<span class="nc" id="L48">        }</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (id &gt;= persons.size()) {</span>
+<span class="nc" id="L50">            throw new NoEntryException(name);</span>
+        }
+<span class="fc" id="L52">        return id;</span>
+    }
+
+    public Dao getDao() {
+<span class="nc" id="L56">        return dao;</span>
+    }
+
+    public Database getDtb() {
+<span class="fc" id="L60">        return dao.getDtb();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
