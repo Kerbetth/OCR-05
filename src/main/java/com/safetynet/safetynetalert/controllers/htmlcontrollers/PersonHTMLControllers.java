@@ -18,6 +18,11 @@ public class PersonHTMLControllers {
     @Autowired
     private PersonService personService;
 
+    /**
+     * a thymeleaf template has been added to put or add Person
+     *
+     *
+     */
 
     @RequestMapping("/persons/new")
     public String newPerson(Model model){
@@ -31,7 +36,7 @@ public class PersonHTMLControllers {
         return "redirect:/";
     }
 
-    @RequestMapping("/persons/edit/{firstName}/{lastName}")
+    @RequestMapping("/persons/edit/{firstName}{lastName}")
     public String editPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName , Model model){
         model.addAttribute("personedit", personService.findPersonByName(firstName+lastName));
         return "personedit";

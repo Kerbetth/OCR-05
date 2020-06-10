@@ -17,7 +17,11 @@ public class MedicalrecordService extends PersAndMedService {
 
     public Logger logger = LogManager.getLogger("MedicalrecordDao");
 
-
+    /**
+     * addMedicalrecord add a new MedicalReord entry with a corresponding new Person entry
+     * setMedicalrecord set birthdate, medication and allergies if a corresponding param exist in the request
+     *
+     */
 
     public List<Object> addMedicalrecord(Medicalrecord medicalrecord) {
         List<Medicalrecord> medicalrecords = dao.getDtb().getMedicalrecords();

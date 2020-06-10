@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class FirestationHTMLControllers {
 
+    /**
+     * a thymeleaf template has been added to put or add firestations
+     *
+     *
+     */
 
     @Autowired
     private FirestationService firestationService;

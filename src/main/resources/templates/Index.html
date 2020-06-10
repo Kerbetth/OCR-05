@@ -61,8 +61,8 @@
                 <td th:text="${person.zip}"></td>
                 <td th:text="${person.phone}"></td>
                 <td th:text="${person.email}"></td>
-                <td><a th:href="${'/persons/edit/' + person.firstName + '/' + person.lastName}">Edit</a></td>
-                <td><a th:href="${'/person/del/' + person.firstName + '/' + person.lastName}">Remove</a></td>
+                <td><a th:href="${'/persons/edit/' + person.firstName +  person.lastName}">Edit</a></td>
+                <td><a th:href="${'/person/del/' + person.firstName + person.lastName}">Remove</a></td>
             </tr>
         </table>
     </div>
@@ -85,9 +85,9 @@
                 <td th:text="${medicalrecord.birthdate}"></td>
                 <td style="max-width: 160px;" th:text="${medicalrecord.medications}"></td>
                 <td style="max-width: 120px;" th:text="${medicalrecord.allergies}"></td>
-                <td><a th:href="${'/medrec/edit/' + medicalrecord.firstName + '/' + medicalrecord.lastName}">Edit</a>
+                <td><a th:href="${'/medrec/edit/' + medicalrecord.firstName  + medicalrecord.lastName}">Edit</a>
                 </td>
-                <td><a th:href="${'/medrec/del/' + medicalrecord.firstName + '/' + medicalrecord.lastName}">Remove</a>
+                <td><a th:href="${'/medrec/del/' + medicalrecord.firstName + medicalrecord.lastName}">Remove</a>
                 </td>
             </tr>
         </table>

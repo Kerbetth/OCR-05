@@ -11,6 +11,12 @@ import java.time.Period;
 
 public class DTOFactory {
 
+    /**
+     * createdefaultPerson Create an default entry of person corresponding with the MedicalRecord registered
+     * createdefaultMedicalRecord Create an default entry of person corresponding with the Person registered
+     * age calculate the age according to the birth date
+     * createPersonFloodAndFire is a common data for Fire an FloodStation get request
+     */
 
     public static Person createdefaultPerson(String firstName, String lastName) {
         Person person = new Person();

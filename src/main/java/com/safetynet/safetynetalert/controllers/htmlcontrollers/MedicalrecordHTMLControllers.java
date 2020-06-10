@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MedicalrecordHTMLControllers {
 
+    /**
+     * a thymeleaf template has been added to put or add Medicalrecord
+     *
+     *
+     */
+
     @Autowired
     private MedicalrecordService medicalrecordDao;
 
@@ -30,7 +36,7 @@ public class MedicalrecordHTMLControllers {
         return "redirect:/";
     }
 
-    @RequestMapping("/medrec/edit/{firstName}/{lastName}")
+    @RequestMapping("/medrec/edit/{firstName}{lastName}")
     public String editmedicalRecord(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName, Model model) {
         model.addAttribute("medicalRecordedit", medicalrecordDao.findMedicalrecordByID(medicalrecordDao.getIdByName(firstName+lastName)));
         return "medicalRecordedit";

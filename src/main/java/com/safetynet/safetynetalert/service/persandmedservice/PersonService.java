@@ -17,6 +17,12 @@ import java.util.List;
 
 @Service
 public class PersonService extends PersAndMedService {
+    
+    /**
+     *  addPerson add a new Person entry with a corresponding new addMedicalrecord entry
+     *  setPerson set address, city, zip, phone and email if a corresponding param exist in the request
+     *
+     */
 
     public Logger logger = LogManager.getLogger("PersonDao");
 

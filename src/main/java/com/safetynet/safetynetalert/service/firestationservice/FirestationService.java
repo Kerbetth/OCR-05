@@ -14,6 +14,11 @@ public class FirestationService {
     @Autowired
     private Dao dao;
 
+    /**
+     * classic CRUD method for Firestations management, get, add, set, and delete
+     *
+     */
+
     public Firestation addFirestation(Firestation firestation) {
         dao.getDtb().getFirestations().add(firestation);
         dao.writer(dao.getDtb());

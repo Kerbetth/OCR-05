@@ -14,6 +14,12 @@ public class IndexHTMLControllers {
     @Autowired
     private Dao dao;
 
+    /**
+     * a thymeleaf template has been added to get a global view of the data
+     * this is the index which show all the data with possibilities of CRUD actions
+     *
+     */
+
     @RequestMapping("/")
     public String listAll(Model model){
         model.addAttribute("persons", dao.loadPersons());

@@ -15,6 +15,9 @@ public class PersonControllers {
     @Autowired
     private PersonService personService;
 
+    /**
+     * Add put and delete for person
+     */
 
     @PostMapping(value = "/person")
     public List<Object> addPersonPost(@RequestBody Person person) {

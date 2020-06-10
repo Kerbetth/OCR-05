@@ -21,6 +21,10 @@ public class GetService {
 
     private Logger logger = LogManager.getLogger("GetService");
 
+    /**
+     *Service which manages all the Get request pull directly from the json file
+     */
+
     @Autowired
     private Dao dao;
 
@@ -171,8 +175,8 @@ public class GetService {
                 result.add(personInfo);
             }
         } else {
-            logger.error(LogArgs.getNoFnameOrLNameMessage(firstName,lastName));
-            throw new NoFnameOrLnameException(firstName,lastName);
+            logger.error(LogArgs.getNoFnameOrLNameMessage(firstName, lastName));
+            throw new NoFnameOrLnameException(firstName, lastName);
         }
         return result;
     }

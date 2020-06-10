@@ -13,6 +13,9 @@ public class FirestationControllers {
     @Autowired
     private FirestationService firestationService;
 
+    /**
+     * Add put and delete for firestation
+     */
 
     @PostMapping(value = "/firestation")
     public Firestation addFirestationPost(@RequestBody Firestation firestationData){

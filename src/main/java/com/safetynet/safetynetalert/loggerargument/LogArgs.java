@@ -3,7 +3,7 @@ package com.safetynet.safetynetalert.loggerargument;
 public class LogArgs {
 
     public static String getWrongFormatMessage(String argument) {
-        return "Error, " + argument + "is not correct, please enter a correct email format";
+        return "Error, " + argument + "is not correct, please enter a correct email or phone format";
     }
 
     public static String getNotEqualSizeMessage() {

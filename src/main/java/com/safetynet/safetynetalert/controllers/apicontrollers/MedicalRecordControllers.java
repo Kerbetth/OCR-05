@@ -15,6 +15,9 @@ public class MedicalRecordControllers {
     @Autowired
     private MedicalrecordService medicalrecordService;
 
+    /**
+     * Add put and delete for medicalRecord
+     */
 
     @PostMapping(value = "/medicalRecord")
     public List<Object> addMedicalRecordPost(@RequestBody Medicalrecord medicalrecord){

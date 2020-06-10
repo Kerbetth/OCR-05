@@ -18,6 +18,12 @@ public class PersAndMedService {
 
     private static final Logger logger = LogManager.getLogger("PersAndMedDao");
 
+    /**
+     * deleteMedicalRecordAndPersonEntryn Delete the two corresponding entry of the same person
+     * getIdByName get the id according to the firstname followed by the lastname
+     *
+     */
+
     @Autowired
     Dao dao;
 

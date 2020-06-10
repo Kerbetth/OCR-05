@@ -18,6 +18,11 @@ public class GetControllers {
     @Autowired
     private GetService service;
 
+    /**
+     * All the get endpoints demanded
+     */
+
+
     @GetMapping(path = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Object> firestation(@RequestParam("stationNumber") Integer stationNumber) {
         return service.firestation(stationNumber);
