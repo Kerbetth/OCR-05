@@ -26,6 +26,10 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
@@ -90,6 +94,12 @@
     <!-- =============================================================== -->
 
     <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -204,9 +214,9 @@
                 <configuration>
                     <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                     <excludes>
-                        <exclude>**/com.safetynet.safetynetalert/domain/*</exclude>
-                        <exclude>**/com.safetynet.safetynetalert/controllers/htmlcontrollers/*</exclude>
-                        <exclude>**/boot/SafetyNetAlertApplication.*</exclude>
+                        <exclude>**/*domain/**/*</exclude>
+                        <exclude>**/*htmlcontrollers/**/*</exclude>
+                        <exclude>**/*SafetyNetAlertApplication.*</exclude>
                     </excludes>
                 </configuration>
                 <reportSets>

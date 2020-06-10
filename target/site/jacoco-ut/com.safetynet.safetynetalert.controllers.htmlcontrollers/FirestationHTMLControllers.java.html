@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirestationHTMLControllers.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SafetyNetAlert</a> &gt; <a href="index.source.html" class="el_package">com.safetynet.safetynetalert.controllers.htmlcontrollers</a> &gt; <span class="el_source">FirestationHTMLControllers.java</span></div><h1>FirestationHTMLControllers.java</h1><pre class="source lang-java linenums">package com.safetynet.safetynetalert.controllers.htmlcontrollers;
+
+
+
+
+import com.safetynet.safetynetalert.domain.Firestation;
+import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+@Controller
+<span class="fc" id="L16">public class FirestationHTMLControllers {</span>
+
+    /**
+     * a thymeleaf template has been added to put or add firestations
+     *
+     *
+     */
+
+    @Autowired
+    private FirestationService firestationService;
+
+    
+    @RequestMapping(&quot;/station/new&quot;)
+    public String newFirestationRecord(Model model) {
+<span class="nc" id="L30">        model.addAttribute(&quot;firestation&quot;, new Firestation());</span>
+<span class="nc" id="L31">        return &quot;firestationAdd&quot;;</span>
+    }
+
+    @RequestMapping(value = &quot;/station/adding&quot;)
+    public String addingFirestation(Firestation firestation) {
+<span class="nc" id="L36">        firestationService.addFirestation(firestation);</span>
+<span class="nc" id="L37">        return &quot;redirect:/&quot;;</span>
+    }
+
+    @RequestMapping(&quot;/station/edit/{address}&quot;)
+    public String editFirestation(@PathVariable(&quot;address&quot;) String address, Model model) {
+<span class="nc" id="L42">        model.addAttribute(&quot;firestationedit&quot;, firestationService.findFirestationByAddress(address));</span>
+<span class="nc" id="L43">        return &quot;firestationedit&quot;;</span>
+    }
+
+    @RequestMapping(value = &quot;/station/setting&quot;)
+    public String updatingfirestation(Firestation firestation) {
+<span class="nc" id="L48">        firestationService.setFirestation(firestation.getAddress(), firestation.getStation());</span>
+<span class="nc" id="L49">        return &quot;redirect:/&quot;;</span>
+    }
+
+    @RequestMapping(value = &quot;/station/del/{address}&quot;)
+    public String deletingfirestation(@PathVariable(&quot;address&quot;) String address) {
+<span class="nc" id="L54">        firestationService.deleteFirestation(address);</span>
+<span class="nc" id="L55">        return &quot;redirect:/&quot;;</span>
+    }
+
+    @RequestMapping(&quot;/station/info/{address}&quot;)
+    public String infoFirestation(@PathVariable(&quot;address&quot;) String address, Model model) {
+<span class="nc" id="L60">        model.addAttribute(&quot;firestation&quot;, firestationService.findFirestationByAddress(address));</span>
+<span class="nc" id="L61">        return &quot;firestation&quot;;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

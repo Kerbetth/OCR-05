@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogArgs.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SafetyNetAlert</a> &gt; <a href="index.source.html" class="el_package">com.safetynet.safetynetalert.loggerargument</a> &gt; <span class="el_source">LogArgs.java</span></div><h1>LogArgs.java</h1><pre class="source lang-java linenums">package com.safetynet.safetynetalert.loggerargument;
+
+<span class="nc" id="L3">public class LogArgs {</span>
+
+    public static String getWrongFormatMessage(String argument) {
+<span class="nc" id="L6">        return &quot;Error, &quot; + argument + &quot;is not correct, please enter a correct email or phone format&quot;;</span>
+    }
+
+    public static String getNotEqualSizeMessage() {
+<span class="nc" id="L10">        return &quot;Error, the number of persons and of medicalRecords are not the same, please check the JSON file&quot;;</span>
+    }
+
+    public static String getExistingNameMessage(String name) {
+<span class="fc" id="L14">        return &quot;The name \&quot;&quot; + name + &quot;\&quot; allready exist in the database, please precise the name&quot;;</span>
+    }
+
+    public static String getNoEntryMessage(String name) {
+<span class="fc" id="L18">        return &quot;The name or address \&quot;&quot; + name + &quot;\&quot; doesn't correspond to any entry in the database&quot;;</span>
+    }
+
+    public static String getNoEntryByStationMessage(String station) {
+<span class="fc" id="L22">        return &quot;No addresses affilated to the station numbers: \&quot;&quot; + station + &quot;\&quot;.&quot;;</span>
+    }
+
+    public static String getNoFnameOrLNameMessage(String fname, String lname) {
+<span class="fc" id="L26">        return &quot;Their is no person with the firstname: \&quot;&quot; + fname + &quot;\&quot; or lastname: \&quot;&quot; + lname + &quot;\&quot;&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
