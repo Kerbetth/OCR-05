@@ -61,6 +61,7 @@ public class GetService {
         count.setChildren(children);
         result.add(personFirestations);
         result.add(count);
+        logger.info("A new firestation Get request has been done with parameter station: "+ stationNumber);
         return result;
     }
 
@@ -95,6 +96,7 @@ public class GetService {
             logger.error(LogArgs.getNoEntryMessage(address));
             throw new NoEntryException(address);
         }
+        logger.info("A new childAlert Get request has been done with parameter address: "+ address);
         return result;
     }
 
@@ -112,6 +114,7 @@ public class GetService {
             logger.error(LogArgs.getNoEntryByStationMessage(stationNumber.toString()));
             throw new NoEntryByStationException(stationNumber.toString());
         }
+        logger.info("A new phoneAlert Get request has been done with parameter address: "+ stationNumber);
         return result;
     }
 
@@ -132,6 +135,7 @@ public class GetService {
         }
         result.add(station);
         result.add(fireList);
+        logger.info("A new fire Get request has been done with parameter address: "+ address);
         return result;
     }
 
@@ -156,6 +160,7 @@ public class GetService {
             logger.error(LogArgs.getNoEntryByStationMessage(numbersList));
             throw new NoEntryByStationException(numbersList);
         }
+        logger.info("A new floodstations Get request has been done with parameter numbers: "+ numbersList);
         return result;
     }
 
@@ -178,6 +183,7 @@ public class GetService {
             logger.error(LogArgs.getNoFnameOrLNameMessage(firstName, lastName));
             throw new NoFnameOrLnameException(firstName, lastName);
         }
+        logger.info("A new personInfo Get request has been done with parameter name: "+ firstName +" "+lastName);
         return result;
     }
 
@@ -195,6 +201,7 @@ public class GetService {
             logger.error("The city \"" + city + "\" doesn't exist in the repertory");
             return null;
         }
+        logger.info("A new communityEmail Get request has been done with parameter city: "+ city );
         return result;
     }
 

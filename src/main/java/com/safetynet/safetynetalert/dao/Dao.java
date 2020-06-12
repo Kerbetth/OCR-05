@@ -65,8 +65,6 @@ public class Dao {
     }
 
     public Person findPersonByName(String name) {
-        System.out.println(database);
-        System.out.println(jsonFile);
         Optional<Person> person =
                 database.getPersons()
                         .stream()
