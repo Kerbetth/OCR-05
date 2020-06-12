@@ -36,6 +36,8 @@ public class MedicalrecordService extends PersAndMedService {
                 dao.writer(dao.getDtb());
                 result.add(dao.getDtb().getMedicalrecords().get(dao.getDtb().getMedicalrecords().size() - 1));
                 result.add(dao.getDtb().getPersons().get(dao.getDtb().getPersons().size() - 1));
+                logger.info("A new Person Post request with the name "+medicalrecord.getFirstName()+
+                        " "+medicalrecord.getLastName() +"has been added.");
                 return result;
             } else {
                 logger.error(LogArgs.getExistingNameMessage(medicalrecord.getFirstName() + medicalrecord.getLastName()));
@@ -61,6 +63,7 @@ public class MedicalrecordService extends PersAndMedService {
         }
         dao.getDtb().getMedicalrecords().set(id, medicalRecordUpdated);
         dao.writer(dao.getDtb());
+        logger.info("A new MedicalRecord Put request on person "+firstNameLastName+" has been done:");
         return dao.getDtb().getMedicalrecords().get(id);
     }
 

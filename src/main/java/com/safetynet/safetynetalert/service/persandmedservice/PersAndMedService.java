@@ -36,6 +36,7 @@ public class PersAndMedService {
             throw new NotEqualSizeListException();
         }
         dao.writer(dao.getDtb());
+        logger.info("A Person/Medical Delete request has been sent for the Person with the name "+ name +" which has been deleted.");
     }
 
     public Integer getIdByName(String name) {
