@@ -1,6 +1,10 @@
 package com.safetynet.safetynetalert.service.persandmedservice;
 
-import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.dao.DaoFirestation;
+import com.safetynet.safetynetalert.dao.DaoMedicalRecord;
+import com.safetynet.safetynetalert.dao.DaoPerson;
+import com.safetynet.safetynetalert.domain.Medicalrecord;
+import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
@@ -11,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -25,23 +30,27 @@ public class PersAndMedService {
      */
 
     @Autowired
-    Dao dao;
+    DaoPerson daoPerson;
+    @Autowired
+    DaoMedicalRecord daoMedicalRecord;
 
     public void deleteMedicalRecordAndPersonEntry(String name) {
         int id = getIdByName(name);
-        dao.getDtb().getMedicalrecords().remove(dao.getDtb().getMedicalrecords().get(id));
-        dao.getDtb().getPersons().remove(dao.getDtb().getPersons().get(id));
-        if (dao.getDtb().getPersons().size() != dao.getDtb().getMedicalrecords().size()) {
+        List<Medicalrecord> medicalrecords = daoMedicalRecord.getMedicalrecords();
+        List<Person> persons = daoPerson.getPersons();
+        medicalrecords.remove(medicalrecords.get(id));
+        persons.remove(persons.get(id));
+        if (persons.size() != medicalrecords.size()) {
             logger.error(LogArgs.getNotEqualSizeMessage());
             throw new NotEqualSizeListException();
         }
-        dao.writer(dao.getDtb());
+        daoPerson.updateJson(persons);
         logger.info("A Person/Medical Delete request has been sent for the Person with the name "+ name +" which has been deleted.");
     }
 
     public Integer getIdByName(String name) {
         int id = 0;
-        List<Person> persons = dao.getDtb().getPersons();
+        List<Person> persons = daoPerson.getPersons();
         for (Person person : persons) {
             if ((person.getFirstName() + person.getLastName()).equals(name)) {
                 break;
@@ -51,13 +60,5 @@ public class PersAndMedService {
             throw new NoEntryException(name);
         }
         return id;
-    }
-
-    public Dao getDao() {
-        return dao;
-    }
-
-    public Database getDtb() {
-        return dao.getDtb();
     }
 }

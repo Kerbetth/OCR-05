@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalert.unit.dao;
 
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
@@ -17,12 +17,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-public class DaoTest {
+public class JsonReaderWriterTest {
 
     private DataTest dataTest=new DataTest();
 
     @Autowired
-    Dao dao;
+    JsonReaderWriter dao;
 
     @Test
     public void returnCorrectPersonByGivingTheName() {

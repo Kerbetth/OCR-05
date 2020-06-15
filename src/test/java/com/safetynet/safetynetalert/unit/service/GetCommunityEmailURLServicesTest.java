@@ -2,7 +2,7 @@ package com.safetynet.safetynetalert.unit.service;
 
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
-import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ public class GetCommunityEmailURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static Dao dao;
+    static JsonReaderWriter dao;
     @Mock
     static Logger loggermock;
 

@@ -1,6 +1,8 @@
 package com.safetynet.safetynetalert.service.persandmedservice;
 
-import com.safetynet.safetynetalert.service.DTOFactory;
+import com.safetynet.safetynetalert.dao.DTOFactory;
+import com.safetynet.safetynetalert.dao.DaoMedicalRecord;
+import com.safetynet.safetynetalert.dao.DaoPerson;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.ExistingDataException;
@@ -10,6 +12,7 @@ import com.safetynet.safetynetalert.exceptions.WrongFormatException;
 import com.safetynet.safetynetalert.loggerargument.LogArgs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +26,11 @@ public class PersonService extends PersAndMedService {
      *  setPerson set address, city, zip, phone and email if a corresponding param exist in the request
      *
      */
+    @Autowired
+    private DaoMedicalRecord daoMedicalRecord;
+
+    @Autowired
+    private DaoPerson daoPerson;
 
     public Logger logger = LogManager.getLogger("PersonDao");
 
@@ -32,18 +40,17 @@ public class PersonService extends PersAndMedService {
     public List<Object> addPerson(Person newPersonData) {
         if (newPersonData.getPhone() == null || newPersonData.getPhone().matches(regexPhone)) {
             if (newPersonData.getEmail() == null || newPersonData.getEmail().matches(regexEmail)) {
-                List<Person> persons = dao.getDtb().getPersons();
-                List<Medicalrecord> medicalrecords = dao.getDtb().getMedicalrecords();
+                List<Person> persons = daoPerson.getPersons();
+                List<Medicalrecord> medicalrecords = daoMedicalRecord.getMedicalrecords();
                 if (medicalrecords.size() == persons.size()) {
-                    if (dao.findPersonByName(newPersonData.getFirstName() + newPersonData.getLastName()) == null) {
+                    if (daoPerson.findPersonByName(newPersonData.getFirstName() + newPersonData.getLastName()) == null) {
                         List<Object> result = new ArrayList<>();
                         persons.add(newPersonData);
                         medicalrecords.add(DTOFactory.createdefaultMedicalRecord(newPersonData.getFirstName(), newPersonData.getLastName()));
-                        dao.getDtb().setMedicalrecords(medicalrecords);
-                        dao.getDtb().setPersons(persons);
-                        dao.writer(dao.getDtb());
-                        result.add(dao.getDtb().getMedicalrecords().get(dao.getDtb().getMedicalrecords().size() - 1));
-                        result.add(dao.getDtb().getPersons().get(dao.getDtb().getPersons().size() - 1));
+                        daoPerson.updateJson(persons);
+                        daoMedicalRecord.updateJson(medicalrecords);
+                        result.add(daoMedicalRecord.getMedicalrecords().get(daoMedicalRecord.getMedicalrecords().size() - 1));
+                        result.add(daoPerson.getPersons().get(daoPerson.getPersons().size() - 1));
                         logger.info("A new Person Post request with the name "+newPersonData.getFirstName()+
                                 " "+newPersonData.getLastName() +" has been added.");
                         return result;
@@ -66,7 +73,7 @@ public class PersonService extends PersAndMedService {
     }
 
     public Person setPerson(String name, Person newPersonData) {
-        Person personUpdated = dao.findPersonByName(name);
+        Person personUpdated = daoPerson.findPersonByName(name);
         if (personUpdated == null) {
             throw new NoEntryException(name);
         }
@@ -95,8 +102,7 @@ public class PersonService extends PersAndMedService {
                 throw new WrongFormatException(newPersonData.getEmail());
             }
         }
-        dao.getDtb().getPersons().set(getIdByName(name), personUpdated);
-        dao.writer(dao.getDtb());
+        daoPerson.updateJson(daoPerson.getPersons().set(getIdByName(name), personUpdated));
         logger.info("A new Person Put request on person "+name+" has been done:");
         return personUpdated;
     }
@@ -104,6 +110,6 @@ public class PersonService extends PersAndMedService {
     //***********Html Methods*************//
 
     public Person findPersonByName(String name){
-        return dao.findPersonByName(name);
+        return daoPerson.findPersonByName(name);
     }
 }

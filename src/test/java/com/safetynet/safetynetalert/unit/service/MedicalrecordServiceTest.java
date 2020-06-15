@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.dao.Dao;
+import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
@@ -26,7 +26,7 @@ public class MedicalrecordServiceTest {
     static Logger loggerMock;
 
     @Mock
-    Dao dao = new Dao("datatest.json");
+    JsonReaderWriter dao = new JsonReaderWriter("datatest.json");
 
     @InjectMocks
     MedicalrecordService medicalrecordDao = new MedicalrecordService();
