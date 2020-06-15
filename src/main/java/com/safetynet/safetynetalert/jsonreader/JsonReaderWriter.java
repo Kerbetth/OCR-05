@@ -81,21 +81,4 @@ public class JsonReaderWriter {
     public Database getDtb() {
         return database;
     }
-
-
-    //***********Html Methods*************//
-
-    public List<Person> loadPersons() {
-        return database.getPersons();
-    }
-
-    public List<Firestation> loadFirestions() {
-        return database.getFirestations();
-    }
-
-    public List<Medicalrecord> loadMedicalRecords() {
-        return database.getMedicalrecords();
-    }
-
-
 }

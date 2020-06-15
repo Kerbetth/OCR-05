@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
+import com.safetynet.safetynetalert.service.CRUDService.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +21,18 @@ public class PersonControllers {
 
     @PostMapping(value = "/person")
     public List<Object> addPersonPost(@RequestBody Person person) {
-        return personService.addPerson(person);
+        return personService.add(person);
     }
 
     @PutMapping(value = "/person/{name}")
     //"name" has to be declared in format "FirstnameLastname"
     public Person setPersonPut(@PathVariable String name, @RequestBody Person personData) {
-        return personService.setPerson(name, personData);
+        return personService.set(name, personData);
     }
 
     @DeleteMapping(value = "/person/{name}")
     public void removePersonDelete(@PathVariable String name) {
-        personService.deleteMedicalRecordAndPersonEntry(name);
+        personService.delete(name);
     }
 
 }

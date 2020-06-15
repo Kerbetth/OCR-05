@@ -2,7 +2,7 @@ package com.safetynet.safetynetalert.unit.service;
 import com.safetynet.safetynetalert.dao.FirestationDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
+import com.safetynet.safetynetalert.service.CRUDService.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class FirestationServicesTest {
         Firestation m = dataTest.getFirestation1();
 
         //ACT
-        firestationService.addFirestation(m);
+        firestationService.add(m);
 
         //ASSERT
         assertThat(database.getFirestations()).hasSize(4);
@@ -53,7 +53,7 @@ public class FirestationServicesTest {
         m.setStation(8);
 
         //ACT
-        firestationService.setFirestation("3333 broadway",8);
+        firestationService.set("3333 broadway",8);
 
         //ASSERT
         assertThat(database.getFirestations()).hasSize(3);
@@ -64,7 +64,7 @@ public class FirestationServicesTest {
     public void returnOnePointLessSizeOfPersonListAfterDelete() {
         //ARRANGE
         //ACT
-        firestationService.deleteFirestation("3333 broadway");
+        firestationService.delete("3333 broadway");
 
         //ASSERT
         assertThat(database.getFirestations()).hasSize(2);

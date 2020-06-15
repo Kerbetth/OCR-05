@@ -4,7 +4,8 @@ package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 
 import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
+import com.safetynet.safetynetalert.service.CRUDService.PersonService;
+import com.safetynet.safetynetalert.service.htmlService.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,8 @@ public class PersonHTMLControllers {
 
     @Autowired
     private PersonService personService;
-
+    @Autowired
+    private HtmlService htmlService;
     /**
      * a thymeleaf template has been added to put or add Person
      *
@@ -32,31 +34,31 @@ public class PersonHTMLControllers {
 
     @RequestMapping(value = "/person/adding")
     public String addingPerson(Person person){
-        personService.addPerson(person);
+        personService.add(person);
         return "redirect:/";
     }
 
     @RequestMapping("/persons/edit/{firstName}{lastName}")
     public String editPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName , Model model){
-        model.addAttribute("personedit", personService.findPersonByName(firstName+lastName));
+        model.addAttribute("personedit", htmlService.findPersonByName(firstName+lastName));
         return "personedit";
     }
 
     @RequestMapping(value = "/person/setting")
     public String updatingPerson(Person person){
-        personService.setPerson(person.getFirstName()+person.getLastName(),person);
+        personService.set(person.getFirstName()+person.getLastName(),person);
         return "redirect:/";
     }
 
     @RequestMapping(value = "/person/del/{name}")
     public String deletingPerson(@PathVariable("name") String name){
-        personService.deleteMedicalRecordAndPersonEntry(name);
+        personService.delete(name);
         return "redirect:/";
     }
 
     @RequestMapping("/persons/info/{firstName}/{lastName}")
     public String getPerson(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName, Model model){
-        model.addAttribute("person", personService.findPersonByName(firstName+lastName));
+        model.addAttribute("person", htmlService.findPersonByName(firstName+lastName));
         return "person";
     }
 

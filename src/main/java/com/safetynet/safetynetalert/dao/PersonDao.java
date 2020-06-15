@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalert.dao;
 
 import com.safetynet.safetynetalert.domain.Medicalrecord;
+import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Person;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +41,20 @@ public class PersonDao {
             return null;
         }
         return person.get();
+    }
+
+    public Integer getIdByName(String name) {
+        int id = 0;
+        List<Person> persons = getPersons();
+        for (Person person : persons) {
+            if ((person.getFirstName() + person.getLastName()).equals(name)) {
+                break;
+            } else id++;
+        }
+        if (id >= persons.size()) {
+            throw new NoEntryException(name);
+        }
+        return id;
     }
 
     public List<Person> findPersonsWithSameFirstNameOrLastName(String firstName, String lastName) {

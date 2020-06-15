@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.service.firestationservice;
+package com.safetynet.safetynetalert.service.CRUDService;
 
 import com.safetynet.safetynetalert.dao.FirestationDao;
 import com.safetynet.safetynetalert.domain.Firestation;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FirestationService {
+public class FirestationService implements CRUDService {
 
     private Logger logger = LogManager.getLogger("FirestationService");
 
@@ -22,43 +22,35 @@ public class FirestationService {
      *
      */
 
-    public Firestation addFirestation(Firestation firestation) {
+    public Object add(Object object) {
+        Firestation firestation = (Firestation) object;
         List<Firestation> firestations = firestationDao.getFirestations();
-        firestations.add(firestation);
+        firestations.add( firestation);
         firestationDao.updateJson(firestations);
         logger.info("A new Firestation Post request with the address "+ firestation.getAddress() +" has been added.");
         return firestation;
     }
 
-    public Firestation setFirestation(String address, Integer stationNumber) {
-        Integer id = getIdByAddress(address);
+    public Firestation set(String address, Object stationNumber) {
+        Integer id = firestationDao.getIdByAddress(address);
         List<Firestation> firestations= firestationDao.getFirestations();
         Firestation firestationToUpdate = firestations.get(id);
-        firestationToUpdate.setStation(stationNumber);
+        firestationToUpdate.setStation((Integer)stationNumber);
         firestations.set(id, firestationToUpdate);
         firestationDao.updateJson(firestations);
         logger.info("A new Firestation Put request with the address "+ address +" has been done.");
         return firestationToUpdate;
     }
 
-    public void deleteFirestation(String address) {
-        Integer id = getIdByAddress(address);
+    public void delete(String address) {
+        Integer id = firestationDao.getIdByAddress(address);
         List<Firestation> firestations = firestationDao.getFirestations();
         firestations.remove(firestations.get(id));
         firestationDao.updateJson(firestations);
         logger.info("A Firestation Delete request has been sent for the firestation with the address "+ address +" which has been deleted.");
     }
 
-    public Integer getIdByAddress(String address) {
-        Integer id = 0;
-        List<Firestation> firestations = firestationDao.getFirestations();
-        for (Firestation firestation :firestations) {
-            if ((firestation.getAddress()).equals(address)){
-                break;
-            } else id++;
-        }
-        return id;
-    }
+
 
 
     //***********Html Methods*************//

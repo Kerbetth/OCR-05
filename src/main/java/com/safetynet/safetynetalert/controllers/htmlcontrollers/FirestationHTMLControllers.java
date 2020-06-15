@@ -4,7 +4,7 @@ package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 
 import com.safetynet.safetynetalert.domain.Firestation;
-import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
+import com.safetynet.safetynetalert.service.CRUDService.FirestationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +33,7 @@ public class FirestationHTMLControllers {
 
     @RequestMapping(value = "/station/adding")
     public String addingFirestation(Firestation firestation) {
-        firestationService.addFirestation(firestation);
+        firestationService.add(firestation);
         return "redirect:/";
     }
 
@@ -45,13 +45,13 @@ public class FirestationHTMLControllers {
 
     @RequestMapping(value = "/station/setting")
     public String updatingfirestation(Firestation firestation) {
-        firestationService.setFirestation(firestation.getAddress(), firestation.getStation());
+        firestationService.set(firestation.getAddress(), firestation.getStation());
         return "redirect:/";
     }
 
     @RequestMapping(value = "/station/del/{address}")
     public String deletingfirestation(@PathVariable("address") String address) {
-        firestationService.deleteFirestation(address);
+        firestationService.delete(address);
         return "redirect:/";
     }
 

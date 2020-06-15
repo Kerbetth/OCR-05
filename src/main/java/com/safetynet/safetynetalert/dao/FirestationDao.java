@@ -59,6 +59,18 @@ public class FirestationDao {
             return null;
         }
     }
+
+    public Integer getIdByAddress(String address) {
+        Integer id = 0;
+        List<Firestation> firestations = getFirestations();
+        for (Firestation firestation :firestations) {
+            if ((firestation.getAddress()).equals(address)){
+                break;
+            } else id++;
+        }
+        return id;
+    }
+
     public void updateJson(List<Firestation> firestations){
         jsonReaderWriter.updateFirestations(firestations);
     }

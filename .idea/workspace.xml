@@ -2,48 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5644b824-1ac9-40ef-ab71-05731dd8732b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/dao/FirestationDaoTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/dao/MedicalRecordDaoTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/CRUDService/CRUDService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/htmlService/HtmlService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/DaoFirestation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/FirestationDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/DaoMedicalRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/MedicalRecordDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/DaoPerson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/PersonDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/GetService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/GetService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/firestationservice/FirestationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/firestationservice/FirestationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/MedicalrecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/MedicalrecordService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/PersAndMedService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/PersAndMedService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/PersonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/PersonService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/dao/DaoPersonTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/dao/PersonDaoTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/dao/JsonReaderWriterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/dao/JsonReaderWriterTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/apicontrollers/FirestationControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/apicontrollers/FirestationControllers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/apicontrollers/MedicalRecordControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/apicontrollers/MedicalRecordControllers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/apicontrollers/PersonControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/apicontrollers/PersonControllers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/FirestationHTMLControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/FirestationHTMLControllers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/IndexHTMLControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/IndexHTMLControllers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/MedicalrecordHTMLControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/MedicalrecordHTMLControllers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/PersonHTMLControllers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/controllers/htmlcontrollers/PersonHTMLControllers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/FirestationDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/FirestationDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/PersonDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/dao/PersonDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/jsonreader/JsonReaderWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/jsonreader/JsonReaderWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/firestationservice/FirestationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/CRUDService/FirestationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/MedicalrecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/CRUDService/MedicalrecordService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/PersAndMedService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/persandmedservice/PersonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/safetynet/safetynetalert/service/CRUDService/PersonService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/integration/APIMedRecIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/integration/APIMedRecIT.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/FirestationServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/FirestationServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetChildAlertURLServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetChildAlertURLServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetCommunityEmailURLServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetCommunityEmailURLServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetFireURLServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetFireURLServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetFirestationURLServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetFirestationURLServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetFloodStationsURLServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetFloodStationsURLServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetPersonInfoURLServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetPersonInfoURLServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetPhoneAlertURLServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/GetPhoneAlertURLServicesTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/MedicalrecordServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/MedicalrecordServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/PersonServicesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/safetynet/safetynetalert/unit/service/PersonServicesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/controllers/htmlcontrollers/IndexHTMLControllers.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/controllers/htmlcontrollers/IndexHTMLControllers.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/dao/Dao.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/DTOFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/GetService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/GetService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/firestationservice/FirestationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/firestationservice/FirestationService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/persandmedservice/MedicalrecordService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/persandmedservice/MedicalrecordService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/persandmedservice/PersAndMedService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/persandmedservice/PersAndMedService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/persandmedservice/PersonService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/safetynet/safetynetalert/service/persandmedservice/PersonService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/dao/DaoTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/FirestationServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/FirestationServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetChildAlertURLServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetChildAlertURLServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetCommunityEmailURLServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetCommunityEmailURLServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetFireURLServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetFireURLServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetFirestationURLServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetFirestationURLServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetFloodStationsURLServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetFloodStationsURLServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetPersonInfoURLServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetPersonInfoURLServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetPhoneAlertURLServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/GetPhoneAlertURLServicesTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/MedicalrecordServiceTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/MedicalrecordServiceTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/PersonServicesTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/safetynet/safetynetalert/unit/service/PersonServicesTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +32,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -79,7 +59,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../OCR-02" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
   </component>
   <component name="RecentsManager">
@@ -88,7 +68,15 @@
       <recent name="com.safetynet.safetynetalert.dao" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.com.safetynet.safetynetalert in SafetyNetAlert">
+  <component name="RunManager" selected="JUnit.All in SafetyNetAlert">
+    <configuration name="All in SafetyNetAlert" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SafetyNetAlert" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MedicalrecordServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SafetyNetAlert" />
       <extension name="coverage">
@@ -137,20 +125,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="com.safetynet.safetynetalert.integration in SafetyNetAlert" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SafetyNetAlert" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.safetynet.safetynetalert.integration.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.safetynet.safetynetalert.integration" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="com.safetynet.safetynetalert.unit in SafetyNetAlert" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SafetyNetAlert" />
       <extension name="coverage">
@@ -174,11 +148,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in SafetyNetAlert" />
         <item itemvalue="JUnit.com.safetynet.safetynetalert in SafetyNetAlert" />
         <item itemvalue="JUnit.com.safetynet.safetynetalert.unit in SafetyNetAlert" />
         <item itemvalue="JUnit.MedicalrecordServiceTest" />
         <item itemvalue="JUnit.PersonServicesTest" />
-        <item itemvalue="JUnit.com.safetynet.safetynetalert.integration in SafetyNetAlert" />
       </list>
     </recent_temporary>
   </component>
@@ -208,7 +182,7 @@
       <workItem from="1591774984332" duration="15213000" />
       <workItem from="1592203565550" duration="7746000" />
       <workItem from="1592212274269" duration="9837000" />
-      <workItem from="1592231880915" duration="3432000" />
+      <workItem from="1592231880915" duration="7944000" />
     </task>
     <task id="LOCAL-00001" summary="ajout de commentaires javadoc">
       <created>1591782073515</created>
@@ -224,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592213967638</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="adaptation des tests selon les corrections apportées">
+      <created>1592235448974</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1592235448974</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -246,37 +227,42 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ajout de commentaires javadoc" />
     <MESSAGE value="separation de la dao selon les trois liste du json et isolation de la classe de lecture/écriture" />
-    <option name="LAST_COMMIT_MESSAGE" value="separation de la dao selon les trois liste du json et isolation de la classe de lecture/écriture" />
+    <MESSAGE value="adaptation des tests selon les corrections apportées" />
+    <option name="LAST_COMMIT_MESSAGE" value="adaptation des tests selon les corrections apportées" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="242" key="#com.intellij.ide.util.MemberChooser" timestamp="1592208570497">
+    <state x="765" y="242" key="#com.intellij.ide.util.MemberChooser" timestamp="1592236886319">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="765" y="242" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1592208570497" />
+    <state x="765" y="242" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1592236886319" />
     <state x="187" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1592235255262">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="187" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1592235255262" />
-    <state x="557" y="119" key="CommitChangelistDialog2" timestamp="1592213966672">
+    <state x="557" y="119" key="CommitChangelistDialog2" timestamp="1592235448079">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="557" y="119" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1592213966672" />
-    <state width="1877" height="295" key="GridCell.Tab.0.bottom" timestamp="1592235325467">
+    <state x="557" y="119" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1592235448079" />
+    <state x="740" y="281" key="FileChooserDialogImpl" timestamp="1592236556424">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1592235325467" />
-    <state width="1877" height="295" key="GridCell.Tab.0.center" timestamp="1592235325467">
+    <state x="740" y="281" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1592236556424" />
+    <state width="1877" height="295" key="GridCell.Tab.0.bottom" timestamp="1592239941252">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1592235325467" />
-    <state width="1877" height="295" key="GridCell.Tab.0.left" timestamp="1592235325467">
+    <state width="1877" height="295" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1592239941252" />
+    <state width="1877" height="295" key="GridCell.Tab.0.center" timestamp="1592239941251">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1592235325467" />
-    <state width="1877" height="295" key="GridCell.Tab.0.right" timestamp="1592235325467">
+    <state width="1877" height="295" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1592239941251" />
+    <state width="1877" height="295" key="GridCell.Tab.0.left" timestamp="1592239941251">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1592235325467" />
+    <state width="1877" height="295" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1592239941251" />
+    <state width="1877" height="295" key="GridCell.Tab.0.right" timestamp="1592239941252">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1877" height="295" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1592239941252" />
     <state width="1877" height="362" key="GridCell.Tab.1.bottom" timestamp="1591790566646">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -305,10 +291,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="350" y="204" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1591787847602" />
-    <state x="552" y="247" key="Vcs.Push.Dialog.v2" timestamp="1592213977726">
+    <state x="552" y="247" key="Vcs.Push.Dialog.v2" timestamp="1592235451734">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="552" y="247" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1592213977726" />
+    <state x="552" y="247" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1592235451734" />
     <state x="656" y="350" key="com.intellij.ide.util.TipDialog" timestamp="1592231899782">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.service.persandmedservice;
+package com.safetynet.safetynetalert.service.CRUDService;
 
 import com.safetynet.safetynetalert.dao.DTOFactory;
 import com.safetynet.safetynetalert.dao.MedicalRecordDao;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PersonService extends PersAndMedService {
+public class PersonService implements CRUDService {
     
     /**
      *  addPerson add a new Person entry with a corresponding new addMedicalrecord entry
@@ -28,7 +28,6 @@ public class PersonService extends PersAndMedService {
      */
     @Autowired
     private MedicalRecordDao medicalRecordDao;
-
     @Autowired
     private PersonDao personDao;
 
@@ -37,7 +36,8 @@ public class PersonService extends PersAndMedService {
     String regexEmail = "^(.+)@(.+)$";
     String regexPhone = "^[0-9-]{8,12}$";
 
-    public List<Object> addPerson(Person newPersonData) {
+    public List<Object> add(Object object) {
+        Person newPersonData = (Person) object;
         if (newPersonData.getPhone() == null || newPersonData.getPhone().matches(regexPhone)) {
             if (newPersonData.getEmail() == null || newPersonData.getEmail().matches(regexEmail)) {
                 List<Person> persons = personDao.getPersons();
@@ -72,46 +72,55 @@ public class PersonService extends PersAndMedService {
         }
     }
 
-    public Person setPerson(String name, Person newPersonData) {
+    public Person set(String name, Object object) {
+        Person modifiedPersonData = (Person) object;
         Person personUpdated = personDao.findPersonByName(name);
         if (personUpdated == null) {
             throw new NoEntryException(name);
         }
-        if (newPersonData.getAddress() != null) {
-            personUpdated.setAddress(newPersonData.getAddress());
+        if (modifiedPersonData.getAddress() != null) {
+            personUpdated.setAddress(modifiedPersonData.getAddress());
         }
-        if (newPersonData.getCity() != null) {
-            personUpdated.setCity(newPersonData.getCity());
+        if (modifiedPersonData.getCity() != null) {
+            personUpdated.setCity(modifiedPersonData.getCity());
         }
-        if (newPersonData.getZip() != null) {
-            personUpdated.setZip(newPersonData.getZip());
+        if (modifiedPersonData.getZip() != null) {
+            personUpdated.setZip(modifiedPersonData.getZip());
         }
-        if (newPersonData.getPhone() != null) {
-            if (newPersonData.getPhone().matches(regexPhone)) {
-                personUpdated.setPhone(newPersonData.getPhone());
+        if (modifiedPersonData.getPhone() != null) {
+            if (modifiedPersonData.getPhone().matches(regexPhone)) {
+                personUpdated.setPhone(modifiedPersonData.getPhone());
             } else {
-                logger.error(LogArgs.getWrongFormatMessage(newPersonData.getPhone()));
-                throw new WrongFormatException(newPersonData.getPhone());
+                logger.error(LogArgs.getWrongFormatMessage(modifiedPersonData.getPhone()));
+                throw new WrongFormatException(modifiedPersonData.getPhone());
             }
         }
-        if (newPersonData.getEmail() != null) {
-            if (newPersonData.getEmail().matches(regexEmail)) {
-                personUpdated.setEmail((newPersonData.getEmail()));
+        if (modifiedPersonData.getEmail() != null) {
+            if (modifiedPersonData.getEmail().matches(regexEmail)) {
+                personUpdated.setEmail((modifiedPersonData.getEmail()));
             } else {
-                logger.error(LogArgs.getWrongFormatMessage(newPersonData.getEmail()));
-                throw new WrongFormatException(newPersonData.getEmail());
+                logger.error(LogArgs.getWrongFormatMessage(modifiedPersonData.getEmail()));
+                throw new WrongFormatException(modifiedPersonData.getEmail());
             }
         }
         List<Person> persons = personDao.getPersons();
-        persons.set(getIdByName(name), personUpdated);
+        persons.set(personDao.getIdByName(name), personUpdated);
         personDao.updateJson(persons);
         logger.info("A new Person Put request on person "+name+" has been done:");
         return personUpdated;
     }
 
-    //***********Html Methods*************//
-
-    public Person findPersonByName(String name){
-        return personDao.findPersonByName(name);
+    public void delete(String name) {
+        int id = personDao.getIdByName(name);
+        List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
+        List<Person> persons = personDao.getPersons();
+        medicalrecords.remove(medicalrecords.get(id));
+        persons.remove(persons.get(id));
+        if (persons.size() != medicalrecords.size()) {
+            logger.error(LogArgs.getNotEqualSizeMessage());
+            throw new NotEqualSizeListException();
+        }
+        personDao.updateJson(persons);
+        logger.info("A Person/Medical Delete request has been sent for the Person with the name "+ name +" which has been deleted.");
     }
 }

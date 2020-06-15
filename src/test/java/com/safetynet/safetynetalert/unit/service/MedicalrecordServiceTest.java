@@ -4,7 +4,7 @@ import com.safetynet.safetynetalert.dao.MedicalRecordDao;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
+import com.safetynet.safetynetalert.service.CRUDService.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ public class MedicalrecordServiceTest {
         when(personDao.findPersonByName(anyString())).thenReturn(null);
 
         //ACT
-        medicalrecordDao.addMedicalrecord(m);
+        medicalrecordDao.add(m);
         //ASSERT
         assertThat(medicalRecordDao.getMedicalrecords()).hasSize(5);
         assertThat(personDao.getPersons()).hasSize(5);
@@ -66,7 +66,7 @@ public class MedicalrecordServiceTest {
         when(personDao.findPersonByName(anyString())).thenReturn(database.getPersons().get(0));
 
         //ACT
-        medicalrecordDao.addMedicalrecord(m);
+        medicalrecordDao.add(m);
 
         //ASSERT
         verify(loggerMock, times(1)).error(anyString());
@@ -83,7 +83,7 @@ public class MedicalrecordServiceTest {
         when(medicalRecordDao.findMedicalrecordByID(anyInt())).thenReturn(database.getMedicalrecords().get(0));
 
         //ACT
-        medicalrecordDao.setMedicalrecord(m.getFirstName() + m.getLastName(), m);
+        medicalrecordDao.set(m.getFirstName() + m.getLastName(), m);
 
         //ASSERT
         assertThat(medicalRecordDao.getMedicalrecords()).hasSize(4);
@@ -100,7 +100,7 @@ public class MedicalrecordServiceTest {
     public void returnOnePointLessSizeOfPersonListAfterDelete() {
         //ARRANGE
         //ACT
-        medicalrecordDao.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
+        medicalrecordDao.delete("JohnSchaffer");
 
         //ASSERT
         assertThat(medicalRecordDao.getMedicalrecords()).hasSize(3);

@@ -3,7 +3,7 @@ package com.safetynet.safetynetalert.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
+import com.safetynet.safetynetalert.service.CRUDService.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import org.junit.jupiter.api.*;
 
@@ -52,7 +52,7 @@ public class APIMedRecIT {
     public void addPersonWithCorrectData() {
         //ACT
         m1.setFirstName("newname");
-        medicalrecordService.addMedicalrecord(m1);
+        medicalrecordService.add(m1);
 
         //ASSERT
         assertThat(getDatabase().getPersons()).hasSize(5);
@@ -63,7 +63,7 @@ public class APIMedRecIT {
     @Test
     public void setPersonWithCorrectData() {
         //ACT
-        medicalrecordService.setMedicalrecord("JeffLoomis", m1);
+        medicalrecordService.set("JeffLoomis", m1);
 
         //ASSERT
         assertThat(getDatabase().getPersons()).hasSize(4);
@@ -80,7 +80,7 @@ public class APIMedRecIT {
     @Test
     public void assertDeletePerson() {
         //ACT
-        medicalrecordService.deleteMedicalRecordAndPersonEntry("JeffLoomis");
+        medicalrecordService.delete("JeffLoomis");
         //ASSERT
         assertThat(getDatabase().getPersons()).hasSize(3);
         assertThat(getDatabase().getMedicalrecords()).hasSize(3);

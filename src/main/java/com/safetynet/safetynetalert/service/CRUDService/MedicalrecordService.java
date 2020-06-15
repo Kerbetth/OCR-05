@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.service.persandmedservice;
+package com.safetynet.safetynetalert.service.CRUDService;
 
 import com.safetynet.safetynetalert.dao.DTOFactory;
 import com.safetynet.safetynetalert.dao.MedicalRecordDao;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MedicalrecordService extends PersAndMedService {
+public class MedicalrecordService implements CRUDService {
 
     public Logger logger = LogManager.getLogger("MedicalrecordDao");
 
@@ -31,7 +31,8 @@ public class MedicalrecordService extends PersAndMedService {
      *
      */
 
-    public List<Object> addMedicalrecord(Medicalrecord medicalrecord) {
+    public List<Object> add(Object object) {
+        Medicalrecord medicalrecord = (Medicalrecord) object;
         List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
         List<Person> persons = personDao.getPersons();
         if (medicalrecords.size() == persons.size()) {
@@ -56,8 +57,9 @@ public class MedicalrecordService extends PersAndMedService {
         }
     }
 
-    public Medicalrecord setMedicalrecord(String firstNameLastName, Medicalrecord medrecEdit) {
-        Integer id = getIdByName(firstNameLastName);
+    public Medicalrecord set(String firstNameLastName, Object object) {
+        Medicalrecord medrecEdit = (Medicalrecord) object;
+        Integer id = personDao.getIdByName(firstNameLastName);
         List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
         Medicalrecord medicalRecordUpdated = medicalRecordDao.findMedicalrecordByID(id);
         if (medrecEdit.getBirthdate() != null) {
@@ -75,11 +77,18 @@ public class MedicalrecordService extends PersAndMedService {
         return medicalRecordDao.getMedicalrecords().get(id);
     }
 
-
-
-    //***********Html Methods*************//
-
-    public Medicalrecord findMedicalrecordByID(int id){
-        return medicalRecordDao.findMedicalrecordByID(id);
+    public void delete(String name) {
+        int id = personDao.getIdByName(name);
+        List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
+        List<Person> persons = personDao.getPersons();
+        medicalrecords.remove(medicalrecords.get(id));
+        persons.remove(persons.get(id));
+        if (persons.size() != medicalrecords.size()) {
+            logger.error(LogArgs.getNotEqualSizeMessage());
+            throw new NotEqualSizeListException();
+        }
+        personDao.updateJson(persons);
+        logger.info("A Person/Medical Delete request has been sent for the Person with the name "+ name +" which has been deleted.");
     }
+
 }

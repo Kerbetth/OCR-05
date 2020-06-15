@@ -3,7 +3,7 @@ import com.safetynet.safetynetalert.dao.MedicalRecordDao;
 import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
+import com.safetynet.safetynetalert.service.CRUDService.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +49,7 @@ public class PersonServicesTest {
         Person p = dataTest.getNewPerson();
         when(personDao.findPersonByName(anyString())).thenReturn(null);
         //ACT
-        personService.addPerson(p);
+        personService.add(p);
 
         //ASSERT
         assertThat(personDao.getPersons()).hasSize(5);
@@ -74,7 +74,7 @@ public class PersonServicesTest {
         p.setZip(5542);
         p.setPhone("5544488775");
         //ACT
-        personService.setPerson(p.getFirstName()+p.getLastName(), p);
+        personService.set(p.getFirstName()+p.getLastName(), p);
 
         //ASSERT
         assertThat(personDao.getPersons()).hasSize(4);
@@ -94,7 +94,7 @@ public class PersonServicesTest {
         //ARRANGE
 
         //ACT
-        personService.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
+        personService.delete("JohnSchaffer");
 
         //ASSERT
         assertThat(personDao.getPersons()).hasSize(3);
