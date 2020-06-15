@@ -1,5 +1,5 @@
 package com.safetynet.safetynetalert.unit.service;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.dao.FirestationDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.firestationservice.FirestationService;
@@ -19,10 +19,10 @@ import static org.mockito.Mockito.*;
 public class FirestationServicesTest {
 
     private DataTest dataTest;
-private Database database;
+    private Database database;
 
     @Mock
-    JsonReaderWriter dao = new JsonReaderWriter("datatest.json");
+    static FirestationDao firestationDao;
 
     @InjectMocks
     FirestationService firestationService = new FirestationService();
@@ -31,9 +31,7 @@ private Database database;
     public void setup() {
         dataTest = new DataTest();
         database = dataTest.getDatabase();
-        doNothing().when(dao).writer(any());
-        when(dao.getDtb()).thenReturn(database);
-
+        when(firestationDao.getFirestations()).thenReturn(database.getFirestations());
     }
 
     @Test
@@ -45,7 +43,7 @@ private Database database;
         firestationService.addFirestation(m);
 
         //ASSERT
-        assertThat(firestationService.getDtb().getFirestations()).hasSize(4);
+        assertThat(database.getFirestations()).hasSize(4);
     }
 
     @Test
@@ -58,8 +56,8 @@ private Database database;
         firestationService.setFirestation("3333 broadway",8);
 
         //ASSERT
-        assertThat(firestationService.getDtb().getFirestations()).hasSize(3);
-        assertThat(firestationService.getDtb().getFirestations().get(0).getStation()).isEqualTo(8);
+        assertThat(database.getFirestations()).hasSize(3);
+        assertThat(database.getFirestations().get(0).getStation()).isEqualTo(8);
     }
 
     @Test
@@ -69,6 +67,6 @@ private Database database;
         firestationService.deleteFirestation("3333 broadway");
 
         //ASSERT
-        assertThat(firestationService.getDtb().getFirestations()).hasSize(2);
+        assertThat(database.getFirestations()).hasSize(2);
     }
 }

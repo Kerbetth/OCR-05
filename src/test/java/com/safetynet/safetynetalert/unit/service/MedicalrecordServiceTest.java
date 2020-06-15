@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.MedicalrecordService;
@@ -26,7 +27,9 @@ public class MedicalrecordServiceTest {
     static Logger loggerMock;
 
     @Mock
-    JsonReaderWriter dao = new JsonReaderWriter("datatest.json");
+    static PersonDao personDao;
+    @Mock
+    static MedicalRecordDao medicalRecordDao;
 
     @InjectMocks
     MedicalrecordService medicalrecordDao = new MedicalrecordService();
@@ -35,9 +38,11 @@ public class MedicalrecordServiceTest {
     public void setup() {
         dataTest = new DataTest();
         medicalrecordDao.logger = loggerMock;
-        doNothing().when(dao).writer(any());
         database = dataTest.getDatabase();
-        when(dao.getDtb()).thenReturn(database);
+        doNothing().when(medicalRecordDao).updateJson(any());
+        doNothing().when(personDao).updateJson(any());
+        when(personDao.getPersons()).thenReturn(database.getPersons());
+        when(medicalRecordDao.getMedicalrecords()).thenReturn(database.getMedicalrecords());
     }
 
     @Test
@@ -45,27 +50,27 @@ public class MedicalrecordServiceTest {
         //ARRANGE
         Medicalrecord m = dataTest.getMedicalrecords().get(0);
         m.setFirstName("newOne");
-        when(dao.findPersonByName(anyString())).thenReturn(null);
+        when(personDao.findPersonByName(anyString())).thenReturn(null);
 
         //ACT
         medicalrecordDao.addMedicalrecord(m);
         //ASSERT
-        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(5);
-        assertThat(medicalrecordDao.getDtb().getPersons()).hasSize(5);
+        assertThat(medicalRecordDao.getMedicalrecords()).hasSize(5);
+        assertThat(personDao.getPersons()).hasSize(5);
     }
 
     @Test
     public void returnErrorIfTheNewMedicalRecordHaveTheSameName() {
         //ARRANGE
         Medicalrecord m = dataTest.getMedicalrecords().get(0);
-        when(dao.findPersonByName(anyString())).thenReturn(database.getPersons().get(0));
+        when(personDao.findPersonByName(anyString())).thenReturn(database.getPersons().get(0));
 
         //ACT
         medicalrecordDao.addMedicalrecord(m);
 
         //ASSERT
         verify(loggerMock, times(1)).error(anyString());
-        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(4);
+        assertThat(medicalRecordDao.getMedicalrecords()).hasSize(4);
     }
 
     @Test
@@ -75,14 +80,14 @@ public class MedicalrecordServiceTest {
         m.setBirthdate(dataTest.getMedicalrecords().get(3).getBirthdate());
         m.setAllergies(dataTest.getMedicationList3());
         m.setMedications(dataTest.getMedicationList3());
-        when(dao.findMedicalrecordByID(anyInt())).thenReturn(database.getMedicalrecords().get(0));
+        when(medicalRecordDao.findMedicalrecordByID(anyInt())).thenReturn(database.getMedicalrecords().get(0));
 
         //ACT
         medicalrecordDao.setMedicalrecord(m.getFirstName() + m.getLastName(), m);
 
         //ASSERT
-        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(4);
-        assertThat(medicalrecordDao.getDtb().getMedicalrecords().get(0)).extracting(
+        assertThat(medicalRecordDao.getMedicalrecords()).hasSize(4);
+        assertThat(medicalRecordDao.getMedicalrecords().get(0)).extracting(
                 Medicalrecord::getFirstName,
                 Medicalrecord::getLastName,
                 Medicalrecord::getBirthdate,
@@ -98,7 +103,7 @@ public class MedicalrecordServiceTest {
         medicalrecordDao.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
 
         //ASSERT
-        assertThat(medicalrecordDao.getDtb().getMedicalrecords()).hasSize(3);
-        assertThat(medicalrecordDao.getDtb().getPersons()).hasSize(3);
+        assertThat(medicalRecordDao.getMedicalrecords()).hasSize(3);
+        assertThat(personDao.getPersons()).hasSize(3);
     }
 }

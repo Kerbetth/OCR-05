@@ -1,8 +1,10 @@
 package com.safetynet.safetynetalert.unit.service;
 
+import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonFloodAndFire;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +28,11 @@ public class GetFireURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static JsonReaderWriter dao;
+    static PersonDao personDao;
+    @Mock
+    static FirestationDao firestationDao;
+    @Mock
+    static MedicalRecordDao medicalRecordDao;
     @Mock
     static Logger loggermock;
 
@@ -39,9 +45,9 @@ public class GetFireURLServicesTest {
         List<Person> addressPerson = dataTest.getPersons();
         addressPerson.remove(addressPerson.get(3));
         addressPerson.remove(addressPerson.get(1));
-        when(dao.findFirestationByAddress(anyString())).thenReturn(dataTest.getFirestation1());
-        when(dao.findPersonByAddress(addressPerson.get(0).getAddress())).thenReturn(addressPerson);
-        when(dao.findMedicalrecordByPerson(any()))
+        when(firestationDao.findFirestationByAddress(anyString())).thenReturn(dataTest.getFirestation1());
+        when(personDao.findPersonByAddress(addressPerson.get(0).getAddress())).thenReturn(addressPerson);
+        when(medicalRecordDao.findMedicalrecordByPerson(any()))
                 .thenReturn(dataTest.getMedicalrecords().get(0))
                 .thenReturn(dataTest.getMedicalrecords().get(2));
 

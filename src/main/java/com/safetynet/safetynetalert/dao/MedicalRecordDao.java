@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class DaoMedicalRecord {
+public class MedicalRecordDao {
 
     /**
      * the Dao method deploy the content of the jsonfile in a database composed with corresponding object
@@ -24,22 +24,15 @@ public class DaoMedicalRecord {
     @Autowired
     private JsonReaderWriter jsonReaderWriter;
 
-    private List<Medicalrecord> medicalrecords;
     private static final Logger logger = LogManager.getLogger("DaoMedicalRecord");
 
     public List<Medicalrecord> getMedicalrecords() {
-        return medicalrecords;
-    }
-
-
-
-    public DaoMedicalRecord() {
-        medicalrecords = jsonReaderWriter.getDtb().getMedicalrecords();
+        return jsonReaderWriter.getDtb().getMedicalrecords();
     }
 
     public Medicalrecord findMedicalrecordByPerson(String name) {
         Optional<Medicalrecord> medicalrecord =
-                medicalrecords
+                getMedicalrecords()
                         .stream()
                         .filter(currentMed -> Objects.equals(name, currentMed.getFirstName() + currentMed.getLastName()))
                         .findFirst();
@@ -50,7 +43,7 @@ public class DaoMedicalRecord {
     }
 
     public Medicalrecord findMedicalrecordByID(Integer id) {
-        return medicalrecords.get(id);
+        return getMedicalrecords().get(id);
     }
 
     public void updateJson(List<Medicalrecord> medicalrecords){

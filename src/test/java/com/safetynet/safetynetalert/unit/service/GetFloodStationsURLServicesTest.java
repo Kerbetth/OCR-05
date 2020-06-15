@@ -1,8 +1,10 @@
 package com.safetynet.safetynetalert.unit.service;
 
+import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.HouseHold;
 import com.safetynet.safetynetalert.domain.Person;
@@ -31,7 +33,11 @@ public class GetFloodStationsURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static JsonReaderWriter dao;
+    static PersonDao personDao;
+    @Mock
+    static FirestationDao firestationDao;
+    @Mock
+    static MedicalRecordDao medicalRecordDao;
     @Mock
     static Logger loggermock;
 
@@ -48,12 +54,12 @@ public class GetFloodStationsURLServicesTest {
         pl1.add(dataTest.getPersons().get(2));
         pl2.add(dataTest.getPersons().get(1));
         pl3.add(dataTest.getPersons().get(3));
-        when(dao.findFirestationsByNumber(anyString())).thenReturn(dataTest.getFirestations());
-        when(dao.findPersonByAddress(anyString()))
+        when(firestationDao.findFirestationsByNumber(anyString())).thenReturn(dataTest.getFirestations());
+        when(personDao.findPersonByAddress(anyString()))
                 .thenReturn(pl1)
                 .thenReturn(pl2)
                 .thenReturn(pl3);
-        when(dao.findMedicalrecordByPerson(any()))
+        when(medicalRecordDao.findMedicalrecordByPerson(any()))
                 .thenReturn(dataTest.getMedicalrecords().get(0));
 
         //ACT
@@ -71,7 +77,7 @@ public class GetFloodStationsURLServicesTest {
     @Test
     public void returnNoFireDataIfNumberStationDoesntExist(){
         List<Firestation> emptylist = new ArrayList<>();
-        when(dao.findFirestationsByNumber(anyString())).thenReturn(emptylist);
+        when(firestationDao.findFirestationsByNumber(anyString())).thenReturn(emptylist);
         //ACT
         assertThrows(NoEntryException.class, () ->  getService.floodstations("5"));
         //ASSERT

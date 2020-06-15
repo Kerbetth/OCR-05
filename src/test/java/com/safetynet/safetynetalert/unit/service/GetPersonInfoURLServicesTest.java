@@ -1,8 +1,9 @@
 package com.safetynet.safetynetalert.unit.service;
 
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.domain.PersonInfo;
 import com.safetynet.safetynetalert.exceptions.NoFnameOrLnameException;
@@ -28,7 +29,9 @@ public class GetPersonInfoURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static JsonReaderWriter dao;
+    static PersonDao personDao;
+    @Mock
+    static MedicalRecordDao medicalRecordDao;
     @Mock
     static Logger loggermock;
 
@@ -40,8 +43,8 @@ public class GetPersonInfoURLServicesTest {
         //ARRANGE
         List<Person> pl1 = new ArrayList<>();
         pl1.add(dataTest.getPersons().get(1));
-        when(dao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(pl1);
-        when(dao.findMedicalrecordByPerson(any()))
+        when(personDao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(pl1);
+        when(medicalRecordDao.findMedicalrecordByPerson(any()))
                 .thenReturn(dataTest.getMedicalrecords().get(0))
                 .thenReturn(dataTest.getMedicalrecords().get(1));
 
@@ -57,7 +60,7 @@ public class GetPersonInfoURLServicesTest {
     @Test
     public void returnNoFireDataIfNumberStationDoesntExist(){
         List<Person> emptylist = new ArrayList<>();
-        when(dao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(emptylist);
+        when(personDao.findPersonsWithSameFirstNameOrLastName(anyString(),anyString())).thenReturn(emptylist);
         //ACT
         assertThrows(NoFnameOrLnameException.class, () -> getService.personInfo("test","test"));
         //ASSERT

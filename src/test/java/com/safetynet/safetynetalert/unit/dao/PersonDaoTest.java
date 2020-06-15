@@ -1,29 +1,44 @@
 package com.safetynet.safetynetalert.unit.dao;
 
-import com.safetynet.safetynetalert.dao.DaoPerson;
-import com.safetynet.safetynetalert.domain.Firestation;
-import com.safetynet.safetynetalert.domain.Medicalrecord;
+import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.unit.DataTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+
 @ExtendWith(SpringExtension.class)
-public class DaoPersonTest {
+public class PersonDaoTest {
 
     private DataTest dataTest=new DataTest();
+    private Database database;
 
-    @Autowired
-    DaoPerson dao;
+    @Mock
+    JsonReaderWriter jsonReaderWriter;
+
+    @InjectMocks
+    PersonDao dao;
+
+    @BeforeEach
+    public void setup() {
+        dataTest = new DataTest();
+        doNothing().when(jsonReaderWriter).writer(any());
+        database = dataTest.getDatabase();
+        when(jsonReaderWriter.getDtb()).thenReturn(database);
+    }
 
     @Test
     public void returnCorrectPersonByGivingTheName() {

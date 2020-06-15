@@ -1,8 +1,9 @@
 package com.safetynet.safetynetalert.unit.service;
 
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
@@ -32,7 +33,9 @@ public class GetChildAlertURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static JsonReaderWriter dao;
+    static PersonDao personDao;
+    @Mock
+    static MedicalRecordDao medicalRecordDao;
     @Mock
     static Logger loggermock;
 
@@ -47,9 +50,9 @@ public class GetChildAlertURLServicesTest {
         addressPerson.remove(addressPerson.get(2));
         String firstNameLastNamea = (addressPerson.get(0).getFirstName() + addressPerson.get(0).getLastName());
         String firstNameLastNameb = (addressPerson.get(1).getFirstName() + addressPerson.get(1).getLastName());
-        when(dao.findPersonByAddress(dataTest.getPersons().get(0).getAddress())).thenReturn(addressPerson);
-        when(dao.findMedicalrecordByPerson(firstNameLastNamea)).thenReturn(dataTest.getMedicalrecords().get(0));
-        when(dao.findMedicalrecordByPerson(firstNameLastNameb)).thenReturn(dataTest.getMedicalrecords().get(1));
+        when(personDao.findPersonByAddress(dataTest.getPersons().get(0).getAddress())).thenReturn(addressPerson);
+        when(medicalRecordDao.findMedicalrecordByPerson(firstNameLastNamea)).thenReturn(dataTest.getMedicalrecords().get(0));
+        when(medicalRecordDao.findMedicalrecordByPerson(firstNameLastNameb)).thenReturn(dataTest.getMedicalrecords().get(1));
 
         //ACT
         List<Child> children = getService.childAlert(dataTest.getPersons().get(0).getAddress());
@@ -68,7 +71,7 @@ public class GetChildAlertURLServicesTest {
     public void returnNoChildAlertDataIfNoChildInSpecifyAddress() {
         //ARRANGE
         List<Person> addressPerson = new ArrayList<>();
-        when(dao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
+        when(personDao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
 
         //ACT
         assertThrows(NoEntryException.class, () -> getService.childAlert("noaddress"));
@@ -85,9 +88,9 @@ public class GetChildAlertURLServicesTest {
         addressPerson.remove(addressPerson.get(2));
         String firstNameLastNamea = (addressPerson.get(0).getFirstName() + addressPerson.get(0).getLastName());
         String firstNameLastNameb = (addressPerson.get(1).getFirstName() + addressPerson.get(1).getLastName());
-        when(dao.findPersonByAddress(dataTest.getPersons().get(0).getAddress())).thenReturn(addressPerson);
-        when(dao.findMedicalrecordByPerson(firstNameLastNamea)).thenReturn(dataTest.getMedicalrecords().get(0));
-        when(dao.findMedicalrecordByPerson(firstNameLastNameb)).thenReturn(dataTest.getMedicalrecords().get(1));
+        when(personDao.findPersonByAddress(dataTest.getPersons().get(0).getAddress())).thenReturn(addressPerson);
+        when(medicalRecordDao.findMedicalrecordByPerson(firstNameLastNamea)).thenReturn(dataTest.getMedicalrecords().get(0));
+        when(medicalRecordDao.findMedicalrecordByPerson(firstNameLastNameb)).thenReturn(dataTest.getMedicalrecords().get(1));
 
         //ACT
         List<Child> children = getService.childAlert(dataTest.getPersons().get(0).getAddress());

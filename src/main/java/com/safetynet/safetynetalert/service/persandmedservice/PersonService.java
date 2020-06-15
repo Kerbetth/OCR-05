@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalert.service.persandmedservice;
 
 import com.safetynet.safetynetalert.dao.DTOFactory;
-import com.safetynet.safetynetalert.dao.DaoMedicalRecord;
-import com.safetynet.safetynetalert.dao.DaoPerson;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.ExistingDataException;
@@ -27,10 +27,10 @@ public class PersonService extends PersAndMedService {
      *
      */
     @Autowired
-    private DaoMedicalRecord daoMedicalRecord;
+    private MedicalRecordDao medicalRecordDao;
 
     @Autowired
-    private DaoPerson daoPerson;
+    private PersonDao personDao;
 
     public Logger logger = LogManager.getLogger("PersonDao");
 
@@ -40,17 +40,17 @@ public class PersonService extends PersAndMedService {
     public List<Object> addPerson(Person newPersonData) {
         if (newPersonData.getPhone() == null || newPersonData.getPhone().matches(regexPhone)) {
             if (newPersonData.getEmail() == null || newPersonData.getEmail().matches(regexEmail)) {
-                List<Person> persons = daoPerson.getPersons();
-                List<Medicalrecord> medicalrecords = daoMedicalRecord.getMedicalrecords();
+                List<Person> persons = personDao.getPersons();
+                List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
                 if (medicalrecords.size() == persons.size()) {
-                    if (daoPerson.findPersonByName(newPersonData.getFirstName() + newPersonData.getLastName()) == null) {
+                    if (personDao.findPersonByName(newPersonData.getFirstName() + newPersonData.getLastName()) == null) {
                         List<Object> result = new ArrayList<>();
                         persons.add(newPersonData);
                         medicalrecords.add(DTOFactory.createdefaultMedicalRecord(newPersonData.getFirstName(), newPersonData.getLastName()));
-                        daoPerson.updateJson(persons);
-                        daoMedicalRecord.updateJson(medicalrecords);
-                        result.add(daoMedicalRecord.getMedicalrecords().get(daoMedicalRecord.getMedicalrecords().size() - 1));
-                        result.add(daoPerson.getPersons().get(daoPerson.getPersons().size() - 1));
+                        personDao.updateJson(persons);
+                        medicalRecordDao.updateJson(medicalrecords);
+                        result.add(medicalRecordDao.getMedicalrecords().get(medicalRecordDao.getMedicalrecords().size() - 1));
+                        result.add(personDao.getPersons().get(personDao.getPersons().size() - 1));
                         logger.info("A new Person Post request with the name "+newPersonData.getFirstName()+
                                 " "+newPersonData.getLastName() +" has been added.");
                         return result;
@@ -73,7 +73,7 @@ public class PersonService extends PersAndMedService {
     }
 
     public Person setPerson(String name, Person newPersonData) {
-        Person personUpdated = daoPerson.findPersonByName(name);
+        Person personUpdated = personDao.findPersonByName(name);
         if (personUpdated == null) {
             throw new NoEntryException(name);
         }
@@ -102,7 +102,9 @@ public class PersonService extends PersAndMedService {
                 throw new WrongFormatException(newPersonData.getEmail());
             }
         }
-        daoPerson.updateJson(daoPerson.getPersons().set(getIdByName(name), personUpdated));
+        List<Person> persons = personDao.getPersons();
+        persons.set(getIdByName(name), personUpdated);
+        personDao.updateJson(persons);
         logger.info("A new Person Put request on person "+name+" has been done:");
         return personUpdated;
     }
@@ -110,6 +112,6 @@ public class PersonService extends PersAndMedService {
     //***********Html Methods*************//
 
     public Person findPersonByName(String name){
-        return daoPerson.findPersonByName(name);
+        return personDao.findPersonByName(name);
     }
 }

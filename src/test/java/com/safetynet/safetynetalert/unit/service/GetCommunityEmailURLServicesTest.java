@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalert.unit.service;
 
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ public class GetCommunityEmailURLServicesTest {
     private DataTest dataTest = new DataTest();
 
     @Mock
-    static JsonReaderWriter dao;
+    static PersonDao personDao;
     @Mock
     static Logger loggermock;
 
@@ -39,7 +39,7 @@ public class GetCommunityEmailURLServicesTest {
         List<Person> addressPerson = dataTest.getPersons();
         addressPerson.remove(addressPerson.get(1));
         addressPerson.remove(addressPerson.get(2));
-        when(dao.findPersonByCity(dataTest.getPersons().get(0).getCity())).thenReturn(addressPerson);
+        when(personDao.findPersonByCity(dataTest.getPersons().get(0).getCity())).thenReturn(addressPerson);
 
         //ACT
         List<String> emailList = getService.communityEmail(dataTest.getPersons().get(0).getCity());
@@ -54,7 +54,7 @@ public class GetCommunityEmailURLServicesTest {
     public void returnNoCommunityEmailDataIfNoEmailInTheCity(){
         //ARRANGE
         List<Person> addressPerson = new ArrayList<>();
-        when(dao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
+        when(personDao.findPersonByAddress("noaddress")).thenReturn(addressPerson);
 
         //ACT
         assertThrows(NoEntryException.class, () -> getService.childAlert("noaddress"));

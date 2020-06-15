@@ -1,11 +1,8 @@
 package com.safetynet.safetynetalert.service.persandmedservice;
 
-import com.safetynet.safetynetalert.dao.DaoFirestation;
-import com.safetynet.safetynetalert.dao.DaoMedicalRecord;
-import com.safetynet.safetynetalert.dao.DaoPerson;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
-import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;
@@ -15,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -30,27 +26,27 @@ public class PersAndMedService {
      */
 
     @Autowired
-    DaoPerson daoPerson;
+    PersonDao personDao;
     @Autowired
-    DaoMedicalRecord daoMedicalRecord;
+    MedicalRecordDao medicalRecordDao;
 
     public void deleteMedicalRecordAndPersonEntry(String name) {
         int id = getIdByName(name);
-        List<Medicalrecord> medicalrecords = daoMedicalRecord.getMedicalrecords();
-        List<Person> persons = daoPerson.getPersons();
+        List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
+        List<Person> persons = personDao.getPersons();
         medicalrecords.remove(medicalrecords.get(id));
         persons.remove(persons.get(id));
         if (persons.size() != medicalrecords.size()) {
             logger.error(LogArgs.getNotEqualSizeMessage());
             throw new NotEqualSizeListException();
         }
-        daoPerson.updateJson(persons);
+        personDao.updateJson(persons);
         logger.info("A Person/Medical Delete request has been sent for the Person with the name "+ name +" which has been deleted.");
     }
 
     public Integer getIdByName(String name) {
         int id = 0;
-        List<Person> persons = daoPerson.getPersons();
+        List<Person> persons = personDao.getPersons();
         for (Person person : persons) {
             if ((person.getFirstName() + person.getLastName()).equals(name)) {
                 break;

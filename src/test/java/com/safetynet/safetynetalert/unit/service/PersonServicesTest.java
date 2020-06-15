@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalert.unit.service;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.persandmedservice.PersonService;
@@ -24,7 +25,9 @@ public class PersonServicesTest {
     @Mock
     static Logger loggerMock;
     @Mock
-    JsonReaderWriter dao = new JsonReaderWriter("datatest.json");
+    static PersonDao personDao;
+    @Mock
+    static MedicalRecordDao medicalRecordDao;
 
     @InjectMocks
     PersonService personService = new PersonService();
@@ -33,23 +36,25 @@ public class PersonServicesTest {
     public void setup() {
         dataTest = new DataTest();
         personService.logger = loggerMock;
-        doNothing().when(dao).writer(any());
+        doNothing().when(medicalRecordDao).updateJson(any());
+        doNothing().when(personDao).updateJson(any());
         database = dataTest.getDatabase();
-        when(dao.getDtb()).thenReturn(database);
+        when(personDao.getPersons()).thenReturn(database.getPersons());
+        when(medicalRecordDao.getMedicalrecords()).thenReturn(database.getMedicalrecords());
     }
 
     @Test
     public void returnCorrectDataOfPersonAndEqualityOfSizeForMedRecAndPersons() {
         //ARRANGE
         Person p = dataTest.getNewPerson();
-        when(dao.findPersonByName(anyString())).thenReturn(null);
+        when(personDao.findPersonByName(anyString())).thenReturn(null);
         //ACT
         personService.addPerson(p);
 
         //ASSERT
-        assertThat(personService.getDtb().getPersons()).hasSize(5);
-        assertThat(personService.getDtb().getMedicalrecords()).hasSize(5);
-        assertThat(personService.getDtb().getPersons().get(4)).extracting(
+        assertThat(personDao.getPersons()).hasSize(5);
+        assertThat(medicalRecordDao.getMedicalrecords()).hasSize(5);
+        assertThat(personDao.getPersons().get(4)).extracting(
                 Person::getFirstName,
                 Person::getLastName,
                 Person::getAddress,
@@ -63,7 +68,7 @@ public class PersonServicesTest {
     @Test
     public void returnModifiedDataOfPerson() {
         //ARRANGE
-        when(dao.findPersonByName(anyString())).thenReturn(database.getPersons().get(0));
+        when(personDao.findPersonByName(anyString())).thenReturn(database.getPersons().get(0));
         Person p = dataTest.getPersons().get(0);
         p.setAddress("modified");
         p.setZip(5542);
@@ -72,8 +77,8 @@ public class PersonServicesTest {
         personService.setPerson(p.getFirstName()+p.getLastName(), p);
 
         //ASSERT
-        assertThat(personService.getDtb().getPersons()).hasSize(4);
-        assertThat(personService.getDtb().getPersons().get(0)).extracting(
+        assertThat(personDao.getPersons()).hasSize(4);
+        assertThat(personDao.getPersons().get(0)).extracting(
                 Person::getFirstName,
                 Person::getLastName,
                 Person::getAddress,
@@ -92,7 +97,7 @@ public class PersonServicesTest {
         personService.deleteMedicalRecordAndPersonEntry("JohnSchaffer");
 
         //ASSERT
-        assertThat(personService.getDtb().getPersons()).hasSize(3);
-        assertThat(personService.getDtb().getMedicalrecords()).hasSize(3);
+        assertThat(personDao.getPersons()).hasSize(3);
+        assertThat(medicalRecordDao.getMedicalrecords()).hasSize(3);
     }
 }

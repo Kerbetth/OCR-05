@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalert.service.persandmedservice;
 
 import com.safetynet.safetynetalert.dao.DTOFactory;
-import com.safetynet.safetynetalert.dao.DaoMedicalRecord;
-import com.safetynet.safetynetalert.dao.DaoPerson;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;
@@ -10,7 +10,6 @@ import com.safetynet.safetynetalert.loggerargument.LogArgs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,9 +21,9 @@ public class MedicalrecordService extends PersAndMedService {
     public Logger logger = LogManager.getLogger("MedicalrecordDao");
 
     @Autowired
-    private DaoMedicalRecord daoMedicalRecord;
+    private MedicalRecordDao medicalRecordDao;
     @Autowired
-    private DaoPerson daoPerson;
+    private PersonDao personDao;
 
     /**
      * addMedicalrecord add a new MedicalReord entry with a corresponding new Person entry
@@ -33,17 +32,17 @@ public class MedicalrecordService extends PersAndMedService {
      */
 
     public List<Object> addMedicalrecord(Medicalrecord medicalrecord) {
-        List<Medicalrecord> medicalrecords = daoMedicalRecord.getMedicalrecords();
-        List<Person> persons = daoPerson.getPersons();
+        List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
+        List<Person> persons = personDao.getPersons();
         if (medicalrecords.size() == persons.size()) {
-            if (daoPerson.findPersonByName(medicalrecord.getFirstName() + medicalrecord.getLastName()) == null) {
+            if (personDao.findPersonByName(medicalrecord.getFirstName() + medicalrecord.getLastName()) == null) {
                 List<Object> result = new ArrayList<>();
                 medicalrecords.add(medicalrecord);
                 persons.add(DTOFactory.createdefaultPerson(medicalrecord.getFirstName(), medicalrecord.getLastName()));
-                daoMedicalRecord.updateJson(medicalrecords);
-                daoPerson.updateJson(persons);
-                result.add(daoMedicalRecord.getMedicalrecords().get(daoMedicalRecord.getMedicalrecords().size() - 1));
-                result.add(daoPerson.getPersons().get(daoPerson.getPersons().size() - 1));
+                medicalRecordDao.updateJson(medicalrecords);
+                personDao.updateJson(persons);
+                result.add(medicalRecordDao.getMedicalrecords().get(medicalRecordDao.getMedicalrecords().size() - 1));
+                result.add(personDao.getPersons().get(personDao.getPersons().size() - 1));
                 logger.info("A new Person Post request with the name "+medicalrecord.getFirstName()+
                         " "+medicalrecord.getLastName() +"has been added.");
                 return result;
@@ -59,8 +58,8 @@ public class MedicalrecordService extends PersAndMedService {
 
     public Medicalrecord setMedicalrecord(String firstNameLastName, Medicalrecord medrecEdit) {
         Integer id = getIdByName(firstNameLastName);
-        List<Medicalrecord> medicalrecords = daoMedicalRecord.getMedicalrecords();
-        Medicalrecord medicalRecordUpdated = daoMedicalRecord.findMedicalrecordByID(id);
+        List<Medicalrecord> medicalrecords = medicalRecordDao.getMedicalrecords();
+        Medicalrecord medicalRecordUpdated = medicalRecordDao.findMedicalrecordByID(id);
         if (medrecEdit.getBirthdate() != null) {
             medicalRecordUpdated.setBirthdate(medrecEdit.getBirthdate());
         }
@@ -71,9 +70,9 @@ public class MedicalrecordService extends PersAndMedService {
             medicalRecordUpdated.setAllergies(medrecEdit.getAllergies());
         }
         medicalrecords.set(id, medicalRecordUpdated);
-        daoMedicalRecord.updateJson(medicalrecords);
+        medicalRecordDao.updateJson(medicalrecords);
         logger.info("A new MedicalRecord Put request on person "+firstNameLastName+" has been done:");
-        return daoMedicalRecord.getMedicalrecords().get(id);
+        return medicalRecordDao.getMedicalrecords().get(id);
     }
 
 
@@ -81,6 +80,6 @@ public class MedicalrecordService extends PersAndMedService {
     //***********Html Methods*************//
 
     public Medicalrecord findMedicalrecordByID(int id){
-        return daoMedicalRecord.findMedicalrecordByID(id);
+        return medicalRecordDao.findMedicalrecordByID(id);
     }
 }

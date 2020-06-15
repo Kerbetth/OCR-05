@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class DaoPerson {
+public class PersonDao {
 
     /**
      * the Dao method deploy the content of the jsonfile in a database composed with corresponding object
@@ -25,20 +25,14 @@ public class DaoPerson {
     @Autowired
     private JsonReaderWriter jsonReaderWriter;
 
-    private List<Person> persons;
-    private static final Logger logger = LogManager.getLogger("Dao");
-
-    public DaoPerson() {
-        this.persons = jsonReaderWriter.getDtb().getPersons();
-    }
 
     public List<Person> getPersons() {
-        return persons;
+        return jsonReaderWriter.getDtb().getPersons();
     }
 
     public Person findPersonByName(String name) {
         Optional<Person> person =
-                persons
+               getPersons()
                         .stream()
                         .filter(currentPerson -> Objects.equals(name, currentPerson.getFirstName() + currentPerson.getLastName()))
                         .findFirst();
@@ -49,21 +43,21 @@ public class DaoPerson {
     }
 
     public List<Person> findPersonsWithSameFirstNameOrLastName(String firstName, String lastName) {
-        return persons
+        return getPersons()
                 .stream()
                 .filter(person -> Objects.equals(firstName, person.getFirstName()) || Objects.equals(lastName, person.getLastName()))
                 .collect(Collectors.toList());
     }
 
     public List<Person> findPersonByCity(String city) {
-        return persons
+        return getPersons()
                 .stream()
                 .filter(person -> Objects.equals(city, person.getCity()))
                 .collect(Collectors.toList());
     }
 
     public List<Person> findPersonByAddress(String Address) {
-        return persons
+        return getPersons()
                 .stream()
                 .filter(person -> Objects.equals(Address, person.getAddress()))
                 .collect(Collectors.toList());

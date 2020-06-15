@@ -1,5 +1,8 @@
 package com.safetynet.safetynetalert.unit.service;
 
+import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.dao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.GetService;
 import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
@@ -30,6 +33,13 @@ public class GetFirestationURLServicesTest {
 
     private DataTest dataTest = new DataTest();
 
+
+    @Mock
+    static PersonDao personDao;
+    @Mock
+    static FirestationDao firestationDao;
+    @Mock
+    static MedicalRecordDao medicalRecordDao;
     @Mock
     private JsonReaderWriter dao = new JsonReaderWriter("datatest.json");
     @Mock
@@ -45,9 +55,9 @@ public class GetFirestationURLServicesTest {
         addressPerson.remove(addressPerson.get(3));
         List<Firestation> firestations = dataTest.getFirestations();
         firestations.remove(2);
-        when(dao.findFirestationsByNumber("1")).thenReturn(firestations);
-        when(dao.findPersonByAddress(addressPerson.get(0).getAddress())).thenReturn(addressPerson);
-        when(dao.findMedicalrecordByPerson(any()))
+        when(firestationDao.findFirestationsByNumber("1")).thenReturn(firestations);
+        when(personDao.findPersonByAddress(addressPerson.get(0).getAddress())).thenReturn(addressPerson);
+        when(medicalRecordDao.findMedicalrecordByPerson(any()))
                 .thenReturn(dataTest.getMedicalrecords().get(0))
                 .thenReturn(dataTest.getMedicalrecords().get(1))
                 .thenReturn(dataTest.getMedicalrecords().get(2));
@@ -74,7 +84,7 @@ public class GetFirestationURLServicesTest {
     public void returnNoFirestationDataIfNumberStationDoesntExist(){
         //ARRANGE
         List<Firestation> firestations = new ArrayList<>();
-        when(dao.findFirestationsByNumber("5")).thenReturn(firestations);
+        when(firestationDao.findFirestationsByNumber("5")).thenReturn(firestations);
 
         //ACT
         assertThrows(NoEntryException.class, () -> getService.firestation(5));
