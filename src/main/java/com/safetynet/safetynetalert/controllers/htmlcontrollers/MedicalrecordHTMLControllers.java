@@ -4,7 +4,7 @@ package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 
 import com.safetynet.safetynetalert.domain.Medicalrecord;
-import com.safetynet.safetynetalert.service.CRUDService.MedicalrecordService;
+import com.safetynet.safetynetalert.service.CRUDservice.MedicalrecordService;
 import com.safetynet.safetynetalert.service.htmlService.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

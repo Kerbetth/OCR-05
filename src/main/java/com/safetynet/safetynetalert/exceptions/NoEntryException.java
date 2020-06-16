@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.exceptions;
 
-import com.safetynet.safetynetalert.loggerargument.LogArgs;
+import com.safetynet.safetynetalert.exceptions.loggerargument.LogArgs;
 
 public class NoEntryException extends NullPointerException{
     /**

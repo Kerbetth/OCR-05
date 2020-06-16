@@ -1,10 +1,10 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.dao.FirestationDao;
-import com.safetynet.safetynetalert.dao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
+import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.persondao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.GetService;
+import com.safetynet.safetynetalert.service.getservice.GetService;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.HouseHold;
 import com.safetynet.safetynetalert.domain.Person;

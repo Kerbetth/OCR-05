@@ -1,9 +1,9 @@
 package com.safetynet.safetynetalert.unit.dao;
 
-import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.unit.DataTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

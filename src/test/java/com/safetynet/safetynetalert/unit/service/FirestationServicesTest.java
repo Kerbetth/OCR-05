@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalert.unit.service;
-import com.safetynet.safetynetalert.dao.FirestationDao;
+import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.CRUDService.FirestationService;
+import com.safetynet.safetynetalert.service.CRUDservice.FirestationService;
 import com.safetynet.safetynetalert.domain.Firestation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ public class FirestationServicesTest {
         m.setStation(8);
 
         //ACT
-        firestationService.set("3333 broadway",8);
+        firestationService.set("3333 broadway",m);
 
         //ASSERT
         assertThat(database.getFirestations()).hasSize(3);

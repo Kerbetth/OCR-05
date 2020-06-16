@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalert.service.htmlService;
 
-import com.safetynet.safetynetalert.dao.FirestationDao;
-import com.safetynet.safetynetalert.dao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
+import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.persondao.PersonDao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
@@ -26,6 +26,7 @@ public class HtmlService {
     public Person findPersonByName(String name){
         return personDao.findPersonByName(name);
     }
+
     public Medicalrecord findMedicalrecordByID(int id){
         return medicalRecordDao.findMedicalrecordByID(id);
     }
@@ -33,6 +34,7 @@ public class HtmlService {
     public int getIdByName(String s) {
        return personDao.getIdByName(s);
     }
+
     public List<Person> loadPersons() {
         return personDao.getPersons();
     }
@@ -43,5 +45,8 @@ public class HtmlService {
 
     public List<Medicalrecord> loadMedicalRecords() {
         return medicalRecordDao.getMedicalrecords();
+    }
+    public Firestation findFirestationByAddress(String address){
+        return firestationDao.findFirestationByAddress(address);
     }
 }

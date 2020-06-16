@@ -50,7 +50,10 @@ public class APIFirestationIT {
     @Test
     public void setFirestationWithCorrectData() {
         //ACT
-        firestationControllers.setFirestationPut("3333 broadway", 3);
+        Firestation f1 = new Firestation();
+        f1.setStation(3);
+        f1.setAddress("3333 broadway");
+        firestationControllers.setFirestationPut(f1.getAddress(), f1);
 
         //ASSERT
         Database result = getDatabase();

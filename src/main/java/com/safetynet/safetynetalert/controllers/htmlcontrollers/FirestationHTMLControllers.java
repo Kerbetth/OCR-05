@@ -4,7 +4,8 @@ package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 
 import com.safetynet.safetynetalert.domain.Firestation;
-import com.safetynet.safetynetalert.service.CRUDService.FirestationService;
+import com.safetynet.safetynetalert.service.CRUDservice.FirestationService;
+import com.safetynet.safetynetalert.service.htmlService.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +23,9 @@ public class FirestationHTMLControllers {
      */
 
     @Autowired
+    private HtmlService htmlService;
+    @Autowired
     private FirestationService firestationService;
-
     
     @RequestMapping("/station/new")
     public String newFirestationRecord(Model model) {
@@ -39,13 +41,13 @@ public class FirestationHTMLControllers {
 
     @RequestMapping("/station/edit/{address}")
     public String editFirestation(@PathVariable("address") String address, Model model) {
-        model.addAttribute("firestationedit", firestationService.findFirestationByAddress(address));
+        model.addAttribute("firestationedit", htmlService.findFirestationByAddress(address));
         return "firestationedit";
     }
 
     @RequestMapping(value = "/station/setting")
     public String updatingfirestation(Firestation firestation) {
-        firestationService.set(firestation.getAddress(), firestation.getStation());
+        firestationService.set(firestation.getAddress(), firestation);
         return "redirect:/";
     }
 
@@ -57,8 +59,9 @@ public class FirestationHTMLControllers {
 
     @RequestMapping("/station/info/{address}")
     public String infoFirestation(@PathVariable("address") String address, Model model) {
-        model.addAttribute("firestation", firestationService.findFirestationByAddress(address));
+        model.addAttribute("firestation", htmlService.findFirestationByAddress(address));
         return "firestation";
     }
+
 
 }

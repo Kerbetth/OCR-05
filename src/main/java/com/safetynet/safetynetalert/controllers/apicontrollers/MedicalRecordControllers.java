@@ -1,11 +1,9 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.service.CRUDService.MedicalrecordService;
+import com.safetynet.safetynetalert.service.CRUDservice.CRUDService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -13,14 +11,14 @@ public class MedicalRecordControllers {
 
 
     @Autowired
-    private MedicalrecordService medicalrecordService;
+    private CRUDService<Medicalrecord> medicalrecordService;
 
     /**
      * Add put and delete for medicalRecord
      */
 
     @PostMapping(value = "/medicalRecord")
-    public List<Object> addMedicalRecordPost(@RequestBody Medicalrecord medicalrecord){
+    public Medicalrecord addMedicalRecordPost(@RequestBody Medicalrecord medicalrecord){
         return medicalrecordService.add(medicalrecord);
     }
 

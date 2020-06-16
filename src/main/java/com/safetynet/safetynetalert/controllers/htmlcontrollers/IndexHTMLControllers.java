@@ -1,7 +1,6 @@
 package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 
-import com.safetynet.safetynetalert.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.service.htmlService.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

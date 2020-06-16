@@ -1,11 +1,9 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.service.CRUDService.PersonService;
+import com.safetynet.safetynetalert.service.CRUDservice.CRUDService;
 import com.safetynet.safetynetalert.domain.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -13,14 +11,14 @@ public class PersonControllers {
 
 
     @Autowired
-    private PersonService personService;
+    private CRUDService<Person> personService;
 
     /**
      * Add put and delete for person
      */
 
     @PostMapping(value = "/person")
-    public List<Object> addPersonPost(@RequestBody Person person) {
+    public Person addPersonPost(@RequestBody Person person) {
         return personService.add(person);
     }
 

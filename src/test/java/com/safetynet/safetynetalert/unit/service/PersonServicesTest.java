@@ -1,9 +1,9 @@
 package com.safetynet.safetynetalert.unit.service;
-import com.safetynet.safetynetalert.dao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.PersonDao;
+import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
+import com.safetynet.safetynetalert.dao.persondao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.CRUDService.PersonService;
+import com.safetynet.safetynetalert.service.CRUDservice.PersonService;
 import com.safetynet.safetynetalert.domain.Person;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;

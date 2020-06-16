@@ -1,8 +1,6 @@
 package com.safetynet.safetynetalert.exceptions;
 
-import com.safetynet.safetynetalert.loggerargument.LogArgs;
-
-import java.io.IOException;
+import com.safetynet.safetynetalert.exceptions.loggerargument.LogArgs;
 
 public class NotEqualSizeListException extends IllegalArgumentException {
     /**

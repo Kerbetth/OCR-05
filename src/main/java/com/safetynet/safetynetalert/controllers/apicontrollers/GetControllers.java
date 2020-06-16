@@ -3,7 +3,8 @@ package com.safetynet.safetynetalert.controllers.apicontrollers;
 import com.safetynet.safetynetalert.domain.Child;
 import com.safetynet.safetynetalert.domain.HouseHold;
 import com.safetynet.safetynetalert.domain.PersonInfo;
-import com.safetynet.safetynetalert.service.GetService;
+import com.safetynet.safetynetalert.service.getservice.GetService;
+import com.safetynet.safetynetalert.service.getservice.GetServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ import java.util.Set;
 public class GetControllers {
 
     @Autowired
-    private GetService service;
+    private GetServiceInterface service;
 
     /**
      * All the get endpoints demanded
