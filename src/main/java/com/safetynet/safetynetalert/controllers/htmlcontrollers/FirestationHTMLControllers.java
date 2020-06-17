@@ -5,7 +5,7 @@ package com.safetynet.safetynetalert.controllers.htmlcontrollers;
 
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.service.CRUDservice.FirestationService;
-import com.safetynet.safetynetalert.service.htmlService.HtmlService;
+import com.safetynet.safetynetalert.service.htmlservice.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

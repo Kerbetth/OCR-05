@@ -153,7 +153,9 @@
                     <excludes>
                         <exclude>**/com.safetynet.safetynetalert/domain/*</exclude>
                         <exclude>**/com.safetynet.safetynetalert/controllers/htmlcontrollers/*</exclude>
+                        <exclude>**/com.safetynet.safetynetalert/service/htmlservice/*</exclude>
                         <exclude>**/boot/SafetyNetAlertApplication.*</exclude>
+                        <exclude>**/boot/Config.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -216,7 +218,9 @@
                     <excludes>
                         <exclude>**/*domain/**/*</exclude>
                         <exclude>**/*htmlcontrollers/**/*</exclude>
+                        <exclude>**/*htmlservice/**/*</exclude>
                         <exclude>**/*SafetyNetAlertApplication.*</exclude>
+                        <exclude>**/*Config.*</exclude>
                     </excludes>
                 </configuration>
                 <reportSets>

@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.service.htmlService;
+package com.safetynet.safetynetalert.service.htmlservice;
 
 import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDao;
 import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
