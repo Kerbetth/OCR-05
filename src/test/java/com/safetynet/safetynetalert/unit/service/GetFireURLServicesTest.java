@@ -3,6 +3,7 @@ package com.safetynet.safetynetalert.unit.service;
 import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDao;
 import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
 import com.safetynet.safetynetalert.daodto.persondao.PersonDao;
+import com.safetynet.safetynetalert.domain.Fire;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.getservice.GetService;
 import com.safetynet.safetynetalert.domain.Person;
@@ -52,13 +53,12 @@ public class GetFireURLServicesTest {
                 .thenReturn(dataTest.getMedicalrecords().get(2));
 
         //ACT
-        List<Object> getfire = getService.fire(dataTest.getPersons().get(0).getAddress());
+        Fire getfire = getService.fire(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        List<PersonFloodAndFire> personFloodAndFires = (List<PersonFloodAndFire>) getfire.get(1);
-        assertThat(getfire).hasSize(2);
+        List<PersonFloodAndFire> personFloodAndFires = getfire.getPersonFloodAndFires();
         assertThat(personFloodAndFires).hasSize(2);
-        assertThat(getfire.get(0)).isEqualTo(1);
+        assertThat(getfire.getStationNumber()).isEqualTo(1);
         Person p1 =  dataTest.getPersons().get(0);
         Person p3 =  dataTest.getPersons().get(1);
         assertThat(personFloodAndFires).extracting("name","phone","medications","allergies")
@@ -70,11 +70,10 @@ public class GetFireURLServicesTest {
     public void returnNoFireDataIfNumberStationDoesntExist(){
 
         //ACT
-        List<Object> getfire = getService.fire("noaddress");
+        Fire getfire = getService.fire("noaddress");
 
         //ASSERT
         verify(loggermock, times(1)).error(anyString());
-        assertThat(getfire).hasSize(2);
-        assertThat(getfire.get(0)).isEqualTo(0);
+        assertThat(getfire.getStationNumber()).isEqualTo(0);
     }
 }

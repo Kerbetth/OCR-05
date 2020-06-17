@@ -68,12 +68,11 @@ public class APIGetIT {
     @Test
     public void returnCorrectFirestationData() {
         //ACT
-        List<Object> getfirestation = getControllers.firestation(1);
+        FirestationGet getfirestation = getControllers.firestation(1);
 
         //ASSERT
-        Count count = (Count) getfirestation.get(1);
-        List<PersonFirestation> personFirestation = (List<PersonFirestation>) getfirestation.get(0);
-        assertThat(getfirestation).hasSize(2);
+        Count count = getfirestation.getCount();
+        List<PersonFirestation> personFirestation = getfirestation.getPersonFirestations();
         assertThat(count.getAdults()).isEqualTo(2);
         assertThat(count.getChildren()).isEqualTo(1);
         assertThat(personFirestation).extracting(
@@ -89,12 +88,11 @@ public class APIGetIT {
     @Test
     public void returnCorrectFireData() {
         //ACT
-        List<Object> getfire = getControllers.fire(dataTest.getPersons().get(0).getAddress());
+        Fire getfire = getControllers.fire(dataTest.getPersons().get(0).getAddress());
 
         //ASSERT
-        List<PersonFloodAndFire> personFloodAndFires = (List<PersonFloodAndFire>) getfire.get(1);
-        assertThat(getfire).hasSize(2);
-        assertThat(getfire.get(0)).isEqualTo(1);
+        List<PersonFloodAndFire> personFloodAndFires = getfire.getPersonFloodAndFires();
+        assertThat(getfire.getStationNumber()).isEqualTo(1);
         assertThat(personFloodAndFires).hasSize(2);
         assertThat(personFloodAndFires).extracting("name", "phone", "medications", "allergies")
                 .contains(tuple(p1.getFirstName() + " " + p1.getLastName(), p1.getPhone(), dataTest.getMedicationList1(), dataTest.getMedicationList2()),

@@ -3,13 +3,10 @@ package com.safetynet.safetynetalert.unit.service;
 import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDao;
 import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
 import com.safetynet.safetynetalert.daodto.persondao.PersonDao;
+import com.safetynet.safetynetalert.domain.*;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.getservice.GetService;
 import com.safetynet.safetynetalert.daodto.jsonreader.JsonReaderWriter;
-import com.safetynet.safetynetalert.domain.Count;
-import com.safetynet.safetynetalert.domain.Firestation;
-import com.safetynet.safetynetalert.domain.Person;
-import com.safetynet.safetynetalert.domain.PersonFirestation;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -63,12 +60,11 @@ public class GetFirestationURLServicesTest {
                 .thenReturn(dataTest.getMedicalrecords().get(2));
 
         //ACT
-        List<Object> getfirestation = getService.firestation(1);
+        FirestationGet getfirestation = getService.firestation(1);
 
         //ASSERT
-        Count count = (Count) getfirestation.get(1);
-        List<PersonFirestation> personFirestation = (List<PersonFirestation>) getfirestation.get(0);
-        assertThat(getfirestation).hasSize(2);
+        Count count = getfirestation.getCount();
+        List<PersonFirestation> personFirestation = getfirestation.getPersonFirestations();
         assertThat(count.getAdults()).isEqualTo(2);
         assertThat(count.getChildren()).isEqualTo(1);
         Person p1 =  dataTest.getPersons().get(0);

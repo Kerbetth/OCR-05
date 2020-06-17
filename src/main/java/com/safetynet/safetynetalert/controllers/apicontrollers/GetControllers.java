@@ -1,8 +1,6 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.domain.Child;
-import com.safetynet.safetynetalert.domain.HouseHold;
-import com.safetynet.safetynetalert.domain.PersonInfo;
+import com.safetynet.safetynetalert.domain.*;
 import com.safetynet.safetynetalert.service.getservice.GetService;
 import com.safetynet.safetynetalert.service.getservice.GetServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ public class GetControllers {
 
 
     @GetMapping(path = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Object> firestation(@RequestParam("stationNumber") Integer stationNumber) {
+    public FirestationGet firestation(@RequestParam("stationNumber") Integer stationNumber) {
         return service.firestation(stationNumber);
     }
 
@@ -40,7 +38,7 @@ public class GetControllers {
     }
 
     @GetMapping(path = "/fire", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Object> fire(@RequestParam("address") String address) {
+    public Fire fire(@RequestParam("address") String address) {
         return service.fire(address);
     }
 

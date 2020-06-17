@@ -24,9 +24,6 @@ public class GetService implements GetServiceInterface {
 
     private Logger logger = LogManager.getLogger("GetService");
 
-    /**
-     *Service which manages all the Get request pull directly from the json file
-     */
 
     @Autowired
     private FirestationDaoInterface firestationDao;
@@ -37,8 +34,8 @@ public class GetService implements GetServiceInterface {
 
 
     @Override
-    public List<Object> firestation(Integer stationNumber) {
-        List<Object> result = new ArrayList<>();
+    public FirestationGet firestation(Integer stationNumber) {
+        FirestationGet result = new FirestationGet();
         Integer adults = 0;
         Integer children = 0;
         Count count = new Count();
@@ -68,8 +65,8 @@ public class GetService implements GetServiceInterface {
         }
         count.setAdults(adults);
         count.setChildren(children);
-        result.add(personFirestations);
-        result.add(count);
+        result.setPersonFirestations(personFirestations);
+        result.setCount(count);
         logger.info("A new firestation Get request has been done with parameter station: "+ stationNumber);
         return result;
     }
@@ -130,8 +127,8 @@ public class GetService implements GetServiceInterface {
     }
 
     @Override
-    public List<Object> fire(String address) {
-        List<Object> result = new ArrayList<>();
+    public Fire fire(String address) {
+        Fire result = new Fire();
         List<PersonFloodAndFire> fireList = new ArrayList<>();
         Integer station = 0;
         if (firestationDao.findFirestationByAddress(address) != null) {
@@ -145,8 +142,8 @@ public class GetService implements GetServiceInterface {
         } else {
             logger.error(LogArgs.getNoEntryMessage(address));
         }
-        result.add(station);
-        result.add(fireList);
+        result.setStationNumber(station);
+        result.setPersonFloodAndFires(fireList);
         logger.info("A new fire Get request has been done with parameter address: "+ address);
         return result;
     }

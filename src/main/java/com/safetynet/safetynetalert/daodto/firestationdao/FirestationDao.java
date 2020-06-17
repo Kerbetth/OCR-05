@@ -16,14 +16,6 @@ public class FirestationDao implements FirestationDaoInterface {
     private JsonReaderWriterInterface jsonReaderWriter;
 
 
-    /**
-     * the Dao method deploy the content of the jsonfile in a database composed with corresponding object
-     * the @Value give the name of the file, which is variable for test purposes
-     * writer method is the one who edited the jsonfile in order to registered the modifications
-     * All the find methods get all sort of data from the constructed database
-     *
-     */
-
     @Override
     public List<Firestation> getFirestations() {
         return jsonReaderWriter.getDtb().getFirestations();

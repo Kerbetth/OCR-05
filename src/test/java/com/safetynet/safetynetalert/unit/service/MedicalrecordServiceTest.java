@@ -4,7 +4,7 @@ import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
 import com.safetynet.safetynetalert.daodto.persondao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.CRUDservice.MedicalrecordService;
+import com.safetynet.safetynetalert.service.crudservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;

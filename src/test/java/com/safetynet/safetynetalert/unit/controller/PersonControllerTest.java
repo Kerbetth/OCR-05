@@ -1,8 +1,7 @@
 package com.safetynet.safetynetalert.unit.controller;
 
 import com.safetynet.safetynetalert.controllers.apicontrollers.PersonControllers;
-import com.safetynet.safetynetalert.controllers.apicontrollers.PersonControllers;
-import com.safetynet.safetynetalert.service.CRUDservice.PersonService;
+import com.safetynet.safetynetalert.service.crudservice.PersonService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

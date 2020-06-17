@@ -13,14 +13,6 @@ import java.util.*;
 @Repository
 public class MedicalRecordDao implements MedicalRecordDaoInterface {
 
-    /**
-     * the Dao method deploy the content of the jsonfile in a database composed with corresponding object
-     * the @Value give the name of the file, which is variable for test purposes
-     * writer method is the one who edited the jsonfile in order to registered the modifications
-     * All the find methods get all sort of data from the constructed database
-     *
-     */
-
     @Autowired
     private JsonReaderWriterInterface jsonReaderWriter;
 

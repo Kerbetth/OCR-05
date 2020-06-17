@@ -3,7 +3,7 @@ package com.safetynet.safetynetalert.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.service.CRUDservice.MedicalrecordService;
+import com.safetynet.safetynetalert.service.crudservice.MedicalrecordService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import org.junit.jupiter.api.*;
 

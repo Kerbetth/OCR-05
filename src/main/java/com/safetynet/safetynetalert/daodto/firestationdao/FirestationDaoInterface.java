@@ -4,6 +4,13 @@ import com.safetynet.safetynetalert.domain.Firestation;
 
 import java.util.List;
 
+
+/**
+ * the get method retrieve all Firestations belonging to the JSONfile
+ * the find method retrieve some Firestations in order to certain conditions
+ * the update method send the edited data in order to be writing in the JSONfile
+ */
+
 public interface FirestationDaoInterface {
 
     List<Firestation> getFirestations();
@@ -12,7 +19,8 @@ public interface FirestationDaoInterface {
 
     List<Firestation> findFirestationsByNumber(String stationNumbers);
 
-    Integer getIdByAddress(String address);
-
     void updateJson(List<Firestation> firestations);
+
+
+    Integer getIdByAddress(String address);
 }

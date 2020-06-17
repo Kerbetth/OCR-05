@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.service.CRUDservice.CRUDService;
+import com.safetynet.safetynetalert.service.crudservice.CrudService;
 import com.safetynet.safetynetalert.domain.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ public class PersonControllers {
 
 
     @Autowired
-    private CRUDService<Person> personService;
+    private CrudService<Person> personService;
 
     /**
      * Add put and delete for person

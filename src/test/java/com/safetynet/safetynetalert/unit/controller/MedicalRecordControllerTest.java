@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalert.unit.controller;
 
 import com.safetynet.safetynetalert.controllers.apicontrollers.MedicalRecordControllers;
-import com.safetynet.safetynetalert.service.CRUDservice.MedicalrecordService;
+import com.safetynet.safetynetalert.service.crudservice.MedicalrecordService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

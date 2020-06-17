@@ -14,15 +14,13 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * the @Value give the name of the file, which is variable for test purposes
+ */
+
 @Repository
 public class JsonReaderWriter implements JsonReaderWriterInterface {
 
-    /**
-     * the Dao method deploy the content of the jsonfile in a database composed with corresponding object
-     * the @Value give the name of the file, which is variable for test purposes
-     * writer method is the one who edited the jsonfile in order to registered the modifications
-     * All the find methods get all sort of data from the constructed database
-     */
 
     private Database database;
     private static final Logger logger = LogManager.getLogger("Dao");

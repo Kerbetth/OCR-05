@@ -1,21 +1,23 @@
 package com.safetynet.safetynetalert.service.getservice;
 
-import com.safetynet.safetynetalert.domain.Child;
-import com.safetynet.safetynetalert.domain.HouseHold;
-import com.safetynet.safetynetalert.domain.PersonInfo;
+import com.safetynet.safetynetalert.domain.*;
 
 import java.util.List;
 import java.util.Set;
 
+/**
+ * this interface contains all the specified Get methods corresponding to the endpoints wanted
+ */
+
 public interface GetServiceInterface {
 
-    List<Object> firestation(Integer stationNumber);
+    FirestationGet firestation(Integer stationNumber);
 
     List<Child> childAlert(String address);
 
     Set<String> phoneAlert(Integer stationNumber);
 
-    List<Object> fire(String address);
+    Fire fire(String address);
 
     List<HouseHold> floodstations(String numbersList);
 

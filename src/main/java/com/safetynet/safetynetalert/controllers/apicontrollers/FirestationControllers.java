@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.service.CRUDservice.CRUDService;
+import com.safetynet.safetynetalert.service.crudservice.CrudService;
 import com.safetynet.safetynetalert.domain.Firestation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ public class FirestationControllers {
 
 
     @Autowired
-    private CRUDService<Firestation> firestationService;
+    private CrudService<Firestation> firestationService;
 
     /**
      * Add put and delete for firestation

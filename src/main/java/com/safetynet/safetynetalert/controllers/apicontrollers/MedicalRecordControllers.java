@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.controllers.apicontrollers;
 
-import com.safetynet.safetynetalert.service.CRUDservice.CRUDService;
+import com.safetynet.safetynetalert.service.crudservice.CrudService;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ public class MedicalRecordControllers {
 
 
     @Autowired
-    private CRUDService<Medicalrecord> medicalrecordService;
+    private CrudService<Medicalrecord> medicalrecordService;
 
     /**
      * Add put and delete for medicalRecord
