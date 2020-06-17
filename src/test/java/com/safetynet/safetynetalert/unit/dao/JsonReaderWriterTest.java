@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalert.unit.dao;
 
 import com.safetynet.safetynetalert.unit.DataTest;
-import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.daodto.jsonreader.JsonReaderWriter;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.dao.jsonreader;
+package com.safetynet.safetynetalert.daodto.jsonreader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalert.domain.Database;

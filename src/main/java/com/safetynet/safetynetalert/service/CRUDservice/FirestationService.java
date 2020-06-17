@@ -1,7 +1,6 @@
 package com.safetynet.safetynetalert.service.CRUDservice;
 
-import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
-import com.safetynet.safetynetalert.dao.firestationdao.FirestationDaoInterface;
+import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDaoInterface;
 import com.safetynet.safetynetalert.domain.Firestation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

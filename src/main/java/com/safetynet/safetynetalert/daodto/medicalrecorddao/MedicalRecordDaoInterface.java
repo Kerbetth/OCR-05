@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.dao.medicalrecorddao;
+package com.safetynet.safetynetalert.daodto.medicalrecorddao;
 
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 

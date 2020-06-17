@@ -1,10 +1,9 @@
 package com.safetynet.safetynetalert.service.getservice;
 
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.DTOFactory;
-import com.safetynet.safetynetalert.dao.firestationdao.FirestationDaoInterface;
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDaoInterface;
-import com.safetynet.safetynetalert.dao.persondao.PersonDaoInterface;
+import com.safetynet.safetynetalert.daodto.DTOFactory;
+import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDaoInterface;
+import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDaoInterface;
+import com.safetynet.safetynetalert.daodto.persondao.PersonDaoInterface;
 import com.safetynet.safetynetalert.exceptions.NoEntryByStationException;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import com.safetynet.safetynetalert.exceptions.NoFnameOrLnameException;

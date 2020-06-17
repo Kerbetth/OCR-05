@@ -1,10 +1,8 @@
 package com.safetynet.safetynetalert.service.CRUDservice;
 
-import com.safetynet.safetynetalert.dao.DTOFactory;
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDaoInterface;
-import com.safetynet.safetynetalert.dao.persondao.PersonDao;
-import com.safetynet.safetynetalert.dao.persondao.PersonDaoInterface;
+import com.safetynet.safetynetalert.daodto.DTOFactory;
+import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDaoInterface;
+import com.safetynet.safetynetalert.daodto.persondao.PersonDaoInterface;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;
 import com.safetynet.safetynetalert.exceptions.NotEqualSizeListException;

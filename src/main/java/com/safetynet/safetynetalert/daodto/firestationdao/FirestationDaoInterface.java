@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.dao.firestationdao;
+package com.safetynet.safetynetalert.daodto.firestationdao;
 
 import com.safetynet.safetynetalert.domain.Firestation;
 

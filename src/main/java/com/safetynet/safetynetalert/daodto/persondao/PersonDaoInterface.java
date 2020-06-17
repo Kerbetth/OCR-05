@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.dao.persondao;
+package com.safetynet.safetynetalert.daodto.persondao;
 
 import com.safetynet.safetynetalert.domain.Person;
 

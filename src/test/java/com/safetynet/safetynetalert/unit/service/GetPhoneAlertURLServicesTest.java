@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
-import com.safetynet.safetynetalert.dao.persondao.PersonDao;
+import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDao;
+import com.safetynet.safetynetalert.daodto.persondao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.getservice.GetService;
 import com.safetynet.safetynetalert.domain.Firestation;

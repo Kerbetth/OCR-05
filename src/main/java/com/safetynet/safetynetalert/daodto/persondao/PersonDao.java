@@ -1,8 +1,7 @@
-package com.safetynet.safetynetalert.dao.persondao;
+package com.safetynet.safetynetalert.daodto.persondao;
 
-import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriterInterface;
+import com.safetynet.safetynetalert.daodto.jsonreader.JsonReaderWriterInterface;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
-import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

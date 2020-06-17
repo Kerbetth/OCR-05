@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalert.unit.service;
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.persondao.PersonDao;
+import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
+import com.safetynet.safetynetalert.daodto.persondao.PersonDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.CRUDservice.PersonService;

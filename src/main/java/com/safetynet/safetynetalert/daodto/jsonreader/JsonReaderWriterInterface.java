@@ -1,4 +1,4 @@
-package com.safetynet.safetynetalert.dao.jsonreader;
+package com.safetynet.safetynetalert.daodto.jsonreader;
 
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Firestation;

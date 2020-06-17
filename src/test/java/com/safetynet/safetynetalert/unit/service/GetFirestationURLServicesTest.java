@@ -1,11 +1,11 @@
 package com.safetynet.safetynetalert.unit.service;
 
-import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.persondao.PersonDao;
+import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDao;
+import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
+import com.safetynet.safetynetalert.daodto.persondao.PersonDao;
 import com.safetynet.safetynetalert.unit.DataTest;
 import com.safetynet.safetynetalert.service.getservice.GetService;
-import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.daodto.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Count;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Person;

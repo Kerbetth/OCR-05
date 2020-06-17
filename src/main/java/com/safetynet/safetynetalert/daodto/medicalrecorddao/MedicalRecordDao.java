@@ -1,7 +1,6 @@
-package com.safetynet.safetynetalert.dao.medicalrecorddao;
+package com.safetynet.safetynetalert.daodto.medicalrecorddao;
 
-import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
-import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriterInterface;
+import com.safetynet.safetynetalert.daodto.jsonreader.JsonReaderWriterInterface;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.LogManager;

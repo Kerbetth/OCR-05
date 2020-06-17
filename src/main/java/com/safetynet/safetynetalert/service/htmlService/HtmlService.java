@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalert.service.htmlService;
 
-import com.safetynet.safetynetalert.dao.firestationdao.FirestationDao;
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
-import com.safetynet.safetynetalert.dao.persondao.PersonDao;
+import com.safetynet.safetynetalert.daodto.firestationdao.FirestationDao;
+import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
+import com.safetynet.safetynetalert.daodto.persondao.PersonDao;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.domain.Person;

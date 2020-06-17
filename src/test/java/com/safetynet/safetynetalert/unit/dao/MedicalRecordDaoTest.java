@@ -1,9 +1,9 @@
 package com.safetynet.safetynetalert.unit.dao;
 
-import com.safetynet.safetynetalert.dao.medicalrecorddao.MedicalRecordDao;
+import com.safetynet.safetynetalert.daodto.medicalrecorddao.MedicalRecordDao;
 import com.safetynet.safetynetalert.domain.Database;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
-import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.daodto.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.unit.DataTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
