@@ -4,6 +4,7 @@ import com.safetynet.safetynetalert.domain.Medicalrecord;
 
 import java.util.List;
 
+
 public interface MedicalRecordDaoInterface {
     List<Medicalrecord> getMedicalrecords();
 

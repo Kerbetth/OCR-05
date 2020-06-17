@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalert.dao.firestationdao;
 
 import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriterInterface;
 import com.safetynet.safetynetalert.domain.Firestation;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public class FirestationDao implements FirestationDaoInterface {
 
     @Autowired
-    private JsonReaderWriter jsonReaderWriter;
+    private JsonReaderWriterInterface jsonReaderWriter;
 
 
     /**

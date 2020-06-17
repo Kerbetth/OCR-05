@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Repository
-public class JsonReaderWriter {
+public class JsonReaderWriter implements JsonReaderWriterInterface {
 
     /**
      * the Dao method deploy the content of the jsonfile in a database composed with corresponding object
@@ -43,6 +43,7 @@ public class JsonReaderWriter {
             e.printStackTrace();}
     }
 
+    @Override
     public void writer(Database database) {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonStr = "";
@@ -63,21 +64,25 @@ public class JsonReaderWriter {
         }
     }
 
+    @Override
     public void updateFirestations(List<Firestation> firestations) {
         database.setFirestations(firestations);
         writer(database);
     }
 
+    @Override
     public void updateMedicalRecords(List<Medicalrecord> medicalrecords) {
         database.setMedicalrecords(medicalrecords);
         writer(database);
     }
 
+    @Override
     public void updatePersons(List<Person> persons) {
         database.setPersons(persons);
         writer(database);
     }
 
+    @Override
     public Database getDtb() {
         return database;
     }

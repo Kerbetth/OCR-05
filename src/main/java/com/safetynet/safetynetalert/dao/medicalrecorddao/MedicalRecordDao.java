@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalert.dao.medicalrecorddao;
 
 import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
+import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriterInterface;
 import com.safetynet.safetynetalert.domain.Medicalrecord;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +23,7 @@ public class MedicalRecordDao implements MedicalRecordDaoInterface {
      */
 
     @Autowired
-    private JsonReaderWriter jsonReaderWriter;
+    private JsonReaderWriterInterface jsonReaderWriter;
 
     private static final Logger logger = LogManager.getLogger("DaoMedicalRecord");
 

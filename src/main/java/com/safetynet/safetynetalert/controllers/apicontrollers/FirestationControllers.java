@@ -23,7 +23,7 @@ public class FirestationControllers {
     }
 
     @PutMapping(value = "/firestation/{address}")
-    public Firestation setFirestationPut(@PathVariable String address, @RequestParam Firestation firestationData){
+    public Firestation setFirestationPut(@PathVariable String address, @RequestBody Firestation firestationData){
         return firestationService.set(address, firestationData);
     }
 

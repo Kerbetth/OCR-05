@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalert.dao.persondao;
 
+import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriterInterface;
 import com.safetynet.safetynetalert.exceptions.NoEntryException;
 import com.safetynet.safetynetalert.dao.jsonreader.JsonReaderWriter;
 import com.safetynet.safetynetalert.domain.Person;
@@ -21,7 +22,7 @@ public class PersonDao implements PersonDaoInterface {
      */
 
     @Autowired
-    private JsonReaderWriter jsonReaderWriter;
+    private JsonReaderWriterInterface jsonReaderWriter;
 
 
     @Override
