@@ -1,0 +1,390 @@
+{
+	"info": {
+		"_postman_id": "75a5321d-6e17-4042-a648-41c3e98c7221",
+		"name": "SafetyAlertCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get PersonInfo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/personInfo?firstName=Peter&lastName=Duncan",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"",
+						"personInfo"
+					],
+					"query": [
+						{
+							"key": "firstName",
+							"value": "Peter"
+						},
+						{
+							"key": "lastName",
+							"value": "Duncan"
+						}
+					]
+				},
+				"description": "Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,\r\nposologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent\r\ntoutes apparaître."
+			},
+			"response": []
+		},
+		{
+			"name": "ChildAlert",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "Cette url doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.\r\nLa liste doit comprendre le prénom et le nom de famille de chaque enfant, son âge et une liste des autres\r\nmembres du foyer. S'il n'y a pas d'enfant, cette url peut renvoyer une chaîne vide."
+			},
+			"response": []
+		},
+		{
+			"name": "Firestation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "Cette url doit retourner une liste des personnes couvertes par la caserne de pompiers correspondante.\r\nDonc, si le numéro de station = 1, elle doit renvoyer les habitants couverts par la station numéro 1. La liste\r\ndoit inclure les informations spécifiques suivantes : prénom, nom, adresse, numéro de téléphone. De plus,\r\nelle doit fournir un décompte du nombre d'adultes et du nombre d'enfants (tout individu âgé de 18 ans ou\r\nmoins) dans la zone desservie."
+			},
+			"response": []
+		},
+		{
+			"name": "Fire",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FloodStation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "personInfo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CommunityEmail",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/communityEmail?city=Culver",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"communityEmail"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "Culver"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddFirestation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\":\"1509 Culver St\", \"station\":\"1\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/firestation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"firestation"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "PutFirestation",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\": \"1509 Culver St\", \"station\":\"8\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/firestation/1509 Culver St",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"firestation",
+						"1509 Culver St"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteFirestation",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/firestation/1509 Culver St",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"firestation",
+						"1509 Culver St"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "AddPerson",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\":\"1509 Culver St\", \"station\":\"1\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/firestation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"firestation"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "PutPerson",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"firstName\":\"value1\", \"lastName\":\"value2\",\"city\":\"new city\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/person/value1value2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"person",
+						"value1value2"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "DeletePerson",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\": \"1509 Culver St\", \"station\":\"8\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/firestation/value1value2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"firestation",
+						"value1value2"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "AddMedicalRecord",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"firstName\":\"value1\", \"lastName\":\"value2\",\"allergies\":[\"newAllergies\"]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/medicalRecord",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"medicalRecord"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "PutMedicalRecord",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"firstName\":\"value1\", \"lastName\":\"value2\",\"city\":\"new city\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/person/value1value2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"person",
+						"value1value2"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteMedicalRecord",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\": \"1509 Culver St\", \"station\":\"8\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/firestation/value1value2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"firestation",
+						"value1value2"
+					]
+				},
+				"description": "CRUD firestation"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
